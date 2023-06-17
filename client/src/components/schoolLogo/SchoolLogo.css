@@ -1,0 +1,51 @@
+
+.custom-container-padding-0{
+    padding: 0;
+    margin: 0;
+}
+.main{
+    display: flex;
+    flex-direction: row;
+   
+}
+
+.leftCol{
+    background-color: #265C5C;
+   height: 100%;
+   padding-top: 110px;
+}
+
+.rightCol{
+    
+    height:100%;
+    padding-right: 0;
+    position: relative;
+    
+    
+}
+.rightCol img{
+   width: 100%;
+   height: 92%;
+   opacity: 0.5;
+   background-size: cover;
+}
+.school{
+  font-weight: 700;
+  font-size: 2.2rem;
+  margin-left: 5px;
+  text-align: center;
+  color: #fff;
+ 
+}
+.school-img {
+   
+    display: grid;
+    place-items: center;
+  }
+  
+  .img-fluid {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+
+  }

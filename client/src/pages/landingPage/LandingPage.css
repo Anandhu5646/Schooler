@@ -1,0 +1,112 @@
+.landing-img{
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    
+}
+.left{
+    padding: 0;
+}
+.rightCol{
+    padding: 0;
+}
+
+
+.right {
+    padding: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .contents-1 {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 330px;
+    font-weight: 800;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .contents-2 {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #265c5c;
+    font-size: 40px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
+  
+  .contents-2 .adminlogo {
+    width: 50px;
+    margin-right: 10px;
+  }
+  
+.contents-2 h2{
+    color: #fff;
+    
+}
+.contents-3 {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #265c5c;
+    font-size: 40px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+   
+  }
+  .contents-3 .facultylogo {
+    width: 50px;
+    margin-right: 10px;
+  }
+  
+.contents-3 h2{
+    color: #fff;
+    
+}
+.contents-4 {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #265c5c;
+    font-size: 40px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
+  .contents-4 .studlogo {
+    width: 50px;
+    margin-right: 10px;
+  }
+  
+.contents-4 h2{
+    color: #fff;
+    
+}
+  
