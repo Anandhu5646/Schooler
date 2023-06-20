@@ -4,11 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Landing from './pages/landingPage/LandingPage'
 import SchoolLogo from './components/schoolLogo/SchoolLogo';
 import AdminHome from './pages/adminHome/AdminHome'
+import AdminLogin from './pages/adminLogin/AdminLogin';
 
 function App() {
   return (
     <div className="App">
-    <AdminHome/>
+    <AdminLogin/>
+    {/* <AdminHome/> */}
       {/* <Landing/> */}
       {/* <SchoolLogo/> */}
     </div>

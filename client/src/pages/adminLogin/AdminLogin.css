@@ -1,0 +1,31 @@
+.box{
+    background-color: rgb(215, 240, 232);
+    width: 400px;
+    height: 500px;
+    margin-top: 150px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: darkgreenx;
+    
+
+}
+.rightCol{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+}.adminlogin{
+    font-weight: 600;
+    margin-top: 40px;
+
+}
+.form-control{
+    width: 90%;
+    margin-left: 19px;
+    /* margin-top: 50px; */
+}
+.form-group{
+    margin-top: 70px;
+   
+}
+
