@@ -212,7 +212,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        
+        <Typography>hi</Typography>
       </Box>
     </Box>
   );
