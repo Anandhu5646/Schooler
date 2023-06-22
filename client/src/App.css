@@ -1,0 +1,19 @@
+.an-list-item:hover{
+    background-color:#212A3E !important;
+    color: rgb(255, 255, 255) !important;
+    border-radius: 30px !important;
+}
+.an-list-item:hover .icon{
+    background-color:#212A3E !important;
+    color: rgb(255, 255, 255) !important;
+    border-radius: 30px !important;
+}
+.an-list-item {
+    color: rgb(75, 75, 75) !important;
+}
+.an-list-item.active {
+    color: rgb(255, 255, 255) !important;
+}
+.an-list-item.active .icon{
+    color: rgb(255, 255, 255) !important;
+}

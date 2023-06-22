@@ -10,13 +10,18 @@ import AdminLogin from './pages/admin/adminLogin/AdminLogin';
 import Login from './components/admin/login/Login';
 import FacultyList from './components/admin/facultyList/FacultyList';
 import StudentList from './components/admin/studentList/StudentList';
-import AddFaculty from './components/admin/addFaculty/AddFaculty';
+import AdminStudent from './pages/admin/adminStudents/AdminStudent';
+import AdminFaculty from './pages/admin/adminFaculty/AdminFaculty';
+import SubjectList from './components/admin/subjectList/SubjectList';
 
 function App() {
   return (
     <div className="App">
+    <SubjectList/>
+    {/* <AdminFaculty/> */}
+    {/* <AdminStudent/> */}
     {/* <StudentList/> */}
-    <AddFaculty/>
+    
     {/* <FacultyList/> */}
     {/* <Login/> */}
     {/* <AdminLogin/> */}
