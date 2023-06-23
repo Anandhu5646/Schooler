@@ -20,14 +20,13 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import SchoolIcon from "@mui/icons-material/School";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import ClassIcon from '@mui/icons-material/Class';
-import SubjectIcon from '@mui/icons-material/Subject';
-import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
-import EmailIcon from '@mui/icons-material/Email';
-import LogoutIcon from '@mui/icons-material/Logout';
-import StudentList from "../../../components/admin/studentList/StudentList";
-
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import ClassIcon from "@mui/icons-material/Class";
+import SubjectIcon from "@mui/icons-material/Subject";
+import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
+import EmailIcon from "@mui/icons-material/Email";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 330;
 
@@ -96,7 +95,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
- function Sidebar() {
+function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(null);
@@ -114,29 +113,32 @@ const Drawer = styled(MuiDrawer, {
   };
 
   const drawerItems = [
-    { text: "Dashboard", icon: <DashboardIcon /> },
-    { text: "Faculty", icon: <GroupIcon /> },
-    { text: "Students", icon: <GroupIcon /> },
-    { text: "Clubs", icon: <LocalLibraryIcon /> },
-    { text: "Club-request", icon: <SchoolIcon/> },
-    {text:"Notice", icon:<WarningAmberIcon/>},
-    {text:"Classes", icon:<ClassIcon/>},
-    {text:"Subjects", icon:<SubjectIcon/>},
-    {text:"Check complain", icon:<NotificationImportantIcon/>},
-    {text:"Verify email", icon:<EmailIcon/>},
-    {text:"Logout", icon:<LogoutIcon/>}
-
-    // Add more objects with text and icon components as needed
+    { text: "Dashboard", icon: <DashboardIcon />, to: "/dashboard" },
+    { text: "Faculty", icon: <GroupIcon />, to: "/faculty" },
+    { text: "Students", icon: <GroupIcon />, to: "/students" },
+    { text: "Clubs", icon: <LocalLibraryIcon />, to: "/clubs" },
+    { text: "Club-request", icon: <SchoolIcon />, to: "/club-requests" },
+    { text: "Notice", icon: <WarningAmberIcon />, to: "/notice" },
+    { text: "Classes", icon: <ClassIcon />, to: "/classes" },
+    { text: "Subjects", icon: <SubjectIcon />, to: "/subjects" },
+    { text: "Check complain", icon: <NotificationImportantIcon />, to: "/complain" },
+    { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
+    { text: "Logout", icon: <LogoutIcon />, to: "/logout" },
   ];
+  
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar style={{ background: "#212A3E", color:"white" }} position="fixed" open={open}>
+      <AppBar
+        style={{ background: "#212A3E", color: "white" }}
+        position="fixed"
+        open={open}
+      >
         <Toolbar>
           <IconButton
             color="white"
-            style={{color:"white"}}
+            style={{ color: "white" }}
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
@@ -153,13 +155,16 @@ const Drawer = styled(MuiDrawer, {
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader className="d-flex justify-content-between w-100 ps-4" style={{ background: "#212A3E", color:"#fff" }}>
-        <h5>Schooler</h5>
+        <DrawerHeader
+          className="d-flex justify-content-between w-100 ps-4"
+          style={{ background: "#212A3E", color: "#fff" }}
+        >
+          <h5>Schooler</h5>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
-              <ChevronRightIcon style={{color:"white"}} color="white" />
+              <ChevronRightIcon style={{ color: "white" }} color="white" />
             ) : (
-              <ChevronLeftIcon style={{color:"white"}}  color="white" />
+              <ChevronLeftIcon style={{ color: "white" }} color="white" />
             )}
           </IconButton>
         </DrawerHeader>
@@ -176,43 +181,49 @@ const Drawer = styled(MuiDrawer, {
                 marginTop: "20px",
                 width: "95%",
                 marginLeft: "10px",
-                
-                backgroundColor: selectedItem === index ? "#212A3E" : "transparent",
+
+                backgroundColor:
+                  selectedItem === index ? "#212A3E" : "transparent",
                 color: selectedItem === index ? "#fff" : "transparent",
                 "&:hover": {
                   backgroundColor: "#212A3E",
-                  color:"white"
+                  color: "white",
                 },
               }}
             >
               <ListItemButton
-                className={`listItem an-list-item ${selectedItem === index && "active"}`}
+                className={`listItem an-list-item ${
+                  selectedItem === index && "active"
+                }`}
                 selected={selectedItem === index}
                 onClick={() => handleItemClick(index)}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
-                  backgroundColor: selectedItem === index ? "#fff" : "transparent",
+                  backgroundColor:
+                    selectedItem === index ? "#fff" : "transparent",
                   color: selectedItem === index ? "#fff" : "transparent",
                   "&:hover": {
                     backgroundColor: "#212A3E",
-                    color:"white"
+                    color: "white",
                   },
                 }}
               >
                 <ListItemIcon
-                className="icon"
+                  className="icon"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
-                    
                   }}
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={item.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -220,11 +231,9 @@ const Drawer = styled(MuiDrawer, {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography>
-          
-        </Typography>
+        <Typography></Typography>
       </Box>
     </Box>
   );
 }
-export default Sidebar
+export default Sidebar;

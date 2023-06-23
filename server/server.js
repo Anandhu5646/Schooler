@@ -13,7 +13,7 @@ const studentRoute = require('./routers/studentRoute.js');
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended:false}));
 app.use(express.static(path.resolve() + "/public"));
 
 app.use(

@@ -40,9 +40,9 @@ const facultySchema = new mongoose.Schema({
         required:true
         
     },
-    empolyeeId:{
+    employeeId:{
         type:String,
-        required:true
+        
     }, 
     address:{
         type:String,
@@ -58,7 +58,7 @@ const facultySchema = new mongoose.Schema({
     pList:[],
     pic:{
      type:String,
-     default:"../public/admin/avatar.jpg"
+     default:"/admin/avatar.jpg"
     }
 })
 
