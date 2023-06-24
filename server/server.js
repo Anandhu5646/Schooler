@@ -29,7 +29,7 @@ dbConnect();
 app.use('/admin', adminRoute);
 app.use('/student', studentRoute);
 app.use('/faculty', facultyRoute);
-app.use('/admin/auth/',adminAuthRoute)
+app.use('/admin/auth',adminAuthRoute)
 
 app.listen(1800, () => {
   console.log("Server running on http://localhost:1800");

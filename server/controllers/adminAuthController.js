@@ -4,33 +4,38 @@ const jwt =require("jsonwebtoken")
 var salt= bcrypt.genSaltSync(10)
 const adminAuthController={
 
-    postAdminLogin:async(req,res)=>{
-        try{
-            const {email,password}=req.body;
+    postAdminLogin: async (req, res) => {
+        try {
+            const {email,password} = req.body;    
+            console.log(req.body);
             const admin=await adminModel.findOne({email})
+        
             if(!admin){
-                return res.json({err:true, message:"You have no admin access"})
-
+                return res.json({error: true, message: "You have no admin access"})
             }
-            const adminValid= bcrypt.compareSync(password,admin.password)
-            if(!adminValid){
-                return res.json({err:true, message:"wrong password"})
+           
+            if (password !== admin.password) {
+              return res.json({ error: true, message: 'Wrong password' });
             }
-            const token=jwt.sign({
-                admin:true,
-                id:admin._id
-            },"myjwtsecretkey")
-            return res.cookie("adminToken",token,{
-                httpOnly:true,
-                secure:true,
-                maxAge:1000*60*60*24*7,
-                sameSite:"none"
-            }).json({err:false})
-        }catch(err){
-            res.json({message:"server error",err:true,error:err})
-            console.log(err);
+            const token = jwt.sign({
+                id: admin._id
+            },"myjwtsecretkey"
+            ) 
+            console.log("token" , token);
+            return res.cookie("adminToken",token ,{
+                httpOnly: true,
+                maxAge: 1000*60*60*24*7,
+                secure: true,
+                sameSite: "none"
+                
+            }).json({error: false})
+            console.log("login sucess");
+        } catch (error) {
+            res.json({error: error, message: "Server error"})
+            console.log(error)
         }
-    },
+      }
+      ,
     postAdminLogout: async(req,res)=>{
         res.cookie("adminToken",token,{
             httpOnly:true,
@@ -40,24 +45,15 @@ const adminAuthController={
         }).json({message:"logged out", error:false})
     },
     checkAdminLoggedIn:async(req,res)=>{
-        try{
-            const token=res.cookie.adminToken
+        try {
+            const token =req.cookies.adminToken
             if(!token){
-                return res.json({loggedIn:false,error:true,message:"no token"})
-                
+              return  res.json({loggedIn :false, message:"no token"})
             }
-
-            const verifiedJwt =jwt.verify(token,"myjwtsecretkey")
-            const admin= await adminModel.findById(verifiedJwt.id,{password:0})
-            if(!admin){
-                return res.json({loggedIn:false})
-
-            }
-            return res.json({admin,loggedIn:true})
-
-        }catch(err){
-            console.log(err);
-            res.json({loggedIn:false,error:err})
+            const verifiedJWT= jwt.verify(token, "myjwtsecretkey")
+            return res.json({name: verifiedJWT.name, loggedIn: true})
+        } catch (error) {
+            res.json({loggedIn: false, error})
         }
     }
 }

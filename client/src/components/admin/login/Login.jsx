@@ -7,16 +7,18 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBIcon,
   MDBCheckbox
 }
   from 'mdb-react-ui-kit';
 import './Login.css'
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 function Login() {
 
-  const [loginType, setLoginType] = useState('Admin');
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errMessage, setErrMessage] = useState("")
@@ -38,7 +40,10 @@ function Login() {
     if (data.err) {
       setErrMessage(data.message)
     } else {
+      console.log("dispatched");
+      navigate('/admin/')      
       dispatch({ type: "refresh" })
+
     }
     setLoading({ ...loading, submit: false })
   }
@@ -51,7 +56,7 @@ function Login() {
             <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
               <MDBCardBody className='p-5 w-100 d-flex flex-column'>
 
-                <h2 className="fw-bold mb-2 text-center">{loginType} Login</h2>
+                <h2 className="fw-bold mb-2 text-center">Admin Login</h2>
                 {
                   errMessage &&
                   <div className="login-row" style={{ justifyContent: "flex-start" }}>
@@ -60,11 +65,11 @@ function Login() {
                 }
 
                 <MDBInput wrapperClass='mb-4 w-100' value={email} onChange={(e) => setEmail(e.target.value)} label='Email address' id='formControlLg' type='email' size="lg" />
-                <MDBInput wrapperClass='mb-4 w-100' value={password} onChange={(e) => setPassword(e.target.password) }label='Password' id='formControlLg' type='password' size="lg" />
+                <MDBInput wrapperClass='mb-4 w-100' value={password} onChange={(e) => setPassword(e.target.value)} label='Password' id='formControlLg' type='password' size="lg" />
 
-                <MDBCheckbox name='flexCheck' id='flexCheckDefault' className='mb-4' label='Agree' />
+                {/* <MDBCheckbox name='flexCheck' id='flexCheckDefault' className='mb-4' label='Agree' /> */}
 
-                <MDBBtn size='lg' disabled={!validForm} style={{ backgroundColor: "#212A3E" }}>
+                <MDBBtn size='lg' disabled={!validForm} type='submit' style={{ backgroundColor: "#212A3E" }}>
                   Login
                 </MDBBtn>
 

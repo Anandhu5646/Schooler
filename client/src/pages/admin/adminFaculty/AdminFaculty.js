@@ -5,6 +5,7 @@ import FacultyList from '../../../components/admin/facultyList/FacultyList'
 function AdminFaculty() {
   return (
     <div>
+  
       <Sidebar/>
       <FacultyList/>
     </div>

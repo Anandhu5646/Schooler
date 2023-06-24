@@ -16,6 +16,7 @@ import {
 } from 'mdb-react-ui-kit';
 import avatar from '../../../assets/avatar.jpg';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function FacultyList() {
     const [showModal, setShowModal] = useState(false);
@@ -42,67 +43,88 @@ function FacultyList() {
         setFormValue({ ...formValue, [e.target.name]: e.target.value });
     };
 
-    const handleAddFaculty = () => {
-        
-        console.log(formValue);
+    const handleAddFaculty = async () => {
+        try {
+
+            const response = await axios.post('/api/faculty', formValue);
+
+
+            if (response.data.success) {
+
+                console.log('Faculty data saved:', response.data.faculty);
+
+            } else {
+
+                console.error('Error saving faculty data:', response.data.error);
+
+            }
+        } catch (err) {
+
+            console.error('Error:', err);
+
+        }
+
         toggleModal();
     };
 
-    return (
-        <div className='' style={{ width: '80%', marginLeft: '200px', marginTop: '50px' }}>
-            <div className='d-flex justify-content-between align-items-end mb-5'>
-                <h1>Faculty List</h1>
-                <Link to="/addFaculty">
+
+
+
+return (
+    <div className='' style={{ width: '80%', marginLeft: '200px', marginTop: '50px' }}>
+        <div className='d-flex justify-content-between align-items-end mb-5'>
+            <h1>Faculty List</h1>
+            <Link to="">
 
                 <MDBBtn style={{ background: '#394867' }} onClick={toggleModal}>
                     Add faculty
                 </MDBBtn>
-                </Link>
-            </div>
-            <MDBTable align='middle'>
-                <MDBTableHead>
-                    <tr>
-                        <th scope='col'>No.</th>
-                        <th scope='col'>Image</th>
-                        <th scope='col'>Name</th>
-                        <th scope='col'>Join Year</th>
-                        <th scope='col'>Teaching Area</th>
-                        <th scope='col'>Mobile</th>
-                        <th scope='col'>DOB</th>
-                        <th scope='col'>Age</th>
-                        <th scope='col' className='d-flex ms-4'>
-                            Action
-                        </th>
-                    </tr>
-                </MDBTableHead>
-                <MDBTableBody>
-                    <tr>
-                        <td>1</td>
-                        <td>
-                            {' '}
-                            <img src={avatar} alt='' style={{ width: '45px', height: '45px' }} className='rounded-circle' />
-                        </td>
-                        <td>
-                            <div className='d-flex align-items-center'>
-                                <div className='ms-3'>
-                                    <p className='fw-bold mb-1'>John Doe</p>
-                                   
-                                </div>
+            </Link>
+        </div>
+        <MDBTable align='middle'>
+            <MDBTableHead>
+                <tr>
+                    <th scope='col'>No.</th>
+                    <th scope='col'>Image</th>
+                    <th scope='col'>Name</th>
+                    <th scope='col'>Join Year</th>
+                    <th scope='col'>Teaching Area</th>
+                    <th scope='col'>Mobile</th>
+                    <th scope='col'>DOB</th>
+                    <th scope='col'>Age</th>
+                    <th scope='col' className='d-flex ms-4'>
+                        Action
+                    </th>
+                </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+                <tr>
+                    <td>1</td>
+                    <td>
+                        {' '}
+                        <img src={avatar} alt='' style={{ width: '45px', height: '45px' }} className='rounded-circle' />
+                    </td>
+                    <td>
+                        <div className='d-flex align-items-center'>
+                            <div className='ms-3'>
+                                <p className='fw-bold mb-1'>John Doe</p>
+
                             </div>
-                        </td>
-                        <td>
-                            <p className='fw-normal mb-1'>2000</p>
-                    
-                        </td>
-                        <td>
-                            <p className='fw-normal mb-1'>Maths</p>
-                        </td>
-                        <td>
-                            <p className='fw-normal mb-1'>45561212232</p>
-                        </td>
-                       <td>22/3/2333</td>
-                        <td>20</td>
-                        <td>
+                        </div>
+                    </td>
+                    <td>
+                        <p className='fw-normal mb-1'>2000</p>
+
+                    </td>
+                    <td>
+                        <p className='fw-normal mb-1'>Maths</p>
+                    </td>
+                    <td>
+                        <p className='fw-normal mb-1'>45561212232</p>
+                    </td>
+                    <td>22/3/2333</td>
+                    <td>20</td>
+                    <td>
                         <Link to="/editFacultyList/:id">
 
                             <MDBBtn color='link' rounded size='sm'>
@@ -115,16 +137,17 @@ function FacultyList() {
                                 X
                             </MDBBtn>
                         </Link>
-                        </td>
-                    </tr>
-                </MDBTableBody>
-            </MDBTable>
+                    </td>
+                </tr>
+            </MDBTableBody>
+        </MDBTable>
 
-            {/* Add Faculty Modal */}
-            <MDBModal show={showModal} onHide={toggleModal} tabIndex='-1'  >
-                <MDBModalDialog >
+        {/* Add Faculty Modal */}
+        <MDBModal show={showModal} onHide={toggleModal} tabIndex='-1'  >
+            <MDBModalDialog >
+                <form on>
                     <MDBModalContent>
-                        <MDBModalHeader style={{marginTop:"50px"}}>
+                        <MDBModalHeader style={{ marginTop: "50px" }}>
                             <MDBModalTitle>Add Faculty</MDBModalTitle>
                             <MDBBtn className='btn-close' color='none' onClick={toggleModal} />
                         </MDBModalHeader>
@@ -243,14 +266,15 @@ function FacultyList() {
                             <MDBBtn color='secondary' onClick={toggleModal}>
                                 Close
                             </MDBBtn>
-                            <MDBBtn onClick={handleAddFaculty} style={{background:"#394867"}}>Save</MDBBtn>
+                            <MDBBtn onClick={handleAddFaculty} style={{ background: "#394867" }} >Save</MDBBtn>
                         </MDBModalFooter>
                     </MDBModalContent>
-                </MDBModalDialog>
-            </MDBModal>
+                </form>
+            </MDBModalDialog>
+        </MDBModal>
 
-        </div>
-    );
+    </div>
+);
 }
 
 export default FacultyList;

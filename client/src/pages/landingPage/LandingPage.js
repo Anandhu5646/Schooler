@@ -7,7 +7,7 @@ import adminlogo from '../../assets/adminlogo.png'
 import teacherlogo from '../../assets/teacherlogo.png'
 import SchoolLogo from '../../components/schoolLogo/SchoolLogo'
 import './LandingPage.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage() {
   const navigate=useNavigate()

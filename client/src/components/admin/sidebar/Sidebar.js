@@ -113,14 +113,14 @@ function Sidebar() {
   };
 
   const drawerItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, to: "/" },
-    { text: "Faculty", icon: <GroupIcon />, to: "/faculty" },
-    { text: "Students", icon: <GroupIcon />, to: "/students" },
-    { text: "Clubs", icon: <LocalLibraryIcon />, to: "/clubs" },
-    { text: "Club-request", icon: <SchoolIcon />, to: "/club-requests" },
-    { text: "Notice", icon: <WarningAmberIcon />, to: "/notice" },
-    { text: "Classes", icon: <ClassIcon />, to: "/classes" },
-    { text: "Subjects", icon: <SubjectIcon />, to: "/subjects" },
+    { text: "Dashboard", icon: <DashboardIcon />, to: "/admin/" },
+    { text: "Faculty", icon: <GroupIcon />, to: "/admin/faculty" },
+    { text: "Students", icon: <GroupIcon />, to: "/admin/student" },
+    { text: "Clubs", icon: <LocalLibraryIcon />, to: "/admin/club" },
+    { text: "Club-request", icon: <SchoolIcon />, to: "/admin/club-requests" },
+    { text: "Notice", icon: <WarningAmberIcon />, to: "/admin/notice" },
+    { text: "Classes", icon: <ClassIcon />, to: "/admin/classes" },
+    { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },
     { text: "Check complain", icon: <NotificationImportantIcon />, to: "/complain" },
     { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
     { text: "Logout", icon: <LogoutIcon />, to: "/logout" },
