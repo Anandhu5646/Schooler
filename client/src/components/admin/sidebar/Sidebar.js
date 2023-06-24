@@ -12,7 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -26,7 +25,8 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { ListItem } from "@mui/material";
 
 const drawerWidth = 330;
 
@@ -125,7 +125,6 @@ function Sidebar() {
     { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
     { text: "Logout", icon: <LogoutIcon />, to: "/logout" },
   ];
-  
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -181,7 +180,6 @@ function Sidebar() {
                 marginTop: "20px",
                 width: "95%",
                 marginLeft: "10px",
-
                 backgroundColor:
                   selectedItem === index ? "#212A3E" : "transparent",
                 color: selectedItem === index ? "#fff" : "transparent",
@@ -190,6 +188,8 @@ function Sidebar() {
                   color: "white",
                 },
               }}
+              component={Link}
+              to={item.to}
             >
               <ListItemButton
                 className={`listItem an-list-item ${
@@ -236,4 +236,5 @@ function Sidebar() {
     </Box>
   );
 }
+
 export default Sidebar;

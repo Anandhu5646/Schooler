@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -14,8 +14,34 @@ import {
   MDBTableBody,
 } from "mdb-react-ui-kit";
 import avatar from "../../../assets/avatar.jpg";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 function StudentList() {
+  const [studentList, setStudentList] = useState([]);
+
+  const fetchStudentList = async () => {
+    try {
+      const response = await axios.get("/admin/viewStudents", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        console.log("Student List:", response.data.students);
+        setStudentList(response.data.students);
+      } else {
+        console.error("Error fetching faculty list:", response.data.error);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudentList();
+  }, []);
+
   const [showModal, setShowModal] = useState(false);
   const [formValue, setFormValue] = useState({
     name: "",
@@ -37,9 +63,18 @@ function StudentList() {
     setShowModal(!showModal);
   };
 
-  const handleAddStudent = () => {
-    // Handle adding student logic here
-    console.log("Student added:", formValue);
+  const handleAddStudent = async () => {
+    try {
+      const response = await axios.post("/admin/addStudent", formValue);
+      if (response.data.success) {
+        console.log("Student data saved:", response.data.student);
+      } else {
+        console.error("Error saving faculty data:", response.data.error);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+
     toggleModal();
   };
 
@@ -75,238 +110,247 @@ function StudentList() {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          <tr>
-            <td>1</td>
-            <td>
-              <img
-                src={avatar}
-                alt=""
-                style={{ width: "45px", height: "45px" }}
-                className="rounded-circle"
-              />
-            </td>
-            <td>
-              <div className="d-flex align-items-center">
-                <div className="ms-3">
-                  <p className="fw-bold mb-1">John Doe</p>
-                  {/* <p className='text-muted mb-0'>john.doe@gmail.com</p> */}
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="fw-normal mb-1">10</p>
-            </td>
-            <td>
-              <p className="fw-normal mb-1">123</p>
-            </td>
-            <td>
-              <p className="fw-normal mb-1">45561212232</p>
-            </td>
-            <td>2000</td>
-            <td>20</td>
-            <td>
-              <MDBBtn color="link" rounded size="sm">
-                Edit
-              </MDBBtn>
-              <MDBBtn color="link" rounded size="sm">
-                X
-              </MDBBtn>
-            </td>
-          </tr>
+          {studentList.map((student, index) => {
+            return (
+              <tr key={student._id}>
+                <td>{index + 1}</td>
+                <td>
+                  <img
+                    src={avatar}
+                    alt=""
+                    style={{ width: "45px", height: "45px" }}
+                    className="rounded-circle"
+                  />
+                </td>
+                <td>
+                  <div className="d-flex align-items-center">
+                    <div className="ms-3">
+                      <p className="fw-bold mb-1">{student.name}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{student.className}</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{student.rollNo}</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{student.mobile}</p>
+                </td>
+                <td>{student.admYear}</td>
+                <td>{student.age}</td>
+                <td>
+                  <MDBBtn color="link" rounded size="sm">
+                    Edit
+                  </MDBBtn>
+                  <MDBBtn color="link" rounded size="sm">
+                    X
+                  </MDBBtn>
+                </td>
+              </tr>
+            );
+          })}
         </MDBTableBody>
       </MDBTable>
 
       <MDBModal show={showModal} onHide={toggleModal} tabIndex="-1">
         <MDBModalDialog>
-          <MDBModalContent className="p-3">
-            <MDBModalHeader style={{marginTop:"50px"}}>
-              <MDBModalTitle>Add Student</MDBModalTitle>
-              <MDBBtn
-                className="btn-close"
-                color="none"
-                onClick={toggleModal}
-              ></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.name}
-                  name="name"
-                  onChange={onChange}
-                  label="Name"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.motherName}
-                  name="motherName"
-                  onChange={onChange}
-                  label="Mother's Name"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.fatherName}
-                  name="fatherName"
-                  onChange={onChange}
-                  label="Father's Name"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.dob}
-                  name="dob"
-                  onChange={onChange}
-                  type="date"
-                  label="Date of Birth"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.age}
-                  name="age"
-                  onChange={onChange}
-                  type="number"
-                  label="Age"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.class}
-                  name="class"
-                  onChange={onChange}
-                  label="Class"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    className="form-check-input"
-                    id="maleRadio"
-                    name="gender"
-                    value="male"
-                    checked={formValue.gender === "male"}
+          <form>
+            <MDBModalContent className="p-3">
+              <MDBModalHeader style={{ marginTop: "50px" }}>
+                <MDBModalTitle>Add Student</MDBModalTitle>
+                <MDBBtn
+                  className="btn-close"
+                  color="none"
+                  onClick={toggleModal}
+                ></MDBBtn>
+              </MDBModalHeader>
+              <MDBModalBody>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.name}
+                    name="name"
                     onChange={onChange}
+                    label="Name"
                     required
                   />
-                  <label className="form-check-label" htmlFor="maleRadio">
-                    Male
-                  </label>
                 </div>
-              </div>
-
-              <div className="mb-3">
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    className="form-check-input"
-                    id="femaleRadio"
-                    name="gender"
-                    value="female"
-                    checked={formValue.gender === "female"}
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.motherName}
+                    name="motherName"
                     onChange={onChange}
+                    label="Mother's Name"
                     required
                   />
-                  <label className="form-check-label" htmlFor="femaleRadio">
-                    Female
-                  </label>
                 </div>
-              </div>
-
-              <div className="mb-3">
-                <div className="form-check">
-                  <input
-                    type="radio"
-                    className="form-check-input"
-                    id="otherRadio"
-                    name="gender"
-                    value="other"
-                    checked={formValue.gender === "other"}
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.fatherName}
+                    name="fatherName"
                     onChange={onChange}
+                    label="Father's Name"
                     required
                   />
-                  <label className="form-check-label" htmlFor="otherRadio">
-                    Other
-                  </label>
                 </div>
-              </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.dob}
+                    name="dob"
+                    onChange={onChange}
+                    type="date"
+                    label="Date of Birth"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.age}
+                    name="age"
+                    onChange={onChange}
+                    type="number"
+                    label="Age"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.className}
+                    name="className"
+                    onChange={onChange}
+                    label="Class"
+                    required
+                  />
+                </div>
 
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.email}
-                  name="email"
-                  onChange={onChange}
-                  type="email"
-                  label="Email"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.password}
-                  name="password"
-                  onChange={onChange}
-                  type="password"
-                  label="Password"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.admissionYear}
-                  name="admissionYear"
-                  onChange={onChange}
-                  label="Admission Year"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.address}
-                  name="address"
-                  onChange={onChange}
-                  label="Address"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.mobile}
-                  name="mobile"
-                  onChange={onChange}
-                  label="Mobile"
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.rollNo}
-                  name="rollNo"
-                  onChange={onChange}
-                  label="Roll No."
-                  required
-                />
-              </div>
-            </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={toggleModal}>
-                Close
-              </MDBBtn>
-              <MDBBtn onSubmit={handleAddStudent}>Save</MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
+                <div className="mb-3">
+                  <div className="form-check">
+                    <input
+                      type="radio"
+                      className="form-check-input"
+                      id="maleRadio"
+                      name="gender"
+                      value="male"
+                      checked={formValue.gender === "male"}
+                      onChange={onChange}
+                      required
+                    />
+                    <label className="form-check-label" htmlFor="maleRadio">
+                      Male
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check">
+                    <input
+                      type="radio"
+                      className="form-check-input"
+                      id="femaleRadio"
+                      name="gender"
+                      value="female"
+                      checked={formValue.gender === "female"}
+                      onChange={onChange}
+                      required
+                    />
+                    <label className="form-check-label" htmlFor="femaleRadio">
+                      Female
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <div className="form-check">
+                    <input
+                      type="radio"
+                      className="form-check-input"
+                      id="otherRadio"
+                      name="gender"
+                      value="other"
+                      checked={formValue.gender === "other"}
+                      onChange={onChange}
+                      required
+                    />
+                    <label className="form-check-label" htmlFor="otherRadio">
+                      Other
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.email}
+                    name="email"
+                    onChange={onChange}
+                    type="email"
+                    label="Email"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.password}
+                    name="password"
+                    onChange={onChange}
+                    type="password"
+                    label="Password"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.admYear}
+                    name="admYear"
+                    onChange={onChange}
+                    label="Admission Year"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.address}
+                    name="address"
+                    onChange={onChange}
+                    label="Address"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.mobile}
+                    name="mobile"
+                    onChange={onChange}
+                    label="Mobile"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.rollNo}
+                    name="rollNo"
+                    onChange={onChange}
+                    label="Roll No."
+                    required
+                  />
+                </div>
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={toggleModal}>
+                  Close
+                </MDBBtn>
+                <MDBBtn
+                  onClick={handleAddStudent}
+                  style={{ background: "#394867" }}
+                >
+                  Save
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </form>
         </MDBModalDialog>
       </MDBModal>
     </div>
   );
 }
-
-export default StudentList;
+export default StudentList

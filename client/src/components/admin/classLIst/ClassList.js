@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MDBBtn,
   MDBModal,
@@ -13,39 +13,59 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from "mdb-react-ui-kit";
+import axios from "axios";
 
 const ClassList = () => {
+  const [classList, setClassList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formValue, setFormValue] = useState({
     className: "",
   });
-  const [classList, setClassList] = useState([
-    {
-      id: 1,
-      className: "Class 1",
-    },
-    {
-      id: 2,
-      className: "Class 2",
-    },
-    {
-      id: 3,
-      className: "Class 3",
-    },
-  ]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  const handleAddClass = () => {
-    const newClass = {
-      id: classList.length + 1,
-      className: formValue.className,
-    };
-    setClassList([...classList, newClass]);
+  const fetchClassList = async () => {
+    try {
+      const response = await axios.get("/admin/viewClasses", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      console.log(response.data);
+      if (response.data.success) {
+        console.log("list:", response.data.classes);
+        setClassList(response.data.classes);
+      } else {
+        console.error(
+          "Error fetching faculty list:",
+          response.data.error
+        );
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  const handleAddClass = async () => {
+    try {
+      const response = await axios.post("/admin/addClass", formValue);
+      if (response.data.success) {
+        console.log("Class data saved:", response.data.class);
+        // Fetch the updated class list after adding a new class
+        fetchClassList();
+      } else {
+        console.error(
+          "Error saving class data:",
+          response.data.error
+        );
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+
     toggleModal();
-    setFormValue({ className: "" });
   };
 
   const handleChange = (e) => {
@@ -56,11 +76,18 @@ const ClassList = () => {
     }));
   };
 
+  useEffect(() => {
+    fetchClassList();
+  }, []);
+
   return (
     <div className="container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Class List</h1>
-        <MDBBtn style={{ background: "#394867" }} onClick={toggleModal}>
+        <MDBBtn
+          style={{ background: "#394867" }}
+          onClick={toggleModal}
+        >
           Add Class
         </MDBBtn>
       </div>
@@ -70,7 +97,7 @@ const ClassList = () => {
             <tr>
               <th scope="col">No.</th>
               <th scope="col">Class Name</th>
-              <th scope="col" className="d-flex ms-4">
+              <th scope="col" >
                 Action
               </th>
             </tr>
@@ -81,9 +108,6 @@ const ClassList = () => {
                 <td>{index + 1}</td>
                 <td>{item.className}</td>
                 <td>
-                  <MDBBtn color="link" rounded size="sm">
-                    Edit
-                  </MDBBtn>
                   <MDBBtn color="link" rounded size="sm">
                     X
                   </MDBBtn>
@@ -96,31 +120,40 @@ const ClassList = () => {
 
       <MDBModal show={showModal} onHide={toggleModal} tabIndex="-1">
         <MDBModalDialog>
-          <MDBModalContent className="p-3">
-            <MDBModalHeader style={{ marginTop: "50px" }}>
-              <MDBModalTitle>Add Class</MDBModalTitle>
-              <MDBBtn className="btn-close" color="none" onClick={toggleModal}></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody>
-              <div className="mb-3">
-                <MDBInput
-                  value={formValue.className}
-                  name="className"
-                  onChange={handleChange}
-                  label="Class Name"
-                  required
-                />
-              </div>
-            </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color="secondary" onClick={toggleModal}>
-                Close
-              </MDBBtn>
-              <MDBBtn onClick={handleAddClass} style={{ background: "#394867" }}>
-                Save
-              </MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
+          <form>
+            <MDBModalContent className="p-3">
+              <MDBModalHeader style={{ marginTop: "50px" }}>
+                <MDBModalTitle>Add Class</MDBModalTitle>
+                <MDBBtn
+                  className="btn-close"
+                  color="none"
+                  onClick={toggleModal}
+                ></MDBBtn>
+              </MDBModalHeader>
+              <MDBModalBody>
+                <div className="mb-3">
+                  <MDBInput
+                    value={formValue.className}
+                    name="className"
+                    onChange={handleChange}
+                    label="Class Name"
+                    required
+                  />
+                </div>
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn color="secondary" onClick={toggleModal}>
+                  Close
+                </MDBBtn>
+                <MDBBtn
+                  onClick={handleAddClass}
+                  style={{ background: "#394867" }}
+                >
+                  Save
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModalContent>
+          </form>
         </MDBModalDialog>
       </MDBModal>
     </div>

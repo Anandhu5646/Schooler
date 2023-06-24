@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     MDBBtn,
     MDBModal,
@@ -14,15 +14,41 @@ import {
     MDBCardTitle,
     MDBCardText,
 } from "mdb-react-ui-kit";
+import axios from "axios";
 
 const ClubList = () => {
+    
+    const [clubList,setClubList] = useState([])
+  const fetchClubList = async () => {
+  try {
+    const response = await axios.get('/admin/viewClubs', {
+      headers: { "Content-Type": "application/json" },withCredentials:true
+    });
+
+    console.log(response.data);
+    if (response.data.success) {
+      console.log('club list:', response.data.clubs);
+      setFacultyList(response.data.clubs);
+    } else {
+      console.error('Error fetching faculty list:', response.data.error);
+    }
+  } catch (err) {
+    console.error('Error:', err);
+  }
+};
+
+
+  useEffect(() => {
+    fetchClubList();
+  }, []);
+  
     const [showModal, setShowModal] = useState(false);
     const [formValue, setFormValue] = useState({
         name: "",
         description: "",
         facultyName: "",
     });
-    const [clubList, setClubList] = useState([]);
+   
 
     const toggleModal = () => {
         setShowModal(!showModal);

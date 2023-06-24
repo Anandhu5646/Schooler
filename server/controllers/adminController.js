@@ -163,33 +163,30 @@ let adminController = {
     ,
     getAdminStudents: async(req,res)=>{
         try {
-            let students= await studentModel.find({
-                _id:req.body._id
-            }).lean()
-            res.json({err:false, students})
-            
+            let students= await studentModel.find()
+            res.json({success:true,err:false, students})
+            console.log(students);
         } catch (error) {
             console.log(error);
             res.json({err:true,error, message:"something went wrong"})
         }
     },
-    getAdminFaculties: async(req,res)=>{
+    getAdminFaculties: async (req, res) => {
         try {
-            let faculties= await facultyModel.find({
-                _id:req.body._id
-            }).lean()
-            res.json({err:false, faculties})
+          const faculties = await facultyModel.find();
+          res.json({ success:true,err: false, faculties });
+          console.log(faculties);
         } catch (error) {
-            console.log(error);
-            res.status(500).json({err:true,error, message:"something went wrong"})
+          console.log(error);
+          res.status(500).json({ err: true, error, message: "Something went wrong" });
         }
-    },
+      },
+      
     getAdminSubjects: async(req,res)=>{
         try {
-            let subjects=await subjectModel.find({
-                _id:req.body._id
-            }).lean()
-            res.json({err:false, subjects})
+            let subjects=await subjectModel.find();
+            res.json({success:true,err:false, subjects})
+            
         } catch (error) {
             console.log(error);
             res.json({err: true,error, message:"something went wrong"})
@@ -197,10 +194,8 @@ let adminController = {
     },
     getAdminClasses:async(req,res)=>{
         try {
-            let classes= await classModel.find({
-                _id:req.body._id
-            }).lean()
-            res.json({err: false, classes})
+            let classes= await classModel.find()
+            res.json({success:true,err: false, classes})
         } catch (error) {
             console.log(error);
             res.json({err:true,error, message:"something went wrong"})            
@@ -219,10 +214,8 @@ let adminController = {
     },
     getAdminClubs:async(req,res)=>{
         try {
-            let clubs= await clubModel.find({
-                _id:req.body._id
-            })
-            res.json({err: false, clubs})
+            let clubs= await clubModel.find()
+            res.json({success:true,err: false, clubs})
         } catch (error) {
             console.log(error);
             res.json({err:true, error,message:"something went wrong"})

@@ -53,9 +53,7 @@ const facultySchema = new mongoose.Schema({
         required:true
     },
    
-    attdenList:[],
-    markList:[],
-    pList:[],
+   
     pic:{
      type:String,
      default:"/admin/avatar.jpg"
