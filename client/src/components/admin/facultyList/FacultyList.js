@@ -15,6 +15,7 @@ import {
     MDBInput,
 } from 'mdb-react-ui-kit';
 import avatar from '../../../assets/avatar.jpg';
+import { Link } from 'react-router-dom';
 
 function FacultyList() {
     const [showModal, setShowModal] = useState(false);
@@ -42,7 +43,7 @@ function FacultyList() {
     };
 
     const handleAddFaculty = () => {
-        // Handle adding faculty logic here
+        
         console.log(formValue);
         toggleModal();
     };
@@ -51,9 +52,12 @@ function FacultyList() {
         <div className='' style={{ width: '80%', marginLeft: '200px', marginTop: '50px' }}>
             <div className='d-flex justify-content-between align-items-end mb-5'>
                 <h1>Faculty List</h1>
+                <Link to="/addFaculty">
+
                 <MDBBtn style={{ background: '#394867' }} onClick={toggleModal}>
                     Add faculty
                 </MDBBtn>
+                </Link>
             </div>
             <MDBTable align='middle'>
                 <MDBTableHead>
@@ -99,12 +103,18 @@ function FacultyList() {
                        <td>22/3/2333</td>
                         <td>20</td>
                         <td>
+                        <Link to="/editFacultyList/:id">
+
                             <MDBBtn color='link' rounded size='sm'>
                                 Edit
                             </MDBBtn>
+                        </Link>
+                        <Link to="/delteFacultyList/:id">
+
                             <MDBBtn color='link' rounded size='sm'>
                                 X
                             </MDBBtn>
+                        </Link>
                         </td>
                     </tr>
                 </MDBTableBody>

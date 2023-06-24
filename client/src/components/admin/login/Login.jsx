@@ -10,48 +10,73 @@ import {
   MDBIcon,
   MDBCheckbox
 }
-from 'mdb-react-ui-kit';
+  from 'mdb-react-ui-kit';
 import './Login.css'
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 function Login() {
+
+  const [loginType, setLoginType] = useState('Admin');
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [errMessage, setErrMessage] = useState("")
+  const dispatch = useDispatch()
+
   
-    const [loginType, setLoginType] = useState('Admin');
-  
-    const handleLoginTypeChange = (type) => {
-      setLoginType(type);
-    };
+  const validForm = () => {
+    if (password.trim() === "" || email.trim() === "") {
+      return false
+    } else {
+      return true
+    }
+  }
+  const [loading, setLoading] = useState({ submit: false })
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading({ ...loading, submit: true })
+    const { data } = await axios.post("/admin/auth/login", { email, password })
+    if (data.err) {
+      setErrMessage(data.message)
+    } else {
+      dispatch({ type: "refresh" })
+    }
+    setLoading({ ...loading, submit: false })
+  }
   return (
-    <MDBContainer fluid style={{ marginTop:"200px"}}>
+    <MDBContainer fluid style={{ marginTop: "200px" }}>
+      <form onSubmit={handleSubmit}>
+        <MDBRow className='d-flex justify-content-center align-items-center h-100'>
+          <MDBCol col='12'>
 
-      <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-        <MDBCol col='12'>
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
+              <MDBCardBody className='p-5 w-100 d-flex flex-column'>
 
-          <MDBCard className='bg-white my-5 mx-auto' style={{borderRadius: '1rem', maxWidth: '500px'}}>
-            <MDBCardBody className='p-5 w-100 d-flex flex-column'>
+                <h2 className="fw-bold mb-2 text-center">{loginType} Login</h2>
+                {
+                  errMessage &&
+                  <div className="login-row" style={{ justifyContent: "flex-start" }}>
+                    <p className='text-danger'>{errMessage}</p>
+                  </div>
+                }
 
-              <h2 className="fw-bold mb-2 text-center">{loginType} Login</h2>
-              <p className="text-white-50 mb-3">Please enter your login and password!</p>
+                <MDBInput wrapperClass='mb-4 w-100' value={email} onChange={(e) => setEmail(e.target.value)} label='Email address' id='formControlLg' type='email' size="lg" />
+                <MDBInput wrapperClass='mb-4 w-100' value={password} onChange={(e) => setPassword(e.target.password) }label='Password' id='formControlLg' type='password' size="lg" />
 
-              <MDBInput wrapperClass='mb-4 w-100' label='Email address' id='formControlLg' type='email' size="lg"/>
-              <MDBInput wrapperClass='mb-4 w-100' label='Password' id='formControlLg' type='password' size="lg"/>
+                <MDBCheckbox name='flexCheck' id='flexCheckDefault' className='mb-4' label='Agree' />
 
-              <MDBCheckbox name='flexCheck' id='flexCheckDefault' className='mb-4' label='Remember password' />
+                <MDBBtn size='lg' disabled={!validForm} style={{ backgroundColor: "#212A3E" }}>
+                  Login
+                </MDBBtn>
 
-              <MDBBtn size='lg' style={{backgroundColor:"#265C5C"}}>
-                Login
-              </MDBBtn>
+                <hr className="my-4" />
 
-              <hr className="my-4" />
+               
+              </MDBCardBody>
+            </MDBCard>
 
-              <div className="text-center">
-                <button className="btn btn-link" onClick={() => handleLoginTypeChange('Student')}>Student Login</button>
-                <button className="btn btn-link" onClick={() => handleLoginTypeChange('Faculty')}>Faculty Login</button>
-              </div>
-            </MDBCardBody>
-          </MDBCard>
-
-        </MDBCol>
-      </MDBRow>
-
+          </MDBCol>
+        </MDBRow>
+      </form>
     </MDBContainer>
   );
 }

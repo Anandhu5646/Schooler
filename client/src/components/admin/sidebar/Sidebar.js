@@ -113,7 +113,7 @@ function Sidebar() {
   };
 
   const drawerItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, to: "/dashboard" },
+    { text: "Dashboard", icon: <DashboardIcon />, to: "/" },
     { text: "Faculty", icon: <GroupIcon />, to: "/faculty" },
     { text: "Students", icon: <GroupIcon />, to: "/students" },
     { text: "Clubs", icon: <LocalLibraryIcon />, to: "/clubs" },
