@@ -45,7 +45,7 @@ function AdminRoute() {
       <Route path="/student" element={<AdminStudent />} />
       <Route path="/club" element={<AdminClub />} />
       <Route path="/classes" element={<AdminClass />} />
-      <Route path="/subject" element={<AdminSubject />} />
+      <Route path="/subjects" element={<AdminSubject />} />
       { 
           admin.login==false &&
       <Route path="/login" element={<AdminLogin/> }/>

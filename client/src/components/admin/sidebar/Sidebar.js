@@ -27,6 +27,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { ListItem } from "@mui/material";
+import axios from "axios";
 
 const drawerWidth = 330;
 
@@ -108,9 +109,9 @@ function Sidebar() {
     setOpen(false);
   };
 
-  const handleItemClick = (index) => {
-    setSelectedItem(index);
-  };
+  // const handleItemClick = (index) => {
+  //   setSelectedItem(index);
+  // };
 
   const drawerItems = [
     { text: "Dashboard", icon: <DashboardIcon />, to: "/admin/" },
@@ -125,7 +126,31 @@ function Sidebar() {
     { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
     { text: "Logout", icon: <LogoutIcon />, to: "/logout" },
   ];
-
+  const handleItemClick = (index) => {
+    if (index === drawerItems.length - 1) {
+      
+      handleLogout();
+    } else {
+      setSelectedItem(index);
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      // Send a request to the logout endpoint on the server-side
+      const response = await axios.post("/logout");
+      if (response.data.success) {
+        // Perform any additional client-side cleanup or redirection
+        console.log("Logout successful");
+        // Redirect the user to the login page or any desired page
+        window.location.href = "/login";
+      } else {
+        console.error("Logout failed:", response.data.error);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+    
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
