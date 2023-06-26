@@ -37,12 +37,13 @@ const adminAuthController={
       }
       ,
     postAdminLogout: async(req,res)=>{
+        const token= req.cookies.adminToken
         res.cookie("adminToken",token,{
             httpOnly:true,
             expires:new Date(0),
             secure:true,
             sameSite:"none"
-        }).json({message:"logged out", error:false})
+        }).json({success:true,message:"logged out", error:false})
     },
     checkAdminLoggedIn:async(req,res)=>{
         try {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import landing from '../../assets/landingpage.jpg'
+import landing from '../../assets/landing1.jpg'
 import studentlogo from '../../assets/studentlogo.png'
 import adminlogo from '../../assets/adminlogo.png'
 import teacherlogo from '../../assets/teacherlogo.png'
@@ -33,7 +33,7 @@ function LandingPage() {
 
             <img src={landing} alt="landing" className='landing-img vh-100'/>
             
-            <div className='contents-1'><h1 > WELCOME TO SMART SCHOOL SYSTEM</h1></div>
+            <div className='contents-1' ><h1 > WELCOME TO SMART SCHOOL SYSTEM</h1></div>
             <button onClick={handleAdminClick} className='contents-2'><h2 ><img src={adminlogo} alt="" className='adminlogo' /> Admin Login</h2></button>
             <button onClick={handleFacultyClick} className='contents-3'><h2 ><img src={teacherlogo} alt="" className='facultylogo' /> Faculty Login</h2></button>
             <button onClick={handleStudentClick} className='contents-4'><h2 ><img src={studentlogo} alt="" className='studlogo' /> Student Login</h2></button>

@@ -1,4 +1,5 @@
-import * as React from "react";
+
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -28,6 +29,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
+import Modal from "@mui/material/Modal";
+import Button from "@mui/material/Button";
+
+
+
+
+
 
 const drawerWidth = 330;
 
@@ -100,15 +108,16 @@ function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(null);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
+  const [showModal, setShowModal] =useState(false);
+  
+  const openModal = () => {
+    setShowModal(true);
   };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  
+  const closeModal = () => {   
+    setShowModal(false);
   };
-
+  
   // const handleItemClick = (index) => {
   //   setSelectedItem(index);
   // };
@@ -124,25 +133,39 @@ function Sidebar() {
     { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },
     { text: "Check complain", icon: <NotificationImportantIcon />, to: "/complain" },
     { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
-    { text: "Logout", icon: <LogoutIcon />, to: "/logout" },
+    { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {
     if (index === drawerItems.length - 1) {
-      
-      handleLogout();
+      openModal();
+      // handleLogout();
     } else {
       setSelectedItem(index);
     }
   };
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+  const handleLogoutConfirmed = async () => {
+    await handleLogout(); // Perform the logout action
+  
+    // Close the modal
+    closeModal();
+  };
   const handleLogout = async () => {
     try {
+     
       // Send a request to the logout endpoint on the server-side
-      const response = await axios.post("/logout");
+      const response = await axios.post("/admin/auth/logout");
       if (response.data.success) {
         // Perform any additional client-side cleanup or redirection
         console.log("Logout successful");
         // Redirect the user to the login page or any desired page
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         console.error("Logout failed:", response.data.error);
       }
@@ -257,6 +280,52 @@ function Sidebar() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Typography></Typography>
+        <Modal
+  open={showModal}
+  onClose={closeModal}
+  aria-labelledby="logout-modal"
+  aria-describedby="logout-modal-description"
+>
+  <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 400,
+      bgcolor: "background.paper",
+      boxShadow: 24,
+      p: 4,
+    }}
+  >
+    <Typography
+      id="logout-modal"
+      variant="h6"
+      component="h2"
+      gutterBottom
+    >
+      Confirm Logout
+    </Typography>
+    <Typography id="logout-modal-description" sx={{ mb: 2 }}>
+      Are you sure you want to logout?
+    </Typography>
+    <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Button
+        onClick={closeModal}
+        variant="contained"
+        color="error"
+        sx={{ mr: 2 }}
+      >
+        Cancel
+      </Button>
+      <Button onClick={handleLogoutConfirmed} variant="contained" style={{background:"#212A3E"}}>
+        Logout
+      </Button>
+    </Box>
+  </Box>
+</Modal>
+
+
       </Box>
     </Box>
   );

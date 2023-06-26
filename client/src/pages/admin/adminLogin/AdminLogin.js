@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import SchoolLogo from '../../../components/schoolLogo/SchoolLogo';
 import Login from '../../../components/admin/login/Login'
 
+
 function AdminLogin() {
   return (
     <div className='w-100'>
@@ -15,6 +16,7 @@ function AdminLogin() {
       <Col md={9} className='rightCol'>
      
         <Login/>
+      
       </Col>
       </Row>
     </div>

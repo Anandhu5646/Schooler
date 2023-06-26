@@ -46,6 +46,7 @@ function AdminRoute() {
       <Route path="/club" element={<AdminClub />} />
       <Route path="/classes" element={<AdminClass />} />
       <Route path="/subjects" element={<AdminSubject />} />
+      <Route path="/logout" element={<Navigate to="/"/>}/>
       { 
           admin.login==false &&
       <Route path="/login" element={<AdminLogin/> }/>

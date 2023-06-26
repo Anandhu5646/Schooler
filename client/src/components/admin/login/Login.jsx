@@ -48,12 +48,12 @@ function Login() {
     setLoading({ ...loading, submit: false })
   }
   return (
-    <MDBContainer fluid style={{ marginTop: "200px" }}>
+    <MDBContainer fluid style={{ marginTop: "200px"}}>
       <form onSubmit={handleSubmit}>
         <MDBRow className='d-flex justify-content-center align-items-center h-100'>
           <MDBCol col='12'>
 
-            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px' }}>
+            <MDBCard className='bg-white my-5 mx-auto' style={{ borderRadius: '1rem', maxWidth: '500px'  }}>
               <MDBCardBody className='p-5 w-100 d-flex flex-column'>
 
                 <h2 className="fw-bold mb-2 text-center">Admin Login</h2>
