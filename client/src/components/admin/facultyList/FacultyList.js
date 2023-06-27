@@ -17,24 +17,17 @@ import {
 import avatar from '../../../assets/avatar.jpg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-// import { fetchFacultyList } from '../../../api/adminApi';
+import { fetchFacultyList,addFaculty } from '../../../api/adminApi';
 
 function FacultyList() {
   const [facultyList, setFacultyList] = useState([]);
 console.log(facultyList);
-  const fetchFacultyList = async () => {
-  try {
-    const response = await axios.get('/admin/viewFaculties', {
-      headers: { "Content-Type": "application/json" },withCredentials:true
-    });
 
-    console.log(response.data);
-    if (response.data.success) {
-      console.log('Faculty list:', response.data.faculties);
-      setFacultyList(response.data.faculties);
-    } else {
-      console.error('Error fetching faculty list:', response.data.error);
-    }
+
+  const fetchFacultyData = async () => {
+  try {
+    const faculties = await fetchFacultyList()
+    setFacultyList(faculties)
   } catch (err) {
     console.error('Error:', err);
   }
@@ -42,7 +35,7 @@ console.log(facultyList);
 
 
   useEffect(() => {
-    fetchFacultyList();
+    fetchFacultyData();
   }, []);
 
   const [showModal, setShowModal] = useState(false);
@@ -71,12 +64,9 @@ console.log(facultyList);
 
   const handleAddFaculty = async () => {
     try {
-      const response = await axios.post('/admin/addFaculty', formValue);
-      if (response.data.success) {
-        console.log('Faculty data saved:', response.data.faculty);
-      } else {
-        console.error('Error saving faculty data:', response.data.error);
-      }
+      const response = await addFaculty(formValue)
+      console.log("data saved successfully",response);
+
     } catch (err) {
       console.error('Error:', err);
     }

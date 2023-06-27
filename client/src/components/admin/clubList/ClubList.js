@@ -14,35 +14,23 @@ import {
   MDBCardTitle,
   MDBCardText,
 } from "mdb-react-ui-kit";
-import axios from "axios";
+import { addClub, fetchClubList } from "../../../api/adminApi";
 
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
 
-  const fetchClubList = async () => {
-    try {
-      const response = await axios.get("/admin/viewClubs", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
 
-      console.log(response.data);
-      if (response.data.success) {
-        console.log("club list:", response.data.clubs);
-        setClubList(response.data.clubs);
-      } else {
-        console.error(
-          "Error fetching club list:",
-          response.data.error
-        );
-      }
+  const fetchClubData = async () => {
+    try {
+     const clubs= await fetchClubList()
+     setClubList(clubs)
     } catch (err) {
       console.error("Error:", err);
     }
   };
 
   useEffect(() => {
-    fetchClubList();
+    fetchClubData();
   }, []);
 
   const [showModal, setShowModal] = useState(false);
@@ -58,19 +46,10 @@ const ClubList = () => {
 
   const handleAddClub = async () => {
     try {
-      const response = await axios.post("/admin/addClub", formValue);
-      if (response.data.success) {
-        console.log("Club data saved:", response.data.club);
-        setClubList((prevClubList) => [
-          ...prevClubList,
-          response.data.club,
-        ]);
-      } else {
-        console.error(
-          "Error saving club data:",
-          response.data.error
-        );
-      }
+      const response = await addClub(formValue)
+      console.log("Club created ",response);
+       
+     
     } catch (err) {
       console.error("Error:", err);
     }

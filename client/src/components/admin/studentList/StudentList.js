@@ -14,32 +14,23 @@ import {
   MDBTableBody,
 } from "mdb-react-ui-kit";
 import avatar from "../../../assets/avatar.jpg";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { fetchStudentList } from "../../../api/adminApi";
+import { addStudent,updateStudent } from "../../../api/adminApi";
 
 function StudentList() {
   const [studentList, setStudentList] = useState([]);
-
-  const fetchStudentList = async () => {
+  const [editStudent, setEditStudent] =useState(null)
+  const fetchStudentData = async () => {
     try {
-      const response = await axios.get("/admin/viewStudents", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-
-      if (response.data.success) {
-        console.log("Student List:", response.data.students);
-        setStudentList(response.data.students);
-      } else {
-        console.error("Error fetching faculty list:", response.data.error);
-      }
-    } catch (err) {
-      console.error("Error:", err);
+      const students = await fetchStudentList();
+      setStudentList(students);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
   useEffect(() => {
-    fetchStudentList();
+    fetchStudentData();
   }, []);
 
   const [showModal, setShowModal] = useState(false);
@@ -59,20 +50,42 @@ function StudentList() {
     rollNo: "",
   });
 
-  const toggleModal = () => {
+  const toggleModal = (student = null) => {
+    if (student) {
+      setEditStudent(student);
+      setFormValue(student);
+    } else {
+      setEditStudent(null);
+      setFormValue({
+        name: "",
+        motherName: "",
+        fatherName: "",
+        dob: "",
+        age: "",
+        class: "",
+        gender: "",
+        email: "",
+        password: "",
+        admissionYear: "",
+        address: "",
+        mobile: "",
+        rollNo: "",
+      });
+    }
     setShowModal(!showModal);
   };
 
   const handleAddStudent = async () => {
     try {
-      const response = await axios.post("/admin/addStudent", formValue);
-      if (response.data.success) {
-        console.log("Student data saved:", response.data.student);
+      if (editStudent) {
+        const response = await updateStudent(editStudent._id, formValue);
+        console.log("Student data updated:", response);
       } else {
-        console.error("Error saving faculty data:", response.data.error);
+      const response = await addStudent(formValue);
+      console.log("Student data saved:", response);
       }
-    } catch (err) {
-      console.error("Error:", err);
+    } catch (error) {
+      console.error("Error saving faculty data:", error);
     }
 
     toggleModal();
@@ -116,7 +129,7 @@ function StudentList() {
                 <td>{index + 1}</td>
                 <td>
                   <img
-                    src={avatar}
+                    src={student.image || avatar}
                     alt=""
                     style={{ width: "45px", height: "45px" }}
                     className="rounded-circle"
@@ -141,7 +154,8 @@ function StudentList() {
                 <td>{student.admYear}</td>
                 <td>{student.age}</td>
                 <td>
-                  <MDBBtn color="link" rounded size="sm">
+                  <MDBBtn color="link" rounded size="sm" 
+                  onClick={()=> toggleModal(student)}>
                     Edit
                   </MDBBtn>
                   <MDBBtn color="link" rounded size="sm">
@@ -353,4 +367,4 @@ function StudentList() {
     </div>
   );
 }
-export default StudentList
+export default StudentList;
