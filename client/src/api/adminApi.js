@@ -53,7 +53,7 @@ export async function fetchStudentList() {
   }
   export async function updateStudent(id,updatedData){
     try {
-        const response= await axios.patch(`/admin/editStudent/${id}`,updatedData)
+        const response= await axios.get(`/admin/editStudent/${id}`,updatedData)
         console.log('Student data updated.', response.data);
        
     } catch (error) {

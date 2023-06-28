@@ -284,7 +284,7 @@ function StudentList() {
             <MDBModalFooter>
               <MDBBtn onClick={toggleModal}>Close</MDBBtn>
               <MDBBtn onClick={handleAddStudent}>
-                {editStudent ? "Save Changes" : "Add"}
+                {editStudent ? "update" : "Save"}
               </MDBBtn>
             </MDBModalFooter>
           </MDBModalContent>
