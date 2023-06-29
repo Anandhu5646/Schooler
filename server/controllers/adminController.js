@@ -234,6 +234,7 @@ let adminController = {
   },
   editAdminStudent: async (req, res) => {
     try {
+      let id=req.params.id
       let {
         name,
         motherName,
@@ -248,9 +249,10 @@ let adminController = {
         mobile,
         rollNo,
         address,
-        id,
+        
       } = req.body;
       console.log(id);
+      
       await studentModel.findByIdAndUpdate(id, {
         $set: {
             name,
@@ -274,6 +276,7 @@ let adminController = {
       console.log(error);
     }
   },
+  
 };
 
 module.exports = adminController;

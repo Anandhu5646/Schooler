@@ -51,9 +51,9 @@ export async function fetchStudentList() {
         throw error;
     }
   }
-  export async function updateStudent(id,updatedData){
+  export async function editStudents(id,updatedData){
     try {
-        const response= await axios.get(`/admin/editStudent/${id}`,updatedData)
+        const response= await axios.put(`/admin/editStudent/${id}`,updatedData)
         console.log('Student data updated.', response.data);
        
     } catch (error) {

@@ -15,7 +15,7 @@ import {
 } from "mdb-react-ui-kit";
 import avatar from "../../../assets/avatar.jpg";
 import { fetchStudentList } from "../../../api/adminApi";
-import { addStudent,updateStudent } from "../../../api/adminApi";
+import { addStudent,editStudents } from "../../../api/adminApi";
 
 function StudentList() {
   const [studentList, setStudentList] = useState([]);
@@ -85,7 +85,7 @@ function StudentList() {
   const handleAddStudent = async () => {
     try {
       if (editStudent) {
-        const response = await updateStudent(editStudent.id, formValue);
+        const response = await editStudents(editStudent.id, formValue);
         console.log("Student data updated:", response);
         // Update the student in the list
         const updatedList = studentList.map((student) =>
@@ -95,7 +95,7 @@ function StudentList() {
       } else {
         const response = await addStudent(formValue);
         console.log("Student data saved:", response);
-        // Add the new student to the list
+       
         setStudentList([...studentList, response.data]);
       }
     } catch (error) {
@@ -108,7 +108,7 @@ function StudentList() {
   const onChange = (e) => {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
-  const modalTitle = editStudent ? "Edit Student" : "Add Student";
+  // const modalTitle = editStudent ? "Edit Student" : "Add Student";
   return (
     <div
       className=""
@@ -187,7 +187,7 @@ function StudentList() {
           <form>
             <MDBModalContent className="p-3">
               <MDBModalHeader style={{ marginTop: "50px" }}>
-                <MDBModalTitle>{modalTitle}</MDBModalTitle>
+                <MDBModalTitle>Add</MDBModalTitle>
                 <MDBBtn
                   className="btn-close"
                   color="none"
@@ -197,7 +197,7 @@ function StudentList() {
               <MDBModalBody>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.name || ""}
+                    value={formValue.name}
                     name="name"
                     onChange={onChange}
                     label="Name"
@@ -206,7 +206,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.motherName || ""}
+                    value={formValue.motherName}
                     name="motherName"
                     onChange={onChange}
                     label="Mother's Name"
@@ -215,7 +215,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.fatherName || ""}
+                    value={formValue.fatherName}
                     name="fatherName"
                     onChange={onChange}
                     label="Father's Name"
@@ -224,7 +224,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.dob || ""}
+                    value={formValue.dob}
                     name="dob"
                     onChange={onChange}
                     type="date"
@@ -234,7 +234,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.age || ""}
+                    value={formValue.age}
                     name="age"
                     onChange={onChange}
                     type="number"
@@ -244,7 +244,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.className || ""}
+                    value={formValue.className}
                     name="className"
                     onChange={onChange}
                     label="Class"
@@ -260,7 +260,7 @@ function StudentList() {
                       id="maleRadio"
                       name="gender"
                       value="male"
-                      checked={formValue.gender === "male" || ""}
+                      checked={formValue.gender === "male" }
                       onChange={onChange}
                       required
                     />
@@ -278,7 +278,7 @@ function StudentList() {
                       id="femaleRadio"
                       name="gender"
                       value="female"
-                      checked={formValue.gender === "female" || ""}
+                      checked={formValue.gender === "female" }
                       onChange={onChange}
                       required
                     />
@@ -296,7 +296,7 @@ function StudentList() {
                       id="otherRadio"
                       name="gender"
                       value="other"
-                      checked={formValue.gender === "other" || ""}
+                      checked={formValue.gender === "other" }
                       onChange={onChange}
                       required
                     />
@@ -308,7 +308,7 @@ function StudentList() {
 
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.email || ""}
+                    value={formValue.email }
                     name="email"
                     onChange={onChange}
                     type="email"
@@ -316,9 +316,10 @@ function StudentList() {
                     required
                   />
                 </div>
+                
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.password || ""}
+                    value={formValue.password}
                     name="password"
                     onChange={onChange}
                     type="password"
@@ -328,16 +329,17 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.admYear || ""}
+                    value={formValue.admYear}
                     name="admYear"
                     onChange={onChange}
+                    type="number"
                     label="Admission Year"
                     required
                   />
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.address || ""}
+                    value={formValue.address}
                     name="address"
                     onChange={onChange}
                     label="Address"
@@ -346,7 +348,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.mobile || ""}
+                    value={formValue.mobile}
                     name="mobile"
                     onChange={onChange}
                     label="Mobile"
@@ -355,7 +357,7 @@ function StudentList() {
                 </div>
                 <div className="mb-3">
                   <MDBInput
-                    value={formValue.rollNo || ""}
+                    value={formValue.rollNo}
                     name="rollNo"
                     onChange={onChange}
                     label="Roll No."
@@ -371,7 +373,7 @@ function StudentList() {
                   onClick={handleAddStudent}
                   style={{ background: "#394867" }}
                 >
-                  {editStudent  ? "Update" : "Save"}
+                  Save
                 </MDBBtn>
               </MDBModalFooter>
             </MDBModalContent>

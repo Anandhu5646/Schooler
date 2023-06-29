@@ -18,6 +18,6 @@ router.get("/viewSubjects", getAdminSubjects)
 router.get("/viewClasses",getAdminClasses)
 router.get("/viewNotices",getAdminNotices)
 router.get("/viewClubs",getAdminClubs)
-router.get("/editStudent/:id",editAdminStudent)
+router.put("/editStudent/:id",editAdminStudent)
 
 module.exports = router;
