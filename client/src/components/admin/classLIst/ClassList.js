@@ -14,6 +14,7 @@ import {
   MDBTableBody,
 } from "mdb-react-ui-kit";
 import axios from "axios";
+import { addClass, fetchClassList } from "../../../api/adminApi";
 
 const ClassList = () => {
   const [classList, setClassList] = useState([]);
@@ -26,23 +27,10 @@ const ClassList = () => {
     setShowModal(!showModal);
   };
 
-  const fetchClassList = async () => {
+  const fetchClassData = async () => {
     try {
-      const response = await axios.get("/admin/viewClasses", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-
-      console.log(response.data);
-      if (response.data.success) {
-        console.log("list:", response.data.classes);
-        setClassList(response.data.classes);
-      } else {
-        console.error(
-          "Error fetching faculty list:",
-          response.data.error
-        );
-      }
+      const response = await fetchClassList()
+        setClassList(response);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -50,17 +38,8 @@ const ClassList = () => {
 
   const handleAddClass = async () => {
     try {
-      const response = await axios.post("/admin/addClass", formValue);
-      if (response.data.success) {
-        console.log("Class data saved:", response.data.class);
-        // Fetch the updated class list after adding a new class
-        fetchClassList();
-      } else {
-        console.error(
-          "Error saving class data:",
-          response.data.error
-        );
-      }
+      const response = await addClass(formValue)
+      console.log(response);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -77,7 +56,7 @@ const ClassList = () => {
   };
 
   useEffect(() => {
-    fetchClassList();
+    fetchClassData();
   }, []);
 
   return (

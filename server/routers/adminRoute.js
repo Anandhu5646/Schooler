@@ -3,7 +3,7 @@ const router= express.Router()
 const { postAdminAddStudent, postAdminAddFaculty, postAdminAddSubject, 
     postAdminAddClass, postAdminAddNotice, getAdminStudents,
      getAdminFaculties, getAdminSubjects, getAdminClasses, postAdminAddClub,
-      getAdminNotices, getAdminClubs, editAdminStudent} = require("../controllers/adminController");
+      getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty} = require("../controllers/adminController");
 
 
 router.post("/addStudent",postAdminAddStudent)
@@ -19,5 +19,6 @@ router.get("/viewClasses",getAdminClasses)
 router.get("/viewNotices",getAdminNotices)
 router.get("/viewClubs",getAdminClubs)
 router.put("/editStudent/:id",editAdminStudent)
+router.post("/deleteFaculty",deleteFaculty)
 
 module.exports = router;

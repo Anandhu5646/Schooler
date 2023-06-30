@@ -276,6 +276,16 @@ let adminController = {
       console.log(error);
     }
   },
+  deleteFaculty: async (req,res)=>{
+    try {
+      const {id}= req.body; 
+      await facultyModel.findOneAndDelete(id)
+      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+    } catch (error) {
+      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      console.log(error);
+    }
+  }
   
 };
 

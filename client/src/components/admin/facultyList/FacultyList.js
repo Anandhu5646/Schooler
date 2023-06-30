@@ -16,8 +16,7 @@ import {
 } from 'mdb-react-ui-kit';
 import avatar from '../../../assets/avatar.jpg';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { fetchFacultyList,addFaculty } from '../../../api/adminApi';
+import { fetchFacultyList,addFaculty,deleteFac } from '../../../api/adminApi';
 
 function FacultyList() {
   const [facultyList, setFacultyList] = useState([]);
@@ -73,8 +72,10 @@ console.log(facultyList);
 
     toggleModal();
   };
-
-  
+const deleteFaculty=async(id)=>{
+const response= await deleteFac(id)
+}
+ 
 
   return (
     <div className='' style={{ width: '80%', marginLeft: '200px', marginTop: '50px' }}>
@@ -135,11 +136,11 @@ console.log(facultyList);
                     Edit
                   </MDBBtn>
                 </Link>
-                <Link to={`/delteFacultyList/${faculty._id}`}>
-                  <MDBBtn color='link' rounded size='sm'>
+                
+                  <MDBBtn type='button' color='link' onClick={()=> deleteFaculty(faculty._id)} rounded size='sm'>
                     X
                   </MDBBtn>
-                </Link>
+               
               </td>
             </tr>
           ))}
