@@ -31,7 +31,7 @@ const adminAuthController={
             }).json({error: false})
             console.log("login sucess");
         } catch (error) {
-            res.json({error: error, message: "Server error"})
+            res.status(500).json({error: error, message: "Server error"})
             console.log(error)
         }
       }
