@@ -11,6 +11,7 @@ const facultyRoute = require('./routers/facultyRoute.js');
 const studentRoute = require('./routers/studentRoute.js');
 const adminAuthRoute= require('./routers/adminAuthRoute.js') 
 const facultyAuthRoute= require('./routers/facultyAuthRoute.js')
+const studentAuthRoute= require("./routers/studentAuthRoute.js")
 
 app.use(express.json());
 app.use(cookieParser());
@@ -32,6 +33,7 @@ app.use('/student', studentRoute);
 app.use('/faculty', facultyRoute);
 app.use('/admin/auth',adminAuthRoute)
 app.use('/faculty/auth',facultyAuthRoute)
+app.use('/student/auth',studentAuthRoute)
 
 app.listen(1800, () => {
   console.log("Server running on http://localhost:1800");

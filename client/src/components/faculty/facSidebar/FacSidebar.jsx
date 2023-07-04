@@ -121,11 +121,11 @@ function FacSidebar() {
 
   const drawerItems = [
     { text: "Profile", icon: <DashboardIcon />, to: "/faculty/" },
-    { text: "Upload Attendance", icon: <GroupIcon />, to: "" },
-    { text: "Upload Mark", icon: <GroupIcon />, to: "" },
-    { text: "Student Clublist", icon: <LocalLibraryIcon />, to: "" },
-    { text: "Notices", icon: <LocalLibraryIcon />, to: "" },
-    { text: "Register Complain", icon: <LocalLibraryIcon />, to: "" },
+    { text: "Upload Attendance", icon: <GroupIcon />, to: "/faculty/attendance" },
+    { text: "Upload Mark", icon: <GroupIcon />, to: "/faculty/mark" },
+    { text: "Student Clublist", icon: <LocalLibraryIcon />, to: "/faculty/clubList" },
+    { text: "Notices", icon: <LocalLibraryIcon />, to: "/faculty/notice" },
+    { text: "Register Complain", icon: <LocalLibraryIcon />, to: "/faculty/complain" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {

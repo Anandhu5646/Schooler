@@ -1,55 +1,52 @@
-const facultyModel = require("../models/facultyModel");
+const studentModel = require("../models/studentModel")
 const bcrypt = require("bcryptjs");
 const jwt =require("jsonwebtoken")
 var salt= bcrypt.genSaltSync(10)
 
-let facultyAuthController={
-    postFacLogin: async (req, res) => {
+let studentAuthController={
+    postStudLogin: async (req, res) => {
         try {
           const { email, password } = req.body;
-          console.log(req.body);
-          const faculty = await facultyModel.findOne({email});
+         
+          const student = await studentModel.findOne({email});
       
-          if (!faculty) {
-            return res.json({ error: true, message: "You have no faculty access" });
+          if (!student) {
+            return res.json({ error: true, message: "You have no student access" });
           }
       
-          const isPasswordMatch = await bcrypt.compare(password, faculty.password);
-          console.log(isPasswordMatch);
+          const isPasswordMatch = await bcrypt.compare(password, student.password);
+          
           if (!isPasswordMatch) {
             return res.json({ error: true, message: "Wrong password" });
           }
       
-          const token = jwt.sign({ id: faculty._id }, "myjwtsecretkey");
-          console.log("token", token);
+          const token = jwt.sign({ id: student._id }, "myjwtsecretkey");
           return res
-            .cookie("facultyToken", token, {
+            .cookie("studentToken", token, {
               httpOnly: true,
               maxAge: 1000 * 60 * 60 * 24 * 7,
               secure: true,
               sameSite: "none"
             })
             .json({ error: false });
-      
-          console.log("login success");
         } catch (error) {
           res.status(500).json({ error: error, message: "Server error" });
           console.log(error);
         }
       },
 
-    postFacLogout:async(req,res)=>{
-        const token=req.cookies.facultyToken
-        res.cookie("facultyToken",token,{
+      postStudLogout:async(req,res)=>{
+        const token=req.cookies.studentToken
+        res.cookie("studentToken",token,{
             httpOnly:"true",
             expires:new Date(0),
             secure:"true",
             sameSite:"none"
         }).status(200).json({success:true,message:"logged out",error:false})
     },
-    checkFacLoggedIn: async(req,res)=>{
+    checkStudLoggedIn: async(req,res)=>{
         try {
-            const token=req.cookies.facultyToken
+            const token=req.cookies.studentToken
             if(!token){
                 return res.status(404).json({loggedIn:false,message:"no token"})
             }
@@ -62,4 +59,4 @@ let facultyAuthController={
         }
     }
 }
-module.exports= facultyAuthController
+module.exports= studentAuthController

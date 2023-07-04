@@ -64,8 +64,8 @@ function Login() {
                   </div>
                 }
 
-                <MDBInput wrapperClass='mb-4 w-100' value={email} onChange={(e) => setEmail(e.target.value)} label='Email address' id='formControlLg' type='email' size="lg" />
-                <MDBInput wrapperClass='mb-4 w-100' value={password} onChange={(e) => setPassword(e.target.value)} label='Password' id='formControlLg' type='password' size="lg" />
+                <MDBInput wrapperClass='mb-4 w-100' value={email} onChange={(e) => setEmail(e.target.value)} label='Email address' id='formControlLg' type='email' size="lg" required/>
+                <MDBInput wrapperClass='mb-4 w-100' value={password} onChange={(e) => setPassword(e.target.value)} label='Password' id='formControlLg' type='password' size="lg" required/>
 
                 {/* <MDBCheckbox name='flexCheck' id='flexCheckDefault' className='mb-4' label='Agree' /> */}
 
