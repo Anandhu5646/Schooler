@@ -4,8 +4,10 @@ const { postAdminAddStudent, postAdminAddFaculty, postAdminAddSubject,
     postAdminAddClass, postAdminAddNotice, getAdminStudents,
      getAdminFaculties, getAdminSubjects, getAdminClasses, postAdminAddClub,
       getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty} = require("../controllers/adminController");
+const verifyAdmin = require("../middleware/verifyAdmin")
 
 
+// router.use(verifyAdmin)
 router.post("/addStudent",postAdminAddStudent)
 router.post("/addFaculty",postAdminAddFaculty)
 router.post("/addSubject",postAdminAddSubject)

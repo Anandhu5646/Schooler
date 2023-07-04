@@ -14,11 +14,18 @@ import {
   MDBModalFooter,
   MDBInput,
 } from 'mdb-react-ui-kit';
+
 import avatar from '../../../assets/avatar.jpg';
 import { Link } from 'react-router-dom';
 import { fetchFacultyList,addFaculty,deleteFac } from '../../../api/adminApi';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { ToastContainer, toast,ToastProvider } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function FacultyList() {
+  const {refresh}= useSelector((state)=> state)
   const [facultyList, setFacultyList] = useState([]);
 console.log(facultyList);
 
@@ -33,10 +40,7 @@ console.log(facultyList);
 };
 
 
-  useEffect(() => {
-    fetchFacultyData();
-  }, []);
-
+  
   const [showModal, setShowModal] = useState(false);
   const [formValue, setFormValue] = useState({
     name: '',
@@ -62,19 +66,62 @@ console.log(facultyList);
   };
 
   const handleAddFaculty = async () => {
-    try {
-      const response = await addFaculty(formValue)
-      console.log("data saved successfully",response);
+  try {
+    const response = await addFaculty(formValue);
+    console.log("data saved successfully", response);
+    toast.success('Faculty added successfully!', {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  } catch (err) {
+    console.error('Error:', err);
+    toast.error('Error adding faculty!', {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
 
-    } catch (err) {
-      console.error('Error:', err);
+  toggleModal();
+};
+
+  const deleteFaculty = async (id) => {
+  try {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this faculty. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#212A3E',
+      cancelButtonColor: 'red',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      await deleteFac(id);
+      const updatedFacultyList = facultyList.filter((faculty) => faculty._id !== id);
+      setFacultyList(updatedFacultyList);
+      Swal.fire('Deleted!', 'The faculty has been deleted.', 'success');
     }
+  } catch (error) {
+    console.error('Error:', error);
+    Swal.fire('Error', 'An error occurred while deleting the faculty.', 'error');
+  }
+};
 
-    toggleModal();
-  };
-const deleteFaculty=async(id)=>{
-const response= await deleteFac(id)
-}
+useEffect(() => {
+    fetchFacultyData();
+  }, [refresh]);
  
 
   return (
@@ -147,7 +194,7 @@ const response= await deleteFac(id)
         </MDBTableBody>
       </MDBTable>
 
-     
+      
       <MDBModal show={showModal} onHide={toggleModal} tabIndex='-1'>
         <MDBModalDialog>
           <form>
@@ -278,6 +325,7 @@ const response= await deleteFac(id)
           </form>
         </MDBModalDialog>
       </MDBModal>
+      <ToastContainer />
     </div>
   );
 }

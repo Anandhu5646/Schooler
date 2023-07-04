@@ -3,6 +3,9 @@ const { postAdminLogin, postAdminLogout, checkAdminLoggedIn } = require('../cont
 
 const router=express.Router()
 
+
+
+
 router.post("/login", postAdminLogin)
 router.post("/logout",postAdminLogout)
 router.get("/check", checkAdminLoggedIn)
