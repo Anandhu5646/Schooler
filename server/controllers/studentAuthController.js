@@ -34,7 +34,7 @@ let studentAuthController={
           console.log(error);
         }
       },
-
+  
       postStudLogout:async(req,res)=>{
         const token=req.cookies.studentToken
         res.cookie("studentToken",token,{

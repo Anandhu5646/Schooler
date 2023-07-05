@@ -240,3 +240,27 @@ export async function deleteFac(id) {
     console.error(error);
   }
 }
+export async function deleteStudent(id) {
+  try {
+    const response = await axios.post(
+      "/admin/deleteStudent",
+      { id },
+      { headers: { "Content-Type": "application/json" }, withCredentials: true }
+    );
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Confirmation!!",
+        text: response.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while deleting faculty",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}

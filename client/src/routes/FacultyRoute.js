@@ -33,7 +33,7 @@ function FacultyRoute() {
           <Route path="/logout" element={<Navigate to="/" />} /> */}
   
           {faculty.login === false && <Route path="/login" element={<FacultyLogin />} />}
-          {/* {faculty.login && <Route path="/login" element={<Navigate to="/admin/" />} />} */}
+          {/* {faculty.login && <Route path="/login" element={<Navigate to="/faculty/" />} />} */}
         </>
       </Routes> 
   )
