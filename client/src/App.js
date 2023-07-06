@@ -1,6 +1,5 @@
 
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Routes, Route } from 'react-router-dom'
 import axios from 'axios';
@@ -23,8 +22,8 @@ function App() {
     <div className="App">
     <Routes>
       <Route path="/admin/*" element={<AdminRoute/>}/>
-      <Route path="/faculty" element={<FacultyRoute/>}/>
-      <Route path='/student' element={<StudentRoute/>}/>
+      <Route path="/faculty/*" element={<FacultyRoute/>}/>
+      <Route path='/student/*' element={<StudentRoute/>}/>
       <Route path='/*' element ={<LandingRoute/>}/>
     </Routes>
     <BackdropLoading open={loading}/>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import StudentProfile from '../pages/student/studentProfile/StudentProfile';
 import StudentLogin from '../pages/student/studentLogin/StudentLogin';
+import StudAttendance from '../pages/student/studAttendance/StudAttendance';
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -23,11 +24,11 @@ function StudentRoute() {
     <Routes>
         <>
           {student.login && <Route path="/" element={<StudentProfile/>} />}
-          {student.login === false && <Route path="/" element={<StudentLogin />} />}
+          {student.login === false && <Route path="/" element={<StudentLogin/>} />}
   
-          {/* <Route path="/student" element={<Adminstudent  />} />
-          <Route path="/student" element={<AdminStudent />} />
-          <Route path="/club" element={<AdminClub />} />
+          <Route path="/attendance" element={<StudAttendance/>} />
+          {/* <Route path="/result" element={<AdminStudent />} /> */}
+          {/* <Route path="/club" element={<AdminClub />} />
           <Route path="/classes" element={<AdminClass />} />
           <Route path="/subjects" element={<AdminSubject />} />
           <Route path="/logout" element={<Navigate to="/" />} /> */}

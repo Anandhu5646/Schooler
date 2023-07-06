@@ -18,20 +18,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
-import SchoolIcon from "@mui/icons-material/School";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import ClassIcon from "@mui/icons-material/Class";
-import SubjectIcon from "@mui/icons-material/Subject";
-import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
-import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-
+import { MdCoPresent } from "react-icons/md";
+import { GrScorecard } from "react-icons/gr";
 
 
 
@@ -118,11 +113,14 @@ function StudSidebar() {
     setShowModal(false);
   };
  
-
+const iconStyle={
+  fontSize:"23px"
+  
+}
   const drawerItems = [
     { text: "Profile", icon: <DashboardIcon />, to: "/student/" },
-    { text: "Attendance", icon: <GroupIcon />, to: "/student/attendance" },
-    { text: "Result", icon: <GroupIcon />, to: "/student/mark" },
+    { text: "Attendance", icon: <span style={iconStyle}><MdCoPresent /></span>, to: "/student/attendance" },
+    { text: "Result", icon: <span style={iconStyle}><GrScorecard /></span>, to: "/student/mark" },
     { text: "Subjects", icon: <LocalLibraryIcon />, to: "/student/subjects" },
     { text: "Timetable", icon: <LocalLibraryIcon />, to: "/student/timetable" },
     { text: "Notices", icon: <LocalLibraryIcon />, to: "/student/notice" },
@@ -134,7 +132,7 @@ function StudSidebar() {
   const handleItemClick = (index) => {
     if (index === drawerItems.length - 1) {
       openModal();
-      // handleLogout();
+      
     } else {
       setSelectedItem(index);
     }
@@ -147,20 +145,19 @@ function StudSidebar() {
     setOpen(false);
   };
   const handleLogoutConfirmed = async () => {
-    await handleLogout(); // Perform the logout action
+    await handleLogout(); 
   
-    // Close the modal
+   
     closeModal();
   };
   const handleLogout = async () => {
     try {
      
-      // Send a request to the logout endpoint on the server-side
+      
       const response = await axios.post("/student/auth/logout");
       if (response.data.success) {
-        // Perform any additional client-side cleanup or redirection
+        
         console.log("Logout successful");
-        // Redirect the user to the login page or any desired page
         window.location.href = "/";
       } else {
         console.error("Logout failed:", response.data.error);
