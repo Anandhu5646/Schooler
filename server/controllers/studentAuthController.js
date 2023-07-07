@@ -9,7 +9,7 @@ let studentAuthController={
           const { email, password } = req.body;
          
           const student = await studentModel.findOne({email});
-      
+      console.log(student,'wwwwwwwwwwwwwwwwwwwwwwwwww')
           if (!student) {
             return res.json({ error: true, message: "You have no student access" });
           }
@@ -48,10 +48,17 @@ let studentAuthController={
         try {
             const token=req.cookies.studentToken
             if(!token){
-                return res.status(404).json({loggedIn:false,message:"no token"})
+                return res.json({loggedIn:false,message:"no token"})
             }
             const verifiedJwt= jwt.verify(token, "myjwtsecretkey")
-            return res.status(200).json({name:verifiedJwt.name,loggedIn:true})
+            const student= await studentModel.findById(verifiedJwt.id )
+            
+            console.log(student,'dfddd',verifiedJwt.id);
+            if(!student){
+                return res.json({loggedIn: false})
+            }
+            return res.status(200).json({student, loggedIn : true})
+            
             
         } catch (error) {
             console.log(error);

@@ -51,10 +51,14 @@ let facultyAuthController={
         try {
             const token=req.cookies.facultyToken
             if(!token){
-                return res.status(404).json({loggedIn:false,message:"no token"})
+                return res.json({loggedIn:false,message:"no token"})
             }
             const verifiedJwt= jwt.verify(token, "myjwtsecretkey")
-            return res.status(200).json({name:verifiedJwt.name,loggedIn:true})
+            const faculty= await facultyModel.findById(verifiedJwt.id )
+            if(!faculty){
+                return res.json({loggedIn: false})
+            }
+            return res.status(200).json({faculty, loggedIn : true})
             
         } catch (error) {
             console.log(error);

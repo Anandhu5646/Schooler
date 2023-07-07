@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import FacultyLogin from '../pages/faculty/facultyLogin/FacultyLogin';
 import FacultyProfile from '../pages/faculty/facultyHome/FacultyProfile';
 
@@ -33,7 +33,7 @@ function FacultyRoute() {
           <Route path="/logout" element={<Navigate to="/" />} /> */}
   
           {faculty.login === false && <Route path="/login" element={<FacultyLogin />} />}
-          {/* {faculty.login && <Route path="/login" element={<Navigate to="/faculty/" />} />} */}
+          {faculty.login && <Route path="/login" element={<Navigate to="/faculty/" />} />}
         </>
       </Routes> 
   )

@@ -26,7 +26,7 @@ function StudentRoute() {
     <Routes>
         <>
           {student.login && <Route path="/" element={<StudentProfile/>} />}
-          {student.login === false && <Route path="/" element={<StudentLogin/>} />}
+          {student.login === false && <Route path="/" element={<StudentLogin />} />}
   
           <Route path="/attendance" element={<StudAttendance/>} />
           <Route path="/mark" element={<StudResult />} />
@@ -35,7 +35,7 @@ function StudentRoute() {
           <Route path="/subjects" element={<StudSubjects/>} />
           {/* <Route path="/logout" element={<Navigate to="/" />} /> */}
   
-          {student.login === false && <Route path="/login" element={<studentLogin />} />}
+          {student.login === false && <Route path="/login" element={<StudentLogin />} />}
           {student.login && <Route path="/login" element={<Navigate to="/student/" />} />}
         </>
       </Routes> 
