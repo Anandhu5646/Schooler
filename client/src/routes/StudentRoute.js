@@ -5,6 +5,8 @@ import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import StudentProfile from '../pages/student/studentProfile/StudentProfile';
 import StudentLogin from '../pages/student/studentLogin/StudentLogin';
 import StudAttendance from '../pages/student/studAttendance/StudAttendance';
+import StudResult from '../pages/student/studResult/StudResult';
+import StudSubjects from '../pages/student/studSubjects/StudSubjects';
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -27,11 +29,11 @@ function StudentRoute() {
           {student.login === false && <Route path="/" element={<StudentLogin/>} />}
   
           <Route path="/attendance" element={<StudAttendance/>} />
-          {/* <Route path="/result" element={<AdminStudent />} /> */}
-          {/* <Route path="/club" element={<AdminClub />} />
-          <Route path="/classes" element={<AdminClass />} />
-          <Route path="/subjects" element={<AdminSubject />} />
-          <Route path="/logout" element={<Navigate to="/" />} /> */}
+          <Route path="/mark" element={<StudResult />} />
+          {/* <Route path="/club" element={<AdminClub />} /> */}
+          {/* <Route path="/classes" element={<AdminClass />} /> */}
+          <Route path="/subjects" element={<StudSubjects/>} />
+          {/* <Route path="/logout" element={<Navigate to="/" />} /> */}
   
           {student.login === false && <Route path="/login" element={<studentLogin />} />}
           {student.login && <Route path="/login" element={<Navigate to="/student/" />} />}

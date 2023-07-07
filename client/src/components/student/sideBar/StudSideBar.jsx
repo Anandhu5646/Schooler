@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -16,20 +15,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupIcon from "@mui/icons-material/Group";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import { MdCoPresent } from "react-icons/md";
-import { GrScorecard } from "react-icons/gr";
-
-
-
+import { MdCoPresent ,MdAssignment,MdSubject,MdViewTimeline,MdAccountBox, MdMarkunread, MdWarningAmber, MdOutlineDiversity1, MdPayments
+} from "react-icons/md";
 
 
 const drawerWidth = 330;
@@ -118,15 +111,15 @@ const iconStyle={
   
 }
   const drawerItems = [
-    { text: "Profile", icon: <DashboardIcon />, to: "/student/" },
+    { text: "Profile", icon:<span style={iconStyle}><MdAccountBox /></span>, to: "/student/" },
     { text: "Attendance", icon: <span style={iconStyle}><MdCoPresent /></span>, to: "/student/attendance" },
-    { text: "Result", icon: <span style={iconStyle}><GrScorecard /></span>, to: "/student/mark" },
-    { text: "Subjects", icon: <LocalLibraryIcon />, to: "/student/subjects" },
-    { text: "Timetable", icon: <LocalLibraryIcon />, to: "/student/timetable" },
-    { text: "Notices", icon: <LocalLibraryIcon />, to: "/student/notice" },
-    { text: "Register Complain", icon: <LocalLibraryIcon />, to: "/student/complain" },
-    { text: "Join Clubs", icon: <LocalLibraryIcon />, to: "/student/clubs" },
-    { text: "Payments", icon: <LocalLibraryIcon />, to: "/student/payment" },
+    { text: "Result", icon: <span style={iconStyle}><MdAssignment /></span>, to: "/student/mark" },
+    { text: "Subjects", icon: <span style={iconStyle}><MdSubject /></span>, to: "/student/subjects" },
+    { text: "Timetable", icon: <span style={iconStyle}><MdViewTimeline /></span>, to: "/student/timetable" },
+    { text: "Notices", icon: <span style={iconStyle}><MdMarkunread /></span>, to: "/student/notice" },
+    { text: "Register Complain", icon: <span style={iconStyle}><MdWarningAmber /></span>, to: "/student/complain" },
+    { text: "Join Clubs", icon: <span style={iconStyle}><MdOutlineDiversity1/></span>, to: "/student/clubs" },
+    { text: "Payments", icon: <span style={iconStyle}><MdPayments /></span>, to: "/student/payment" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {

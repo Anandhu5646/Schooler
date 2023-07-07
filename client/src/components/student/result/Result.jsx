@@ -40,7 +40,7 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
- function Attendance() {
+ function Result() {
   return (
    <div style={{ marginTop: "50px", width:"90%" ,marginLeft:"100px"}}  >
      <TableContainer component={Paper} >
@@ -72,4 +72,4 @@ const rows = [
    </div>
   );
 }
-export default Attendance
+export default Result
