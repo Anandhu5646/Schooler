@@ -1,18 +1,21 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import Toaster from "../components/toaster/Toaster";
 
-export async function fetchFaculty(id) {
+export async function fetchFaculty() {
   try {
-    const response = await axios.get(`/faculty/${id}`, {
+    const response = await axios.get(`/faculty/`, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
-    console.log(response.data);
+   
     if (response.data.success) {
+     
       Swal.fire({
         icon: "success",
         title: "Faculty Bio",
         text: response.data.message,
+        timer: 1000
       });
       return response.data.faculty
     } else {

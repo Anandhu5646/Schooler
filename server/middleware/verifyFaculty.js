@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const facultyModel = require('../models/facultyModel');
 
 const verifyFaculty = async (req, res, next) => {
   try {

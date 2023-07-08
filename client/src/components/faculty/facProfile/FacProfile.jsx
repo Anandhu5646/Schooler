@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
 import { fetchFaculty } from '../../../api/facultyApi';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MdEditSquare } from 'react-icons/md';
 import { Button } from '@mui/material';
 
 function FacProfile() {
   const [faculty, setFaculty] = useState(null);
-  const { id } = useParams();
   const fetchfacultyData = async () => {
     try {
-      const facultyData = await fetchFaculty(id); 
+      const facultyData = await fetchFaculty(); 
       setFaculty(facultyData);
     } catch (error) {
       console.error('Error:', error);
