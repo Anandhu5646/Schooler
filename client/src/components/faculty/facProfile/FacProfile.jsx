@@ -90,21 +90,21 @@ function FacProfile() {
       if (response.data.success) {
         setRefresh(!refresh);
         setOpen(false);
-        return response.data.student;
+        return response.data.faculty;
 
       } else {
         setErrmsg(response.data.message);
-        console.error('Failed to update student profile:', response.data.message);
+        console.error('Failed to update faculty profile:', response.data.message);
       }
     } catch (error) {
-      console.error('Error updating student profile:', error);
+      console.error('Error updating faculty profile:', error);
     }
   };
   return (
     <div>
 {/* ======================edit modal================================ */}
 <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Update Student Details</DialogTitle>
+        <DialogTitle>Update Faculty Details</DialogTitle>
         <DialogContent>
           <p style={{ color: 'red', }}>{errmsg}</p>
           <TextField
@@ -157,12 +157,12 @@ function FacProfile() {
           />
           <TextField
             margin="dense"
-            id="admYear"
-            label="Admission Year"
+            id="joiningYear"
+            label="Joining Year"
             type="number"
             fullWidth
             variant="standard"
-            name="admYear"
+            name="joiningYear"
             value={joiningYear}
             onChange={(event) => setJoiningYear(event.target.value)}
           />
@@ -269,17 +269,18 @@ function FacProfile() {
           <MDBCard className="mb-3" style={{ borderRadius: '.5rem', color: "black" }}>
             <MDBRow className="g-0">
               <MDBCol md="4" className="gradient-custom text-center text-black" style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
+                <MDBCardImage src={faculty.pic.length > 0 ? `http://localhost:1800/images/${faculty.pic[0].filename}`
+                        : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp'} alt="Avatar" className="rounded-circle my-5" style={{ width: '120px', height: "120px"}} fluid />
                 <MDBTypography tag="h5">{faculty.name}</MDBTypography>
                 
-                <Button variant="text">Edit Image</Button>
+                {/* <Button variant="text">Edit Image</Button> */}
                 <MDBIcon far icon="edit mb-5" />
               </MDBCol>
               <MDBCol md="8">
                 <MDBCardBody className="p-4">
                   <div className='d-flex justify-content-between'>
                   <MDBTypography tag="h6">Information</MDBTypography>
-                  <Link><MDBTypography tag="h6"><MdEditSquare/></MDBTypography></Link>
+                  <Button onClick={HandleClickOpen}><MDBIcon /><MdEditSquare /></Button>
                   </div>
                   <hr className="mt-0 mb-4" />
                   <MDBRow className="pt-1">

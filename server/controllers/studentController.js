@@ -13,8 +13,6 @@ let studentController={
   },
   postStudEditProfile: async (req, res) => {
     const id = req.student.id;
-    // console.log(typeof id, 'ddddddddddddddddd');
-  
     try {
       const student = await studentModel.findById(id);
       if (!student) {

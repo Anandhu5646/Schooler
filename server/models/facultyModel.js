@@ -31,8 +31,9 @@ const facultySchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    qulification:{
+    qualification:{
     type:String,
+    
    },
     
     mobile:{
@@ -55,7 +56,7 @@ const facultySchema = new mongoose.Schema({
    
    
     pic:{
-     type:String,
+     type:[],
      default:"/admin/avatar.jpg"
     }
 })
