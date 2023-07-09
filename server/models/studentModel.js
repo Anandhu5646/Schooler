@@ -54,7 +54,7 @@ const studentSchema= new mongoose.Schema({
     },
    
     pic:{
-     type:String,
+     type:[],
      default:"/admin/avatar.jpg"
     }
 })

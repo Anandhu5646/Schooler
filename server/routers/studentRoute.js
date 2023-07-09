@@ -18,6 +18,6 @@ const upload = multer({storage: storage})
 
 
 router.get("/" , verifyStudent, getStudProfile)
-router.get("/",verifyStudent,upload.single('file'),postStudEditProfile)
+router.post("/",verifyStudent,upload.single('pic'),postStudEditProfile)
 
 module.exports = router;

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
-import StudentProfileUpdateApi, { fetchStudent } from '../../../api/studentApi';
+import  { fetchStudent } from '../../../api/studentApi';
 import { Link } from 'react-router-dom';
 import { MdEditSquare } from 'react-icons/md';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, useMediaQuery } from '@mui/material';
 import Toaster from '../../toaster/Toaster';
 import axios from 'axios';
+import { useTheme } from '@emotion/react';
 
 
 function StudProfile() {
@@ -20,13 +21,10 @@ function StudProfile() {
     }
   };
 
+  const [refresh, setRefresh] = useState(false)
   useEffect(() => {
     fetchStudentData();
-  }, []);
-
-
-  const [refresh, setRefresh] = useState(false)
-  //edit student modal
+  }, [refresh]);
 
   const [open, setOpen] = useState(false)
 
@@ -68,7 +66,6 @@ function StudProfile() {
   const getClasses = async () => {
     try {
       const data = await axios.get('/admin/viewClasses');
-      console.log(data.data.classes, 'dddddddddd');
       setClasses(data.data.classes)
 
     } catch (error) {
@@ -76,12 +73,12 @@ function StudProfile() {
     }
   };
 
- 
+
   const [errmsg, setErrmsg] = useState('')
-  const HandlSave = async () => {
+  const HandleSave = async () => {
     try {
       const response = await axios.post('/student/', {
-        id: student.id,
+        id: student._id,
         name,
         email,
         mobile,
@@ -95,20 +92,87 @@ function StudProfile() {
         age,
         className,
         pic
+      }, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
       });
 
       if (response.data.success) {
         setRefresh(!refresh);
         setOpen(false);
+        return response.data.student;
+
       } else {
+        setErrmsg(response.data.message);
         console.error('Failed to update student profile:', response.data.message);
       }
     } catch (error) {
       console.error('Error updating student profile:', error);
     }
   };
+// =====================otp modal=====================
+// const [openPas, setOpenPas] = React.useState(false);
+// const [emailOrPhone, setEmailOrPhone] = React.useState('');
+// const [otp, setOtp] = React.useState('');
+// const theme = useTheme();
+// const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+// const [text, setText] = useState(' Enter your Registered email or phone number ')
+// const [label1, setLabel1] = useState("Email or Phone")
+// const [btnText, setBtnText] = useState("Send OTP")
+// const [errMsg, setErrMsg] = useState('')
+// const [cameOtp, setcameOtp] = useState(0)
+// const handleClickOpenPas = () => {
+//   setOpenPas(true);
+// };
+
+//   const handleClosepas = () => {
+//     setOpenPas(false);
+//   };
+
+
   return (
     <div>
+    {/* ======================================================================= */}
+      {/* otp modal */}
+      {/* <div>
+
+        <Dialog
+          fullScreen={fullScreen}
+          open={openPas}
+          onClose={handleClosepas}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {"OTP Verification"}
+          </DialogTitle>
+          <p style={{ color: 'red', marginLeft: '10px' }}>{errMsg}</p>
+          <DialogContent>
+            <DialogContentText>
+              {text}
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label={label1}
+              type="text"
+              value={btnText === 'Verify' ? otp : emailOrPhone}
+              onChange={btnText === 'Verify' ? (e) => setOtp(e.target.value) : (e) => setEmailOrPhone(e.target.value)}
+              fullWidth
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={btnText === 'Verify' ? VerifyOtp : handleVerify} autoFocus>
+              {btnText}
+            </Button>
+          </DialogActions>
+
+        </Dialog>
+      </div> */}
+
+      {/* ================================================================= */}
+
+      {/* student profile */}
       <section className="">
 
         {student && (
@@ -118,17 +182,17 @@ function StudProfile() {
                 <MDBCard className="mb-3" style={{ borderRadius: '.5rem', color: "black" }}>
                   <MDBRow className="g-0">
                     <MDBCol md="4" className="gradient-custom text-center text-black" style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                      <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
+                      <MDBCardImage src={student.pic.length > 0 ? `http://localhost:1800/images/${student.pic[0].filename}`
+                        : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp'} alt="Avatar" className="rounded-circle my-5" style={{ width: '120px', height: "120px" }} fluid />
                       <MDBTypography tag="h5">{student.name}</MDBTypography>
 
-                      {/* <Button variant="text">Edit Image</Button> */}
                       <MDBIcon far icon="edit mb-5" />
                     </MDBCol>
                     <MDBCol md="8">
                       <MDBCardBody className="p-4">
                         <div className='d-flex justify-content-between'>
                           <MDBTypography tag="h6">Information</MDBTypography>
-                          <Button onClick={HandleClickOpen}><MDBIcon far icon="edit mb-5" /><MdEditSquare /></Button>
+                          <Button onClick={HandleClickOpen}><MDBIcon /><MdEditSquare /></Button>
                           {/* <Link><MDBTypography tag="h6"><MdEditSquare/></MDBTypography></Link> */}
 
                         </div>
@@ -270,12 +334,11 @@ function StudProfile() {
                 value={className}
                 onChange={(event) => setClassName(event.target.value)}
               >
-               {classes.map((data) => (
-  <MenuItem key={data._id} value={data.className}>{data.className}</MenuItem>
-))}
-
+                {classes.map((data) => (
+                  <MenuItem key={data._id} value={data.className}>{data.className}</MenuItem>
+                ))}
               </Select>
-              )}
+            )}
           </FormControl>
 
           <FormControl margin="dense" fullWidth>
@@ -348,7 +411,7 @@ function StudProfile() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="button" onClick={HandlSave}>Update</Button>
+          <Button type="button" onClick={HandleSave}>Update</Button>
         </DialogActions>
       </Dialog>
     </div>

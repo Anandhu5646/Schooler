@@ -11,7 +11,7 @@ const verifyStudent = async(req, res, next) => {
             const verifiedJwt= jwt.verify(token, "myjwtsecretkey")
             const student= await studentModel.findById(verifiedJwt.id )
             
-            console.log(student,'dfddd',verifiedJwt.id);
+            // console.log(student,'dfddd',verifiedJwt.id);
             if(!student){
                 return res.json({loggedIn: false})
             }
