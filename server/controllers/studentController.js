@@ -42,6 +42,40 @@ let studentController={
       return res.json({ success: false, message: 'Failed to update student profile' });
     }
   }
+  ,
+  sentOtp:async(req,res)=>{
+    try {
+      const { email } = req.body;
+
+      
+      const otp = Math.floor(Math.random() * 1000000);
+      const otpToken = jwt.sign({ otp, email }, "jwtsecretkey");
+      
+      res.json({ otpToken ,success:true });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({success:false,error})
+    }
+  },
+  verifyOtp:async(req,res)=>{
+    try {
+      const { otp, otpToken } = req.body;
+
+    // Verify the JWT and extract the OTP and email
+    const { otp: jwtOTP, email } = jwt.verify(otpToken, "jwtsecretkey");
+
+    // Compare the user-typed OTP with the OTP from the JWT
+    if (otp === jwtOTP) {
+      // OTP is correct
+      res.json({ success: true, email });
+    } else {
+      // OTP is incorrect
+      res.json({ success: false });
+    }
+    } catch (error) {
+      console.log(error);
+    }
+  }
     
 }
 

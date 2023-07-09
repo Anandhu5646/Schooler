@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
-import  { fetchStudent } from '../../../api/studentApi';
+import  { fetchStudent, sentOttp } from '../../../api/studentApi';
 import { Link } from 'react-router-dom';
 import { MdEditSquare } from 'react-icons/md';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, useMediaQuery } from '@mui/material';
@@ -111,68 +111,155 @@ function StudProfile() {
     }
   };
 // =====================otp modal=====================
-// const [openPas, setOpenPas] = React.useState(false);
-// const [emailOrPhone, setEmailOrPhone] = React.useState('');
-// const [otp, setOtp] = React.useState('');
-// const theme = useTheme();
-// const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-// const [text, setText] = useState(' Enter your Registered email or phone number ')
-// const [label1, setLabel1] = useState("Email or Phone")
-// const [btnText, setBtnText] = useState("Send OTP")
-// const [errMsg, setErrMsg] = useState('')
-// const [cameOtp, setcameOtp] = useState(0)
-// const handleClickOpenPas = () => {
-//   setOpenPas(true);
-// };
 
-//   const handleClosepas = () => {
-//     setOpenPas(false);
-//   };
+const [openVerifyModal, setOpenVerifyModal] = useState(false);
+const [openChangePwdModal, setOpenChangePwdModal] = useState(false);
+const [emailOrPhone, setEmailOrPhone] = useState('');
+const [otp, setOtp] = useState('');
+const [errMsg, setErrMsg] = useState('');
+const [text, setText] = useState('Enter your registered email or phone number');
+const [label1, setLabel1] = useState('Email or Phone');
+const [btnText, setBtnText] = useState('Send OTP');
+const [newPassword, setNewPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+const [cameOtp, setCameOtp]= useState(0)
 
 
+const handleOpenModals = () => {
+  setOpenVerifyModal(true);
+  setEmailOrPhone('');
+  setOtp('');
+  setErrMsg('');
+  setText('Enter your registered email or phone');
+  setLabel1('Email or Phone');
+  setBtnText('Send OTP');
+};
+const handleCloseModals = () => {
+  setOpenVerifyModal(false);
+  setOpenChangePwdModal(false);
+  setNewPassword('');
+  setConfirmPassword('');
+};
+const handleSendOTP = async() => {
+  const resp= await sentOttp(emailOrPhone)
+  
+  if (emailOrPhone === '') {
+    setErrMsg('Email or phone number is required');
+    return;
+  }
+  // Send OTP and handle the response
+  // Update the state variables accordingly
+  setCameOtp(resp.otp)
+  setText('Enter the OTP received on your email or phone');
+  setLabel1('OTP');
+  setBtnText('Verify');
+  setErrMsg('')
+};
+
+const handleVerifyOTP = () => {
+  // Implement the logic to verify the OTP
+  // Handle any error messages
+  if (otp === '') {
+    setErrMsg('OTP is required');
+    return;
+  }
+  // Verify the OTP and handle the response
+  // If OTP is verified successfully, open the change password modal
+  setOpenChangePwdModal(true);
+};
+
+const handleChangePassword = async () => {
+  if (newPassword === '' || confirmPassword === '') {
+    setErrMsg('New password and confirm password are required');
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    setErrMsg('New password and confirm password do not match');
+    return;
+  }
+
+  try {
+    const response = await axios.post('/change-password', {
+      email: student.email,
+      newPassword: newPassword,
+    });
+
+    if (response.data.success) {
+      setErrMsg('');
+      handleCloseModals();
+      // Display success message or perform any other actions
+    } else {
+      setErrMsg(response.data.message);
+      console.error('Failed to change password:', response.data.message);
+    }
+  } catch (error) {
+    console.error('Errorchanging password:', error);
+  }
+};
   return (
     <div>
     {/* ======================================================================= */}
       {/* otp modal */}
-      {/* <div>
+      <div>
 
-        <Dialog
-          fullScreen={fullScreen}
-          open={openPas}
-          onClose={handleClosepas}
-          aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="responsive-dialog-title">
-            {"OTP Verification"}
-          </DialogTitle>
-          <p style={{ color: 'red', marginLeft: '10px' }}>{errMsg}</p>
-          <DialogContent>
-            <DialogContentText>
-              {text}
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              label={label1}
-              type="text"
-              value={btnText === 'Verify' ? otp : emailOrPhone}
-              onChange={btnText === 'Verify' ? (e) => setOtp(e.target.value) : (e) => setEmailOrPhone(e.target.value)}
-              fullWidth
-            />
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={btnText === 'Verify' ? VerifyOtp : handleVerify} autoFocus>
-              {btnText}
-            </Button>
-          </DialogActions>
-
-        </Dialog>
-      </div> */}
+      <Dialog open={openVerifyModal} onClose={handleCloseModals}>
+        <DialogTitle>OTP Verification</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{text}</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label={label1}
+            type="text"
+            value={btnText === 'Verify' ? otp : emailOrPhone}
+            onChange={(e) => (btnText === 'Verify' ? setOtp(e.target.value) : setEmailOrPhone(e.target.value))}
+            fullWidth
+          />
+          {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={btnText === 'Verify' ? handleVerifyOTP : handleSendOTP} autoFocus>
+            {btnText}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
 
       {/* ================================================================= */}
 
-      {/* student profile */}
+
+
+ {/* Change Password Modal */}
+ <Dialog open={openChangePwdModal} onClose={handleCloseModals}>
+        <DialogTitle>Change Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="New Password"
+            type="password"
+            fullWidth
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Confirm New Password"
+            type="password"
+            fullWidth
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModals}>Cancel</Button>
+          <Button onClick={handleChangePassword}>Change Password</Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+      {/*============== student profile ==================== */}
       <section className="">
 
         {student && (
@@ -247,7 +334,7 @@ function StudProfile() {
                             <MDBCardText className="text-muted">{student.rollNo}</MDBCardText>
                           </MDBCol>
                         </MDBRow>
-                        <Button variant="text" style={{ marginLeft: "200px" }}>Change Password?</Button>
+                        <Button variant="text" style={{ marginLeft: "200px" }} onClick={handleOpenModals}>Change Password?</Button>
                       </MDBCardBody>
                     </MDBCol>
                   </MDBRow>

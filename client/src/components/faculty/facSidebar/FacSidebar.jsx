@@ -190,7 +190,7 @@ function FacSidebar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color={"white"} noWrap component="div">
-            SCHOOL MANAGEMENT SYSTEM-FACULTY PANEL
+            SCHOOL MANAGEMENT SYSTEM - FACULTY PANEL
           </Typography>
         </Toolbar>
       </AppBar>
