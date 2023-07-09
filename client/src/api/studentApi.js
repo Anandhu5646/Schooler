@@ -41,13 +41,15 @@ const StudentProfileUpdateApi = async (name, email, mobile, dob, admYear, father
       pic
     });
 
-    // Handle the response or perform any additional logic
+    if(response.data.success){
 
-    return response.data; // Return the response data if needed
+      return response.data.student; 
+    }
+
   } catch (error) {
-    // Handle any errors that occurred during the request
+    
     console.error('Error updating student profile:', error);
-    throw error; // Rethrow the error or handle it gracefully
+    throw error; 
   }
 };
 

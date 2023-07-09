@@ -76,23 +76,37 @@ function StudProfile() {
     }
   };
 
-  useEffect(() => {
-    getClasses();
-  }, []);
+ 
   const [errmsg, setErrmsg] = useState('')
-  const HandlSave = () => {
-    if (name.trim() && email.trim() && mobile.trim() && dob.trim() && admYear.trim() && fatherName.trim() && motherName.trim()
-      && address.trim() && rollNo.trim() && gender.trim() && age.trim()) {
+  const HandlSave = async () => {
+    try {
+      const response = await axios.post('/student/', {
+        id: student.id,
+        name,
+        email,
+        mobile,
+        dob,
+        admYear,
+        fatherName,
+        motherName,
+        address,
+        rollNo,
+        gender,
+        age,
+        className,
+        pic
+      });
 
-      StudentProfileUpdateApi(name, email, mobile, dob, admYear, fatherName, motherName, address, rollNo,
-        gender, age, pic)
-      setRefresh(!refresh)
-      setOpen(false);
-    } else {
-      setErrmsg('Fill the form properly')
+      if (response.data.success) {
+        setRefresh(!refresh);
+        setOpen(false);
+      } else {
+        console.error('Failed to update student profile:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating student profile:', error);
     }
-
-  }
+  };
   return (
     <div>
       <section className="">

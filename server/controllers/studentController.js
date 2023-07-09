@@ -12,20 +12,32 @@ let studentController={
     }
   },
   postStudEditProfile:async(req,res)=>{
+    const { id, name, email, mobile, dob, admYear, fatherName, motherName, address, rollNo, gender, age, className } = req.body;
+
     try {
-      await studentModel.findByIdAndUpdate(req.student.id,{
-        $set:{
-            pic:req.file.filename
-        }
-    })
-    return res.json({error: false})
-    } catch (error) {
-      res.json({error: true,message:"Something went wrong"}) 
-      console.log(error)
-    }
-  }
+      const updatedStudent = await studentModel.findByIdAndUpdate(id, {
+        name,
+        email,
+        mobile,
+        dob,
+        admYear,
+        fatherName,
+        motherName,
+        address,
+        rollNo,
+        gender,
+        age,
+        className,
+        pic: req.file
+      });
   
-      
+      return res.json({ success: true, message: 'Student profile updated successfully', student: updatedStudent });
+    } catch (error) {
+      console.error('Error updating student profile:', error);
+      return res.json({ success: false, message: 'Failed to update student profile' });
+    }
+  
+  }   
 }
 
 module.exports= studentController
