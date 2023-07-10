@@ -1,6 +1,7 @@
 const jwt= require('jsonwebtoken')
 const studentModel = require("../models/studentModel");
 const sentOTP= require('../helper/otpVerify')
+const bcrypt = require("bcryptjs");
 
 let studentController={
 
@@ -59,24 +60,19 @@ let studentController={
   },
 
   changePassword:async(req,res)=>{
-    
-      const { newPassword } = req.body;
-      const id = req.student.id;
-    
-      try {
-        
+    try {
+        const { newPassword } = req.body;
+        const id = req.student.id;
+        console.log(newPassword,'new pass')
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
+        const updatedStudent = await studentModel.updateOne({_id:id}, { password: hashedPassword });
+        console.log(hashedPassword, 'dfdfdfdfsdsdsd' ,updatedStudent)
+          res.json({ message: 'Password changed successfully', updatedStudent });
         
-        const updatedStudent = await User.findByIdAndUpdate({_id:id}, { password: hashedPassword });
-    
-        if (updatedStudent) {
-          res.json({ success: true, message: 'Password changed successfully' });
-        } else {
-          res.status(404).json({ success: false, message: 'Student not found' });
-        }
     }catch(error) {
       console.log(error);
+      res.status(500).json({error, message:" server error"})
     }
   }
     

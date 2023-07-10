@@ -39,6 +39,25 @@ export async function sentOttp(emailOrPhone) {
   }
 }
 
-export default function studentSubmit
+export async function studentSubmitPass(newPassword){
+  try {
+    const response = await axios.post('/student/changePass', {
+      newPassword
+    }, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+    console.log(response.data,'dfdfdfd')
+      return response.data
+  
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops..!!',
+      text: 'An error occurred while updating password',
+    });
+    throw error;
+  }
+}
 
 

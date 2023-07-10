@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
-import  { fetchStudent, sentOttp } from '../../../api/studentApi';
+import  { fetchStudent, sentOttp, studentSubmitPass } from '../../../api/studentApi';
 import { Link } from 'react-router-dom';
 import { MdEditSquare } from 'react-icons/md';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, useMediaQuery } from '@mui/material';
@@ -165,12 +165,8 @@ const handleCloseModals = () => {
      setBtnText('Verify')
      setErrMsg('')
      setAction('otp')
-     Swal.fire({
-        icon: 'success',
-        title: 'OTP Sent',
-        text: 'Please check your email for the OTP',
-      });
-      console.log(data.otp,'fdfdfdfdfd')
+   
+      console.log(data.otp,'otp')
     } catch (error) {
       console.error('Error sending OTP:', error);
     }
@@ -188,6 +184,8 @@ const handleVerifyOTP = () => {
     setErrMsg('')
     handleclickPasOpen()
     setOpenChangePwdModal(true);
+  }else{
+    setErrMsg("otp incorrect")
   }
 
 };
@@ -210,6 +208,14 @@ const handleChangePassword = async()=>{
   if(newPassword===confirmPassword && newPassword.trim() && confirmPassword.trim()){
     await studentSubmitPass(newPassword)
     handleCloseModals1()
+    handleCloseModals(false)
+    setOpenChangePwdModal(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Password Updated',
+      });
+
   }else{
     setErrMsg('password not match')
   }
@@ -226,6 +232,7 @@ const handleChangePassword = async()=>{
         <DialogTitle>OTP Verification</DialogTitle>
         <DialogContent>
           <DialogContentText>{text}</DialogContentText>
+          {/* <DialogContentText>{errMsg}</DialogContentText> */}
           <TextField
             autoFocus
             margin="dense"
@@ -250,7 +257,7 @@ const handleChangePassword = async()=>{
 
 
  {/* Change Password Modal */}
- <Dialog open={openChangePwdModal} onClose={handleCloseModals1}>
+ <Dialog open={openPas} onClose={handleCloseModals1}>
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           <TextField
