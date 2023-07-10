@@ -1,5 +1,6 @@
-
+const jwt= require('jsonwebtoken')
 const studentModel = require("../models/studentModel");
+const sentOTP= require('../helper/otpVerify')
 
 let studentController={
 
@@ -35,7 +36,7 @@ let studentController={
   
       const updatedStudent = await student.save();
   
-      console.log(updatedStudent, 'lllllllllllllllll');
+      
       return res.json({ success: true, message: 'Student profile updated successfully', student: updatedStudent });
     } catch (error) {
       console.error('Error updating student profile:', error);
@@ -46,33 +47,35 @@ let studentController={
   sentOtp:async(req,res)=>{
     try {
       const { email } = req.body;
-
-      
       const otp = Math.floor(Math.random() * 1000000);
       const otpToken = jwt.sign({ otp, email }, "jwtsecretkey");
-      
-      res.json({ otpToken ,success:true });
+      sentOTP(req.body.email, otp)
+      res.json({ otpToken ,otp});
+      console.log(otp,'otp')
     } catch (error) {
       console.log(error);
       res.status(500).json({success:false,error})
     }
   },
-  verifyOtp:async(req,res)=>{
-    try {
-      const { otp, otpToken } = req.body;
 
-    // Verify the JWT and extract the OTP and email
-    const { otp: jwtOTP, email } = jwt.verify(otpToken, "jwtsecretkey");
-
-    // Compare the user-typed OTP with the OTP from the JWT
-    if (otp === jwtOTP) {
-      // OTP is correct
-      res.json({ success: true, email });
-    } else {
-      // OTP is incorrect
-      res.json({ success: false });
-    }
-    } catch (error) {
+  changePassword:async(req,res)=>{
+    
+      const { newPassword } = req.body;
+      const id = req.student.id;
+    
+      try {
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
+        const updatedStudent = await User.findByIdAndUpdate({_id:id}, { password: hashedPassword });
+    
+        if (updatedStudent) {
+          res.json({ success: true, message: 'Password changed successfully' });
+        } else {
+          res.status(404).json({ success: false, message: 'Student not found' });
+        }
+    }catch(error) {
       console.log(error);
     }
   }

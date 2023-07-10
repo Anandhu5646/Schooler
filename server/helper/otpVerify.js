@@ -17,7 +17,7 @@ let sentOtp=(email,otp)=>{
       });
   
            var mailOptions={
-            from: process.env.OTP_EMAIL,
+            from: "anandhus186@gmail.com",
             to: email,
             subject: "Schooler Email verification",
             html: `
@@ -26,7 +26,7 @@ let sentOtp=(email,otp)=>{
               <h2>${otp}</h2>
             `,
           }
-    
+    console.log(email,'dfdfdfdfdfd')
           transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               console.log("email sent error ", error)

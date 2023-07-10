@@ -1,5 +1,5 @@
 const express= require("express");
-const { getStudProfile, postStudEditProfile, sentOtp } = require("../controllers/studentController");
+const { getStudProfile, postStudEditProfile, sentOtp, verifyOtp, changePassword } = require("../controllers/studentController");
 const verifyStudent = require("../middleware/verifyStudent");
 const router= express.Router()
 const multer= require("multer")
@@ -20,5 +20,7 @@ const upload = multer({storage: storage})
 router.get("/" , verifyStudent, getStudProfile)
 router.post("/",verifyStudent,upload.single('pic'),postStudEditProfile)
 router.post("/sentOtp",verifyStudent,sentOtp)
+router.post("/changePass", verifyStudent, changePassword)
+
 
 module.exports = router;

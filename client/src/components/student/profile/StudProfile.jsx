@@ -7,7 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import Toaster from '../../toaster/Toaster';
 import axios from 'axios';
 import { useTheme } from '@emotion/react';
-
+import Swal from 'sweetalert2';
 
 function StudProfile() {
   const [student, setStudent] = useState(null);
@@ -41,7 +41,7 @@ function StudProfile() {
   const [rollNo, setRollNo] = useState('')
   const [className, setClassName] = useState('')
   const [pic, setPic] = useState('')
-
+  const [action, setAction]= useState('profile')
   const HandleClickOpen = async () => {
 
     setOpen(true);
@@ -100,6 +100,7 @@ function StudProfile() {
       if (response.data.success) {
         setRefresh(!refresh);
         setOpen(false);
+        setAction('profile')
         return response.data.student;
 
       } else {
@@ -120,8 +121,7 @@ const [errMsg, setErrMsg] = useState('');
 const [text, setText] = useState('Enter your registered email or phone number');
 const [label1, setLabel1] = useState('Email or Phone');
 const [btnText, setBtnText] = useState('Send OTP');
-const [newPassword, setNewPassword] = useState('');
-const [confirmPassword, setConfirmPassword] = useState('');
+
 const [cameOtp, setCameOtp]= useState(0)
 
 
@@ -140,63 +140,82 @@ const handleCloseModals = () => {
   setNewPassword('');
   setConfirmPassword('');
 };
-const handleSendOTP = async() => {
-  const resp= await sentOttp(emailOrPhone)
-  
-  if (emailOrPhone === '') {
-    setErrMsg('Email or phone number is required');
-    return;
-  }
-  // Send OTP and handle the response
-  // Update the state variables accordingly
-  setCameOtp(resp.otp)
-  setText('Enter the OTP received on your email or phone');
-  setLabel1('OTP');
-  setBtnText('Verify');
-  setErrMsg('')
-};
+
+
+  const handleSendOTP = async () => {
+    if (!emailOrPhone) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops..!!',
+        text: 'Email is required',
+      });
+      return;
+    }
+
+    try {
+      const data = await sentOttp(emailOrPhone);
+     if(data.otp===false){
+      setErrMsg("otp wrong")
+     }
+
+     
+     setCameOtp(data.otp)
+     setText('Enter your OTP')
+     setLabel1('Enter OTP')
+     setBtnText('Verify')
+     setErrMsg('')
+     setAction('otp')
+     Swal.fire({
+        icon: 'success',
+        title: 'OTP Sent',
+        text: 'Please check your email for the OTP',
+      });
+      console.log(data.otp,'fdfdfdfdfd')
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+  };
 
 const handleVerifyOTP = () => {
-  // Implement the logic to verify the OTP
-  // Handle any error messages
+  
   if (otp === '') {
     setErrMsg('OTP is required');
     return;
   }
-  // Verify the OTP and handle the response
-  // If OTP is verified successfully, open the change password modal
-  setOpenChangePwdModal(true);
+  
+  if(otp==cameOtp){
+
+    setErrMsg('')
+    handleclickPasOpen()
+    setOpenChangePwdModal(true);
+  }
+
 };
+// =====================password change ======================
 
-const handleChangePassword = async () => {
-  if (newPassword === '' || confirmPassword === '') {
-    setErrMsg('New password and confirm password are required');
-    return;
+
+const [ openPas, setOpenPas]=useState(false)
+
+const handleclickPasOpen =()=>{
+  setOpenPas(true)
+}
+
+const handleCloseModals1 = ()=>{
+  setOpenPas(false)
+}
+const [newPassword, setNewPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+
+const handleChangePassword = async()=>{
+  if(newPassword===confirmPassword && newPassword.trim() && confirmPassword.trim()){
+    await studentSubmitPass(newPassword)
+    handleCloseModals1()
+  }else{
+    setErrMsg('password not match')
   }
+} 
+// ==========================================================
 
-  if (newPassword !== confirmPassword) {
-    setErrMsg('New password and confirm password do not match');
-    return;
-  }
-
-  try {
-    const response = await axios.post('/change-password', {
-      email: student.email,
-      newPassword: newPassword,
-    });
-
-    if (response.data.success) {
-      setErrMsg('');
-      handleCloseModals();
-      // Display success message or perform any other actions
-    } else {
-      setErrMsg(response.data.message);
-      console.error('Failed to change password:', response.data.message);
-    }
-  } catch (error) {
-    console.error('Errorchanging password:', error);
-  }
-};
   return (
     <div>
     {/* ======================================================================= */}
@@ -231,7 +250,7 @@ const handleChangePassword = async () => {
 
 
  {/* Change Password Modal */}
- <Dialog open={openChangePwdModal} onClose={handleCloseModals}>
+ <Dialog open={openChangePwdModal} onClose={handleCloseModals1}>
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           <TextField
@@ -252,7 +271,7 @@ const handleChangePassword = async () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModals}>Cancel</Button>
+          <Button onClick={handleCloseModals1}>Cancel</Button>
           <Button onClick={handleChangePassword}>Change Password</Button>
         </DialogActions>
       </Dialog>
