@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
-import { fetchFaculty } from '../../../api/facultyApi';
+import { facultySubmitPass, fetchFaculty, sentOttpFac } from '../../../api/facultyApi';
 import { Link } from 'react-router-dom';
 import { MdEditSquare } from 'react-icons/md';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+
+
 
 function FacProfile() {
   const [faculty, setFaculty] = useState(null);
@@ -34,7 +38,7 @@ function FacProfile() {
   const [age, setAge] = useState('')
   const [className, setClassName] = useState('')
   const [pic, setPic] = useState('')
-
+  const [action, setAction]= useState('profile')
   const HandleClickOpen = async () => {
 
     setOpen(true);
@@ -100,8 +104,181 @@ function FacProfile() {
       console.error('Error updating faculty profile:', error);
     }
   };
+
+
+// =====================otp modal=====================
+
+const [openVerifyModal, setOpenVerifyModal] = useState(false);
+const [openChangePwdModal, setOpenChangePwdModal] = useState(false);
+const [emailOrPhone, setEmailOrPhone] = useState('');
+const [otp, setOtp] = useState('');
+const [errMsg, setErrMsg] = useState('');
+const [text, setText] = useState('Enter your registered email or phone number');
+const [label1, setLabel1] = useState('Email or Phone');
+const [btnText, setBtnText] = useState('Send OTP');
+
+const [cameOtp, setCameOtp]= useState(0)
+
+
+const handleOpenModals = () => {
+  setOpenVerifyModal(true);
+  setEmailOrPhone('');
+  setOtp('');
+  setErrMsg('');
+  setText('Enter your registered email or phone');
+  setLabel1('Email or Phone');
+  setBtnText('Send OTP');
+};
+const handleCloseModals = () => {
+  setOpenVerifyModal(false);
+  setOpenChangePwdModal(false);
+  setNewPassword('');
+  setConfirmPassword('');
+};
+
+
+  const handleSendOTP = async () => {
+    if (!emailOrPhone) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops..!!',
+        text: 'Email is required',
+      });
+      return;
+    }
+
+    try {
+      const data = await sentOttpFac(emailOrPhone);
+     if(data.otp===false){
+      setErrMsg("otp wrong")
+     }
+
+     
+     setCameOtp(data.otp)
+     setText('Enter your OTP')
+     setLabel1('Enter OTP')
+     setBtnText('Verify')
+     setErrMsg('')
+     setAction('otp')
+   
+      console.log(data.otp,'otp')
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+  };
+
+const handleVerifyOTP = () => {
+  
+  if (otp === '') {
+    setErrMsg('OTP is required');
+    return;
+  }
+  
+  if(otp==cameOtp){
+
+    setErrMsg('')
+    handleclickPasOpen()
+    setOpenChangePwdModal(true);
+  }else{
+    setErrMsg("otp incorrect")
+  }
+
+};
+// =====================password change ======================
+
+
+const [ openPas, setOpenPas]=useState(false)
+
+const handleclickPasOpen =()=>{
+  setOpenPas(true)
+}
+
+const handleCloseModals1 = ()=>{
+  setOpenPas(false)
+}
+const [newPassword, setNewPassword] = useState('');
+const [confirmPassword, setConfirmPassword] = useState('');
+
+const handleChangePassword = async()=>{
+  if(newPassword===confirmPassword && newPassword.trim() && confirmPassword.trim()){
+    await facultySubmitPass(newPassword)
+    handleCloseModals1()
+    handleCloseModals(false)
+    setOpenChangePwdModal(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Password Updated',
+      });
+
+  }else{
+    setErrMsg('password not match')
+  }
+} 
+
+
+
   return (
     <div>
+{/* =========================== otp modal ======================= */}
+
+<div>
+
+<Dialog open={openVerifyModal} onClose={handleCloseModals}>
+  <DialogTitle>OTP Verification</DialogTitle>
+  <DialogContent>
+    <DialogContentText>{text}</DialogContentText>
+    {/* <DialogContentText>{errMsg}</DialogContentText> */}
+    <TextField
+      autoFocus
+      margin="dense"
+      label={label1}
+      type="text"
+      value={btnText === 'Verify' ? otp : emailOrPhone}
+      onChange={(e) => (btnText === 'Verify' ? setOtp(e.target.value) : setEmailOrPhone(e.target.value))}
+      fullWidth
+    />
+    {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={btnText === 'Verify' ? handleVerifyOTP : handleSendOTP} autoFocus>
+      {btnText}
+    </Button>
+  </DialogActions>
+</Dialog>
+</div>
+
+
+{/* ====================== password change ==================== */}
+
+<Dialog open={openPas} onClose={handleCloseModals1}>
+        <DialogTitle>Change Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="New Password"
+            type="password"
+            fullWidth
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Confirm New Password"
+            type="password"
+            fullWidth
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModals1}>Cancel</Button>
+          <Button onClick={handleChangePassword}>Change Password</Button>
+        </DialogActions>
+      </Dialog>
+
+
+
 {/* ======================edit modal================================ */}
 <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Update Faculty Details</DialogTitle>
@@ -330,7 +507,7 @@ function FacProfile() {
                     </MDBCol>
                     
                   </MDBRow>
-                  <Button variant="text" style={{marginLeft:"200px"}}>Change Password?</Button>
+                  <Button variant="text" onClick={handleOpenModals} style={{marginLeft:"200px"}}>Change Password?</Button>
                 </MDBCardBody>
               </MDBCol>
             </MDBRow>
