@@ -3,7 +3,7 @@ const router= express.Router()
 const { postAdminAddStudent, postAdminAddFaculty, postAdminAddSubject, 
     postAdminAddClass, postAdminAddNotice, getAdminStudents,
      getAdminFaculties, getAdminSubjects, getAdminClasses, postAdminAddClub,
-      getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty, deleteStudent} = require("../controllers/adminController");
+      getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty, deleteStudent, deleteSubject} = require("../controllers/adminController");
 const verifyAdmin = require("../middleware/verifyAdmin");
 
 
@@ -24,5 +24,7 @@ router.get("/viewClubs",getAdminClubs)
 router.put("/editStudent/:id",editAdminStudent)
 router.post("/deleteFaculty",deleteFaculty)
 router.post("/deleteStudent",deleteStudent)
+router.post("/deleteSubject",deleteSubject)
+
 
 module.exports = router; 

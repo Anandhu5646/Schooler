@@ -9,10 +9,10 @@ const subjectSchema= new mongoose.Schema({
         type:String
        
     },
-    subClass:{
-        type:String,
-        required:true
-    },
+    // subClass:{
+    //     type:String,
+    //     required:true
+    // },
     subCredit:{
         type:String
         

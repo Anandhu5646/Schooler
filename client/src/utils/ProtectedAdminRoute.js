@@ -1,15 +1,11 @@
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
-function ProtectedAdminRoute({admin}) {
+function ProtectedAdminRoute({ admin }) {
   return (
     <>
-        {
-            admin.login===false && <Navigate to="/admin/login"/>
-        }
-        {
-            admin.login && <Outlet/>
-        }
+      {!admin.login && <Navigate to="/admin/login" />}
+      {admin.login && <Outlet />}
     </>
   )
 }

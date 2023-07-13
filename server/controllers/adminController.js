@@ -98,11 +98,11 @@ let adminController = {
 
   postAdminAddSubject: async (req, res) => {
     try {
-      let { subName, subCode, subClass, subCredit } = req.body;
+      let { subName, subCode,  subCredit } = req.body;
       let subject = new subjectModel({
         subName,
         subCode,
-        subClass,
+        // subClass,
         subCredit,
       });
       await subject.save();
@@ -279,7 +279,7 @@ let adminController = {
   deleteFaculty: async (req,res)=>{
     try {
       const {id}= req.body; 
-      await facultyModel.findOneAndDelete(id)
+      await facultyModel.findByIdAndDelete({_id:id})
       return res.status(200).json({error:false, success:true, message: "deleted successfully"})
     } catch (error) {
       res.status(500).json({error:true,success:false, message:"Something went wrong"})
@@ -289,7 +289,17 @@ let adminController = {
   deleteStudent: async (req,res)=>{
     try {
       const {id}= req.body; 
-      await studentModel.findOneAndDelete(id)
+      await studentModel.findByIdAndDelete({_id:id})
+      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+    } catch (error) {
+      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      console.log(error);
+    }
+  },
+  deleteSubject: async (req,res)=>{
+    try {
+      const {id}= req.body; 
+      await subjectModel.findByIdAndDelete({_id:id})
       return res.status(200).json({error:false, success:true, message: "deleted successfully"})
     } catch (error) {
       res.status(500).json({error:true,success:false, message:"Something went wrong"})
