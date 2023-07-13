@@ -10,13 +10,6 @@ export async function fetchFaculty() {
     });
    
     if (response.data.success) {
-     
-      // Swal.fire({
-      //   icon: "success",
-      //   title: "Faculty Bio",
-      //   text: response.data.message,
-      //   timer: 1000
-      // });
       return response.data.faculty
     } else {
       Swal.fire({
@@ -69,6 +62,59 @@ export async function facultySubmitPass(newPassword){
       icon: 'error',
       title: 'Oops..!!',
       text: 'An error occurred while updating password',
+    });
+    throw error;
+  }
+}
+
+
+export async function fetchStudentsByclass() {
+  try {
+    const response = await axios.get("/faculty/viewAttendance", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    if (response.data.success) {
+      return response.data.students;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "Something went wrong while fetching data",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while fetching data",
+    });
+    throw error;
+  }
+}
+export async function saveAttendanceData(attendanceData) {
+  try {
+    const response = await axios.post('/faculty/saveAttendance', attendanceData, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    });
+
+    if (response.data.success) {
+      console.log(response.data,'Attendance data saved successfully');
+      return response.data
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "Failed to save attendance data",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while saving attendance data:",
     });
     throw error;
   }

@@ -1,0 +1,11 @@
+.buttonStyle{
+    color :white;
+    border : 'none';
+    border-radius: '5px';
+   
+    font-size: '12px';
+    cursor: 'pointer';
+    outline: 'none';
+    box-shadow: '0 2px 4px rgba(0, 0, 0, 0.2)';
+    transition: 'background-color 0.3s ease';
+}

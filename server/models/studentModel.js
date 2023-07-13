@@ -25,7 +25,7 @@ const studentSchema= new mongoose.Schema({
     className:{
         type:String,
         required:true
-    },
+    }, 
     admYear:{
         type:String,
         

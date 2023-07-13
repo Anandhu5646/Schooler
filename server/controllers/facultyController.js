@@ -1,7 +1,9 @@
 const facultyModel = require("../models/facultyModel");
 const jwt= require('jsonwebtoken')
 const bcrypt = require("bcryptjs");
-const sentOTP= require('../helper/otpVerify')
+const sentOTP= require('../helper/otpVerify');
+const studentModel = require("../models/studentModel");
+const attendanceModel = require("../models/attendanceModel");
 
 
 let facultyController = {
@@ -82,5 +84,35 @@ let facultyController = {
       res.status(500).json({ error, message: " server error" });
     }
   },
+
+  getStudentAttendance: async (req,res)=>{
+    const className = req.faculty.className
+// console.log(className,'qqqqqqqqqqqqqqqqqqq')
+    try {
+      
+      const students = await studentModel.find({ className });
+      // console.log(student,'fdsdfsdfasdfasdfa');
+      res.json({success:true, students, message:"student data fetched successfully"});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to fetch students' });
+    }
+  },
+
+  postFacStudAttendance:async(req,res)=>{
+    const attendanceData = req.body;
+console.log(attendanceData,'dfdfdfdfd')
+    try {
+      await attendanceModel.create(attendanceData);
+      res.json({ success: true, message: 'Attendance data saved successfully' });
+    } catch (error) {
+      console.error('Failed to save attendance data:', error);
+      res.status(500).json({ success: false, error: 'Failed to save attendance data' });
+    }
+  }
+  
+
+ 
+
 };
 module.exports = facultyController;

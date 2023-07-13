@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import FacultyLogin from '../pages/faculty/facultyLogin/FacultyLogin';
 import FacultyProfile from '../pages/faculty/facultyHome/FacultyProfile';
+import FacMarkAttendance from '../pages/faculty/facultyAttendance/FacMarkAttendance';
 
 function FacultyRoute() {
   const { faculty, refresh } = useSelector((state) => state);
@@ -25,13 +26,13 @@ function FacultyRoute() {
           {faculty.login && <Route path="/" element={<FacultyProfile/>} />}
           {faculty.login === false && <Route path="/" element={<FacultyLogin />} />}
   
-          {/* <Route path="/faculty" element={<AdminFaculty  />} />
-          <Route path="/student" element={<AdminStudent />} />
+          <Route path="/attendance" element={<FacMarkAttendance />} />
+          {/* <Route path="/student" element={<AdminStudent />} />
           <Route path="/club" element={<AdminClub />} />
           <Route path="/classes" element={<AdminClass />} />
           <Route path="/subjects" element={<AdminSubject />} />
-          <Route path="/logout" element={<Navigate to="/" />} /> */}
-  
+          <Route path="/logout" element={<Navigate to="/" />} />
+   */}
           {faculty.login === false && <Route path="/login" element={<FacultyLogin />} />}
           {faculty.login && <Route path="/login" element={<Navigate to="/faculty/" />} />}
         </>

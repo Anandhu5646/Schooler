@@ -25,4 +25,4 @@ router.put("/editStudent/:id",editAdminStudent)
 router.post("/deleteFaculty",deleteFaculty)
 router.post("/deleteStudent",deleteStudent)
 
-module.exports = router;
+module.exports = router; 

@@ -167,7 +167,7 @@ useEffect(() => {
                 </div>
               </td>
               <td>
-                <p className='fw-normal mb-1'>{student.class}</p>
+                <p className='fw-normal mb-1'>{student.className}</p>
               </td>
               <td>
                 <p className='fw-normal mb-1'>{student.admYear}</p>
