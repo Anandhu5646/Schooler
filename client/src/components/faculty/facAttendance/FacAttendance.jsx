@@ -175,9 +175,9 @@ const FacAttendance = () => {
 
       {/*============== Attendance Modal ====================== */}
       <form>
-        <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal show={showModal} onHide={handleCloseModal} style={{marginTop:"100px", zIndex:10000}}>
           <Modal.Header closeButton>
-            <Modal.Title style={{ marginTop: "50px" }}>
+            <Modal.Title >
               Mark Attendance
             </Modal.Title>
           </Modal.Header>

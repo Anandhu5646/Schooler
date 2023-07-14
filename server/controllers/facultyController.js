@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const sentOTP = require("../helper/otpVerify");
 const studentModel = require("../models/studentModel");
 const attendanceModel = require("../models/attendanceModel");
+const subjectModel = require("../models/subjectModel");
+const markModel = require("../models/markModel");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -103,7 +105,7 @@ let facultyController = {
 
   postFacStudAttendance: async (req, res) => {
     const attendanceData = req.body;
-    console.log(attendanceData, "dfdfdfdfd");
+    
     try {
       await attendanceModel.create(attendanceData);
       res.json({
@@ -135,5 +137,38 @@ let facultyController = {
         .json({ success: false, error: "Failed to save attendance data" }); 
     }
   },
+
+  getAllSubjects: async(req,res)=>{
+    try {
+      const subjects= await subjectModel.find()
+      res.json({success:true, subjects})
+    } catch (error) {
+      res.json({success:false, error, message:"Failed to display subjects"})
+    }
+  },
+
+  saveStudentMark: async (req,res)=>{
+    try {
+      const { studentId, subject, marks, grade } = req.body;
+      
+      const mark = await markModel.create({
+        student: studentId,
+        subject,
+        marks,
+        markingDate: new Date().toLocaleDateString(),
+        grade,
+        status: true
+      });
+  
+      res.status(200).json({ success: true, message: 'Mark data saved successfully' });
+    } catch (error) {
+      console.error(error)
+      res.json({success:false,error, message:"Server error"})
+    }
+  }  
+
+
+
+
 };
 module.exports = facultyController;

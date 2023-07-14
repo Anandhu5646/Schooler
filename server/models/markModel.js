@@ -13,12 +13,19 @@ const studentMarkSchema = new mongoose.Schema({
   },
   markingDate: {
     type: Date,
-    required: true
+    
+  },
+  grade:{
+    type:String,
+    required:true
   },
   status: {
-    type: String,
-    enum: ['Pending', 'uploaded'],
-    default: 'Pending'
+    type: Boolean,
+    default: false
+  },
+  subject:{
+    type:String,
+    
   }
 });
 

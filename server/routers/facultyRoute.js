@@ -7,6 +7,8 @@ const {
   getStudentAttendance,
   postFacStudAttendance,
   getStudMark,
+  getAllSubjects,
+  saveStudentMark,
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
 const router = express.Router();
@@ -32,5 +34,7 @@ router.post("/changePass", verifyFaculty, changePasswordFac);
 router.get('/viewAttendance', verifyFaculty, getStudentAttendance)
 router.post('/saveAttendance',verifyFaculty, postFacStudAttendance )
 router.get('/viewMarkStatus', verifyFaculty, getStudMark)
+router.get('/viewSubjects', verifyFaculty, getAllSubjects)
+router.post("/saveMark", verifyFaculty, saveStudentMark)
 
 module.exports = router;

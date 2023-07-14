@@ -144,3 +144,50 @@ export async function getStudentByClass(){
     throw error;
   }
 }
+
+export async function getAllSubj(){
+  try {
+    const response= await axios.get("/faculty/viewSubjects",
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    }
+    )
+
+    if(response.data.success){
+      return response.data.subjects
+    }else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: response.data.message,
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while fetching subjects",
+    });
+    throw error;
+  }
+}
+
+export async function saveMarkData(studentId, subject, marks, grade) {
+  try {
+    const response = await axios.post("/faculty/saveMark", {
+      studentId: studentId,
+      subject: subject,
+      marks: marks,
+      grade: grade
+    });
+    return response.data;
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while uploading marks",
+    });
+    throw error;
+  } 
+}
