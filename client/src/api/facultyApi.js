@@ -1,6 +1,5 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-import Toaster from "../components/toaster/Toaster";
 
 export async function fetchFaculty() {
   try {
@@ -108,6 +107,32 @@ export async function saveAttendanceData(attendanceData) {
         icon: "error",
         title: "Oops..!!",
         text: "Failed to save attendance data",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while saving attendance data:",
+    });
+    throw error;
+  }
+}
+
+export async function getStudentByClass(){
+  try {
+    const response = await axios.get("/faculty/viewMarkStatus", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    if (response.data.success) {
+      return response.data.students;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "Something went wrong while fetching data",
       });
     }
   } catch (error) {

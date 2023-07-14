@@ -181,6 +181,7 @@ function SubjectList() {
                 name="subName"
                 onChange={onChange}
                 label="Subject Name"
+                required
               />
             </div>
             <div className="mb-3">
@@ -189,6 +190,7 @@ function SubjectList() {
                 name="subCode"
                 onChange={onChange}
                 label="Subject Code"
+                required
               />
             </div>
             <div className="mb-3">
@@ -198,6 +200,7 @@ function SubjectList() {
                 onChange={onChange}
                 type="number"
                 label="Subject Credit"
+                required
               />
             </div>
           </MDBModalBody>

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
 import  { fetchStudent, sentOttp, studentSubmitPass } from '../../../api/studentApi';
-import { Link } from 'react-router-dom';
+
 import { MdEditSquare } from 'react-icons/md';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, useMediaQuery } from '@mui/material';
-import Toaster from '../../toaster/Toaster';
 import axios from 'axios';
-import { useTheme } from '@emotion/react';
 import Swal from 'sweetalert2';
 
 function StudProfile() {

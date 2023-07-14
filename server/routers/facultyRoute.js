@@ -6,6 +6,7 @@ const {
   changePasswordFac,
   getStudentAttendance,
   postFacStudAttendance,
+  getStudMark,
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
 const router = express.Router();
@@ -30,5 +31,6 @@ router.post("/sentOtp", verifyFaculty, sentOtpFac);
 router.post("/changePass", verifyFaculty, changePasswordFac);
 router.get('/viewAttendance', verifyFaculty, getStudentAttendance)
 router.post('/saveAttendance',verifyFaculty, postFacStudAttendance )
+router.get('/viewMarkStatus', verifyFaculty, getStudMark)
 
 module.exports = router;
