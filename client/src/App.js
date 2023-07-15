@@ -7,6 +7,8 @@ import AdminRoute from './routes/AdminRoute';
 import FacultyRoute from './routes/FacultyRoute';
 import StudentRoute from './routes/StudentRoute';
 import LandingRoute from './routes/LandingRoute';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 
 import { useSelector } from 'react-redux';
 import BackdropLoading from './components/BackdropLoading';
