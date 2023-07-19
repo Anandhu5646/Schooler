@@ -17,6 +17,7 @@ import {
 } from "../../../api/facultyApi";
 import "./FacMark.css";
 import { FcUpload } from "react-icons/fc";
+ 
 
 function MarkAttendanceTable({ students }) {
   const [studentsList, setStudentsList] = useState([]);

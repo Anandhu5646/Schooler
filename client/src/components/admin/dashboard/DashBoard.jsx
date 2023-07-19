@@ -1,49 +1,55 @@
 import React from "react";
-import { CCardGroup, CCard, CCardBody, CCardImage, CCardTitle, CCardText } from "@coreui/react";
-import reactImage from "/images/react.jpg";
+import { Card } from "react-bootstrap";
+import { FaUser, FaChalkboardTeacher, FaUsers } from "react-icons/fa";
+import "./DashBoard.css";
 
-const Dashboard = ({ totalStudents, totalClubs, totalFaculty }) => {
+
+const Dashboard = ({ studentCount, facultyCount, clubCount }) => {
   return (
-    <CCardGroup>
-      <CCard>
-        <CCardImage orientation="top" src={reactImage} />
-        <CCardBody>
-          <CCardTitle>Total Students</CCardTitle>
-          <CCardText>
-            This is a wider card with supporting text below as a natural lead-in to additional content.
-            This content is a little bit longer.
-          </CCardText>
-          <CCardText>
-            <small className="text-medium-emphasis">Last updated 3 mins ago</small>
-          </CCardText>
-        </CCardBody>
-      </CCard>
-      <CCard>
-        <CCardImage orientation="top" src={reactImage} />
-        <CCardBody>
-          <CCardTitle>Total Clubs</CCardTitle>
-          <CCardText>
-            This card has supporting text below as a natural lead-in to additional content.
-          </CCardText>
-          <CCardText>
-            <small className="text-medium-emphasis">Last updated 3 mins ago</small>
-          </CCardText>
-        </CCardBody>
-      </CCard>
-      <CCard>
-        <CCardImage orientation="top" src={reactImage} />
-        <CCardBody>
-          <CCardTitle>Total Faculty</CCardTitle>
-          <CCardText>
-            This is a wider card with supporting text below as a natural lead-in to additional content.
-            This card has even longer content than the first to show that equal height action.
-          </CCardText>
-          <CCardText>
-            <small className="text-medium-emphasis">Last updated 3 mins ago</small>
-          </CCardText>
-        </CCardBody>
-      </CCard>
-    </CCardGroup>
+    <div className="dashboard-container">
+      <div className="card-container">
+        <Card className="dashboard-card">
+        
+        
+          <Card.Body className="card-body">
+         
+            <div className="card-icon">
+              <FaUser />
+            </div>
+            <Card.Title className="card-title">Total Students</Card.Title>
+            <Card.Text className="count-text">
+              <strong>{studentCount}100</strong>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+      <div className="card-container">
+        <Card className="dashboard-card">
+          <Card.Body>
+            <div className="card-icon">
+              <FaChalkboardTeacher />
+            </div>
+            <Card.Title>Total Faculty</Card.Title>
+            <Card.Text className="count-text">
+              <strong>{facultyCount}</strong>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+      <div className="card-container">
+        <Card className="dashboard-card">
+          <Card.Body>
+            <div className="card-icon">
+              <FaUsers />
+            </div>
+            <Card.Title>Total Clubs</Card.Title>
+            <Card.Text className="count-text">
+              <strong>{clubCount}</strong>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+    </div>
   );
 };
 
