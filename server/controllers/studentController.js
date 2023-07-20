@@ -2,6 +2,7 @@ const jwt= require('jsonwebtoken')
 const studentModel = require("../models/studentModel");
 const sentOTP= require('../helper/otpVerify')
 const bcrypt = require("bcryptjs");
+const clubModel = require('../models/clubModel');
 
 let studentController={
 
@@ -74,7 +75,22 @@ let studentController={
       console.log(error);
       res.status(500).json({error, message:" server error"})
     }
-  }
+  },
+  getStudClubs: async(req,res)=>{
+    try {
+      const  clubs= await clubModel.find().sort({_id:-1})
+      const token=req.cookies.studentToken
+      const verifiedJwt= jwt.verify(token, "myjwtsecretkey")
+      const student= await studentModel.findById(verifiedJwt.id )
+
+     
+    res.json({success:true, clubs, student})
+    } catch (error) {
+      console.log("Something went wrong")
+      res.json({success:false, error, message:"Error occured while fetchig club list"})
+    }
+  },
+  
     
 }
 

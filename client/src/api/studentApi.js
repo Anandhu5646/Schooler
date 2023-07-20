@@ -60,4 +60,27 @@ export async function studentSubmitPass(newPassword){
   }
 }
 
+export async function getClub(){
+  try {
+    const response= await axios.get('/student/clubs', {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    if(response.data.success){
+      console.log(response.data,'clubs')
+      return response.data
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops..!!',
+      text: 'An error occurred while fetching clubs',
+    });
+    throw error;
+  }
+}
 
+export async function facultyClubReqSend(studentName, studentId, className,
+  clubId, clubName, clubFac, clubFacId){
+    
+  }

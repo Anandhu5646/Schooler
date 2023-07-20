@@ -171,9 +171,10 @@ let adminController = {
   },
   getAdminStudents: async (req, res) => {
     try {
+
       let students = await studentModel.find();
       res.json({ success: true, err: false, students });
-      console.log(students);
+     
     } catch (error) {
       console.log(error);
       res.json({ err: true, error, message: "something went wrong" });
@@ -183,7 +184,7 @@ let adminController = {
     try {
       const faculties = await facultyModel.find();
       res.json({ success: true, err: false, faculties });
-      console.log(faculties);
+      
     } catch (error) {
       console.log(error);
       res
@@ -305,7 +306,70 @@ let adminController = {
       res.status(500).json({error:true,success:false, message:"Something went wrong"})
       console.log(error);
     }
-  }
+  },
+  postEditAdminFaculty: async (req, res) => {
+
+    try {
+      console.log('wewewewewwewe')
+      let id=req.params.id
+      const faculty = await facultyModel.findById({_id:id});
+      if (!faculty) {
+        return res.json({ success: false, message: "faculty not found" });
+      }
+
+      faculty.name = req.body.name;
+      faculty.email = req.body.email;
+      faculty.mobile = req.body.mobile;
+      faculty.dob = req.body.dob;
+      faculty.joiningYear = req.body.joiningYear;
+      faculty.teachingArea = req.body.teachingArea;
+      faculty.qualification = req.body.qualification;
+      faculty.address = req.body.address;
+      faculty.gender = req.body.gender;
+      faculty.age = req.body.age;
+      faculty.className = req.body.className;
+     
+
+      const updatedFaculty = await faculty.save();
+
+      console.log(updatedFaculty, "lllllllllllllllll");
+      return res.json({
+        success: true,
+        message: "faculty details updated successfully",
+        faculty: updatedFaculty
+      });
+    } catch (error) {
+      res.json({ success: false, message: "server error", error });
+      console.log(error);
+    }
+  },
+  getFacByid: async(req,res)=>{
+    try {
+      const facultyId = req.params.id;
+     
+      const faculty = await facultyModel.findById(facultyId ,{password:0});
+      if (!faculty) {
+        return res.status(404).json({ success: false, message: 'Faculty not found' });
+      }
+      console.log(faculty,'uuuuuuuuuuuuuuu');
+      res.status(200).json({ success: true, faculty });
+    } catch (error) {
+      console.error('Error fetching faculty details:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  },
+  getClubFaculties: async (req, res) => {
+    try {
+      const faculties = await facultyModel.find();
+      res.json({ faculties });
+      
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ err: true, error, message: "Something went wrong" });
+    }
+  },
    
 };
 

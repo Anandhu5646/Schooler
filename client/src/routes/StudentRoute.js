@@ -7,6 +7,7 @@ import StudentLogin from '../pages/student/studentLogin/StudentLogin';
 import StudAttendance from '../pages/student/studAttendance/StudAttendance';
 import StudResult from '../pages/student/studResult/StudResult';
 import StudSubjects from '../pages/student/studSubjects/StudSubjects';
+import StudentClubs from '../pages/student/studentClubs/StudentClubs';
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -30,7 +31,7 @@ function StudentRoute() {
   
           <Route path="/attendance" element={<StudAttendance/>} />
           <Route path="/mark" element={<StudResult />} />
-          {/* <Route path="/club" element={<AdminClub />} /> */}
+          <Route path="/clubs" element={<StudentClubs/>} />
           {/* <Route path="/classes" element={<AdminClass />} /> */}
           <Route path="/subjects" element={<StudSubjects/>} />
           {/* <Route path="/logout" element={<Navigate to="/" />} /> */}

@@ -28,10 +28,10 @@ const adminAuthController={
                 secure: true,
                 sameSite: "none"
                 
-            }).json({error: false})
+            }).json({error: false, success:true})
             console.log("login sucess");
         } catch (error) {
-            res.status(500).json({error: error, message: "Server error"})
+            res.status(500).json({error: error,success:false, message: "Server error"})
             console.log(error)
         }
       }

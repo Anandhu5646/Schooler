@@ -127,7 +127,6 @@ function Sidebar() {
     { text: "Faculty", icon: <GroupIcon />, to: "/admin/faculty" },
     { text: "Students", icon: <GroupIcon />, to: "/admin/student" },
     { text: "Clubs", icon: <LocalLibraryIcon />, to: "/admin/club" },
-    { text: "Club-request", icon: <SchoolIcon />, to: "/admin/club-requests" },
     { text: "Notice", icon: <WarningAmberIcon />, to: "/admin/notice" },
     { text: "Classes", icon: <ClassIcon />, to: "/admin/classes" },
     { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },

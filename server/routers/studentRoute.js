@@ -1,5 +1,5 @@
 const express= require("express");
-const { getStudProfile, postStudEditProfile, sentOtp, verifyOtp, changePassword } = require("../controllers/studentController");
+const { getStudProfile, postStudEditProfile, sentOtp, verifyOtp, changePassword, getStudClubs } = require("../controllers/studentController");
 const verifyStudent = require("../middleware/verifyStudent");
 const router= express.Router()
 const multer= require("multer")
@@ -15,12 +15,11 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage})
 
-
-
 router.get("/" , verifyStudent, getStudProfile)
 router.post("/",verifyStudent,upload.single('pic'),postStudEditProfile)
 router.post("/sentOtp",verifyStudent,sentOtp)
 router.post("/changePass", verifyStudent, changePassword)
+router.get("/clubs",verifyStudent, getStudClubs)
 
 
 module.exports = router;

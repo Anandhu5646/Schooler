@@ -13,8 +13,9 @@ const clubSchema = new mongoose.Schema({
     facultyName:{
         type:String
     },
-   
-    members:[],
+    facultyId:{
+        type:String
+    },
     date : { type : Date, default: Date.now }
 })
 

@@ -5,17 +5,16 @@
   align-items: center;
   
 }
-.card-icon{
+.card-icon1{
   color: rgba(0, 0, 0, 0.562);
 }
-.card-container {
-  margin: 10px;
-}
-.card-title{
+
+.card-title1{
   font-size: 30px;
 }
-.card {
+.dashboard-card {
   background-color:  #92a8d1 !important;
+  margin: 10px;
   width: 370px;
   height: 200px; 
   color: white;
@@ -24,10 +23,10 @@
 body {
   overflow: hidden;
 }
-.count-text{
+.count-text1{
   font-size: 50px;
 }
-.card-body{
+.card-body1{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,9 +42,10 @@ body {
     overflow:auto;
   }
 
-  .card {
+  .dashboard-card{
     width: 270px; 
     margin-left: 50px;
+    
    
   }
 }

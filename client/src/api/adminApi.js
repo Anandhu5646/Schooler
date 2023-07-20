@@ -1,5 +1,13 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+
+
+export async function authAdmin(){
+  const response= await axios.get("/admin/auth")
+  return response
+}
+
 
 export async function fetchStudentList() {
   try {
@@ -288,3 +296,83 @@ export async function deleteSubjects(id){
     console.log(error)
   }
 }
+export async function fecthFacultyDetails(id){
+  const response=  await axios.get(`/admin/viewFaculties/${id}`,
+   { headers: { "Content-Type": "application/json" }, withCredentials: true })
+   if(response.data.success){
+    return response.data.faculty
+   }else{
+     Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while fetching faculty",
+      });
+   }
+}
+export async function updateFaculty(id, name, email, mobile, dob, joiningYear, teachingArea, qualification, address, gender, age, className) {
+  try {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("mobile", mobile);
+    formData.append("dob", dob);
+    formData.append("joiningYear", joiningYear);
+    formData.append("teachingArea", teachingArea);
+    formData.append("qualification", qualification);
+    formData.append("address", address);
+    formData.append("gender", gender);
+    formData.append("age", age);
+    formData.append("className", className);
+
+    const response = await axios.post(`/admin/saveFac/${id}`, formData, {
+      withCredentials: true,
+    });
+
+    if (response.data.success) {
+      return response.data;
+    } else {
+      toast.error("Failed to update faculty. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  } catch (error) {
+    console.error("Error updating faculty:", error);
+    toast.error("Error updating faculty. Please try again later.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+}
+
+export const StudentClubAdminGetApi = async (id) => {
+  let { data } = await axios
+    .get('/admin/faculty', { params: { id } }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  if (data === false) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something Wrong',
+
+    })
+
+  }
+  return data
+
+}
+
+

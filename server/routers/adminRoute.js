@@ -3,28 +3,30 @@ const router= express.Router()
 const { postAdminAddStudent, postAdminAddFaculty, postAdminAddSubject, 
     postAdminAddClass, postAdminAddNotice, getAdminStudents,
      getAdminFaculties, getAdminSubjects, getAdminClasses, postAdminAddClub,
-      getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty, deleteStudent, deleteSubject} = require("../controllers/adminController");
+      getAdminNotices, getAdminClubs, editAdminStudent, deleteFaculty, deleteStudent, deleteSubject, getFacByid, postEditAdminFaculty, getClubFaculties} = require("../controllers/adminController");
 const verifyAdmin = require("../middleware/verifyAdmin");
 
 
 
 // router.use(verifyAdmin)
-router.post("/addStudent",postAdminAddStudent)
-router.post("/addFaculty",postAdminAddFaculty)
-router.post("/addSubject",postAdminAddSubject)
-router.post("/addClass",postAdminAddClass)
-router.post("/addNotice",postAdminAddNotice)
-router.post("/addClub",postAdminAddClub)
-router.get("/viewStudents",getAdminStudents)
-router.get("/viewFaculties",getAdminFaculties) 
-router.get("/viewSubjects", getAdminSubjects)
+router.post("/addStudent",verifyAdmin,postAdminAddStudent)
+router.post("/addFaculty",verifyAdmin,postAdminAddFaculty)
+router.post("/addSubject",verifyAdmin,postAdminAddSubject)
+router.post("/addClass",verifyAdmin,postAdminAddClass)
+router.post("/addNotice",verifyAdmin,postAdminAddNotice)
+router.post("/addClub",verifyAdmin,postAdminAddClub)
+router.get("/viewStudents",verifyAdmin,getAdminStudents)
+router.get("/viewFaculties",verifyAdmin,getAdminFaculties) 
+router.get("/viewSubjects",verifyAdmin, getAdminSubjects)
 router.get("/viewClasses",getAdminClasses)
-router.get("/viewNotices",getAdminNotices)
-router.get("/viewClubs",getAdminClubs)
-router.put("/editStudent/:id",editAdminStudent)
-router.post("/deleteFaculty",deleteFaculty)
-router.post("/deleteStudent",deleteStudent)
-router.post("/deleteSubject",deleteSubject)
+router.get("/viewNotices",verifyAdmin,getAdminNotices)
+router.get("/viewClubs",verifyAdmin,getAdminClubs)
+router.post("/saveFac/:id",postEditAdminFaculty)
+router.get("/viewFaculties/:id", verifyAdmin, getFacByid)
+router.post("/deleteFaculty",verifyAdmin,deleteFaculty)
+router.post("/deleteStudent",verifyAdmin,deleteStudent)
+router.post("/deleteSubject",verifyAdmin,deleteSubject)
+router.get("/faculty", verifyAdmin, getClubFaculties)
 
 
 module.exports = router; 

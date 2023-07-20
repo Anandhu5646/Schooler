@@ -20,10 +20,7 @@ function StudProfile() {
   };
 
   const [refresh, setRefresh] = useState(false)
-  useEffect(() => {
-    fetchStudentData();
-  }, [refresh]);
-
+ 
   const [open, setOpen] = useState(false)
 
   const [name, setName] = useState('')
@@ -71,6 +68,10 @@ function StudProfile() {
     }
   };
 
+  useEffect(() => {
+    getClasses()
+    fetchStudentData();
+  }, [refresh]);
 
   const [errmsg, setErrmsg] = useState('')
   const HandleSave = async () => {
@@ -219,6 +220,8 @@ const handleChangePassword = async()=>{
   }
 } 
 // ==========================================================
+
+
 
   return (
     <div>
@@ -435,7 +438,7 @@ const handleChangePassword = async()=>{
 
           <FormControl margin="dense" fullWidth>
             <InputLabel id="classname-label">Select Class</InputLabel>
-            {(classes.length > 0 &&
+            {(classes?.length > 0 &&
               <Select
                 labelId="classname-label"
                 id="className"
