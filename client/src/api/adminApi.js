@@ -153,7 +153,15 @@ export async function fetchClubList() {
 
 export async function addClub(clubData) {
   try {
-    const response = await axios.post("/admin/addClub", clubData);
+    
+    const { facultyId, facultyName, name, description } = clubData;
+    const response = await axios.post("/admin/addClub", {
+      facultyId,
+      facultyName,
+      name,
+      description,
+    });
+
     if (response.data.success) {
       return response.data.club;
     } else {
@@ -168,11 +176,12 @@ export async function addClub(clubData) {
     Swal.fire({
       icon: "error",
       title: "Oops..!!",
-      text: "An error occured while saving club data",
+      text: "An error occurred while saving club data",
     });
     throw error;
   }
 }
+
 
 export async function fetchClassList() {
   try {
@@ -236,6 +245,27 @@ export async function deleteFac(id) {
         icon: "success",
         title: "Confirmation!!",
         text: response.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while deleting faculty",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function deleteClub(id) {
+  try {
+    const response = await axios.post(`/admin/deleteClub/${id}`,  { headers: { "Content-Type": "application/json" }, withCredentials: true });
+
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Confirmation!!",
+        text: response.data.message,
       });
     } else {
       Swal.fire({
@@ -355,23 +385,20 @@ export async function updateFaculty(id, name, email, mobile, dob, joiningYear, t
   }
 }
 
-export const StudentClubAdminGetApi = async (id) => {
-  let { data } = await axios
-    .get('/admin/faculty', { params: { id } }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-  if (data === false) {
+export const getStudentClubFac = async () => {
+  try{
+  const response = await axios.get(`/admin/faculty`);
+   
+    return response.data
+  } catch (err) {
+    console.error("Error:", err);
     Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Something Wrong',
-
-    })
-
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong",
+    });
+    return null;
   }
-  return data
 
 }
 

@@ -192,9 +192,7 @@ useEffect(() => {
             </tr>
           ))}
         </MDBTableBody>
-      </MDBTable>
-
-      
+      </MDBTable> 
       <MDBModal show={showModal} onHide={toggleModal} tabIndex='-1'>
   <MDBModalDialog>
     <form>

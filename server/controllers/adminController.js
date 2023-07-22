@@ -151,10 +151,11 @@ let adminController = {
   },
   postAdminAddClub: async (req, res) => {
     try {
-      let { name, description, facultyName, date } = req.body;
+      let { name, description,facultyId, facultyName, date } = req.body;
       let club = new clubModel({
         name,
         description,
+        facultyId,
         facultyName,
         date,
       });
@@ -307,6 +308,17 @@ let adminController = {
       console.log(error);
     }
   },
+  deleteClubs: async (req,res)=>{
+    try {
+      const {id}= req.params;
+      console.log('sdfdfdfdfdfdfdfdfdfd',id)
+      await clubModel.findByIdAndDelete({_id:id})
+      return res.json({error:false, success:true, message: "deleted successfully"})
+    } catch (error) {
+      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      console.log(error);
+    }
+  },
   postEditAdminFaculty: async (req, res) => {
 
     try {
@@ -360,9 +372,13 @@ let adminController = {
   },
   getClubFaculties: async (req, res) => {
     try {
-      const faculties = await facultyModel.find();
-      res.json({ faculties });
-      
+    const faculty = await facultyModel.find();
+   
+    if (!faculty) {
+      res.status(404).json({ error: "Faculty not found" });
+    } else {
+      res.json(faculty); 
+    }
     } catch (error) {
       console.log(error);
       res

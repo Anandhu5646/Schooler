@@ -191,3 +191,44 @@ export async function saveMarkData(studentId, subject, marks, grade) {
     throw error;
   } 
 }
+
+export async function getStudClubReq(){
+  try {
+    const response= await axios.get("/faculty/viewClubReq",{
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    if(response.data.success){
+      return response.data.request
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while fetching student club requests",
+    });
+    throw error;
+  }
+}
+export async function FacClubReqUpdated(id, status){
+  try {
+    const response=await axios.post(`/faculty/saveReq`,{id,status},
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    
+   if(response.data.success){
+      return true
+    }else{
+      return false
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while updating status",
+    });
+    throw error;
+  }
+}

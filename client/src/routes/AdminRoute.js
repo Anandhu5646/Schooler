@@ -33,7 +33,7 @@ function AdminRoute() {
       {admin.login && <Route path="/login" element={<Navigate to="/admin/" />} />}
   
 
-      <Route element={<ProtectedAdminRoute admin={admin} />}>
+      {/* <Route element={<ProtectedAdminRoute admin={admin} />}> */}
         <>
           <Route path="/" element={<AdminHome />} />
           <Route path="/faculty" element={<AdminFaculty />} />
@@ -43,7 +43,7 @@ function AdminRoute() {
           <Route path="/subjects" element={<AdminSubject />} />
           <Route path="/logout" element={<Navigate to="/" />} />
         </>
-      </Route>
+      {/* </Route> */}
     </Routes>
   );
 }

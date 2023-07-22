@@ -3,6 +3,7 @@ const studentModel = require("../models/studentModel");
 const sentOTP= require('../helper/otpVerify')
 const bcrypt = require("bcryptjs");
 const clubModel = require('../models/clubModel');
+const clubRequestModel = require('../models/clubRequestModel');
 
 let studentController={
 
@@ -90,7 +91,41 @@ let studentController={
       res.json({success:false, error, message:"Error occured while fetchig club list"})
     }
   },
-  
+  postClubRequest: async (req, res) => {
+    try {
+        const request = await clubRequestModel.create({
+            studentName: req.body.studentName,
+            className:req.body.className,
+            clubName: req.body.clubName,
+            status: req.body.status,
+            facultyId: req.body.facultyId,
+            facultyName: req.body.facultyName,
+            studentId: req.body.studentId,
+            clubId: req.body.clubId
+        });
+
+        if (request !== null) {
+            res.json('Club Request sent successfully...!!');
+        } else {
+            res.json(false);
+        }
+    } catch (err) {
+        res.json(false);
+        console.log(err)
+    }
+},  
+getSendReqStatus: async(req,res)=>{
+  try {
+   
+    const statuss= await clubRequestModel.find().sort({_id:-1})
+    console.log(statuss,'statussssssss')
+    res.json({success:true, statuss})
+  } catch (error) {
+    res.json({success:false, error, message:"Server error"})
+    console.log(error)
+  }
+
+}
     
 }
 

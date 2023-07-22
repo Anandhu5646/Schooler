@@ -1,53 +1,173 @@
-import React, { useState, useEffect } from "react";
-import { Card, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Table } from "react-bootstrap";
+import { Badge, IconButton } from "@mui/material";
+import styled from "styled-components";
+import { FacClubReqUpdated, getStudClubReq } from "../../../api/facultyApi";
+import { MdDone,MdDelete,MdCancel } from "react-icons/md";
+import Swal from "sweetalert2";
 
+
+const StyledTableRow = styled.tr`
+  &:nth-of-type(even) {
+    background-color: #f2f2f2;
+  }
+`;
 function FacClubReq() {
-  const [clubRequests, setClubRequests] = useState([]);
 
-  // Fetch student club requests from the backend API
-  useEffect(() => {
-    // Replace the API call below with the actual API endpoint to fetch student club requests
-    fetch("API_ENDPOINT_TO_FETCH_CLUB_REQUESTS")
-      .then((response) => response.json())
-      .then((data) => setClubRequests(data))
-      .catch((error) => console.error("Error fetching club requests:", error));
-  }, []);
+  const [requests, setRequests] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
-  // Function to handle accepting or rejecting a club request
-  const handleClubRequest = (clubRequest, isAccepted) => {
-    // Implement the logic to accept or reject the club request
-    // You can make an API call to update the status in the backend
-
-    // For demonstration purposes, let's update the status directly in the frontend
-    const updatedClubRequests = clubRequests.map((request) =>
-      request.id === clubRequest.id ? { ...request, status: isAccepted ? "Accepted" : "Rejected" } : request
-    );
-    setClubRequests(updatedClubRequests);
+  const fetchClubReq = async () => {
+    const response = await getStudClubReq();
+    setRequests(response);
+    setRefresh(true);
   };
+  useEffect(() => {
+    fetchClubReq();
+  }, [refresh]);
+// ==================================================
 
+const Accept="Now You are a Member"
+const Reject="Request Send"
+
+  const handleActions = async (id,status) => {
+
+    let response=await FacClubReqUpdated(id,status)
+    if (response===true) {
+      Swal.fire({
+        icon: 'success',
+        text: status==='Now You are a Member' ? 'Request Accepted' : status
+
+      })
+    }
+  const handleDelete = async () => {
+
+    console.log("delete");
+  };
+  // ============================================================
   return (
-    <div>
-      <h1>Student Club Requests</h1>
-      {clubRequests.map((clubRequest) => (
-        <Card key={clubRequest.id} className="mb-4">
-          <Card.Body>
-            <Card.Title>{clubRequest.studentName}</Card.Title>
-            <Card.Text>Class: {clubRequest.studentClass}</Card.Text>
-            <Card.Text>Club Name: {clubRequest.clubName}</Card.Text>
-            <Card.Text>Status: {clubRequest.status}</Card.Text>
-            <div className="d-flex justify-content-end">
-              <Button variant="success" className="me-2" onClick={() => handleClubRequest(clubRequest, true)}>
-                Accept
-              </Button>
-              <Button variant="danger" onClick={() => handleClubRequest(clubRequest, false)}>
-                Reject
-              </Button>
-            </div>
-          </Card.Body>
-        </Card>
-      ))}
+    <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
+      <div className="d-flex justify-content-between mb-3">
+        <h2>Club Join Requests</h2>
+      </div>
+      <hr></hr>
+      <Table responsive striped bordered hover>
+        <thead>
+          <tr>
+            <th
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Student Name
+            </th>
+            <th
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Class
+            </th>
+            <th
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Club Name
+            </th>
+            <th
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Status
+            </th>
+            <th
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.length > 0 ? (
+            requests.map((club, index) => (
+              <StyledTableRow key={index}>
+                <td>{club.studentName}</td>
+                <td>{club.className}</td>
+                <td>{club.clubName}</td>
+                <td>
+                  {club.status === "Now You are a Member"
+                    ? "Request Accepted"
+                    : club.status === "Request Send"
+                    ? "Requested"
+                    : club.status}
+                </td>
+                <td>
+                  {club.status === "Now You are a Member" ? (
+                    <IconButton
+                    style={{color:'red'}}
+                      variant="danger"
+                      onClick={() => handleActions(club._id,Reject)}
+                    >
+                      <MdCancel/>
+                    </IconButton>
+                  ) : club.status === "Reject" ? (
+                    <IconButton
+                    style={{color:'green'}}
+                      variant="success"
+                      onClick={() => handleActions(club._id,Accept)}
+                    >
+                     <MdDone/>
+                    </IconButton>
+                  ) : (
+                    <>
+                      <IconButton 
+                      style={{color:'green'}}
+                        variant="success"
+                        onClick={() => handleActions(club._id,Accept)}
+                      >
+                       <MdDone/>
+                      </IconButton>{" "}
+                      <IconButton
+                      style={{color:'red'}}
+                        variant="danger"
+                        onClick={() => handleActions(club._id,Reject)}
+                      >
+                       <MdCancel/>
+                      </IconButton>
+                    </>
+                  )}
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDelete(club._id)}
+                  >
+                    <MdDelete/>
+                  </IconButton>
+                </td>
+              </StyledTableRow>
+            ))
+          ) : (
+            <StyledTableRow>
+              <td colSpan="6">No Requests</td>
+            </StyledTableRow>
+          )}
+        </tbody>
+      </Table>
     </div>
   );
 }
-
+}
 export default FacClubReq;

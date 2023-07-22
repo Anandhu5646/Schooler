@@ -3,28 +3,29 @@ import {
   Button,
   Card,
   Col,
-  Container,
   Row,
   Modal,
   Form,
 } from "react-bootstrap";
 import {
-  StudentClubAdminGetApi,
   addClub,
+  deleteClub,
   fetchClubList,
+  getStudentClubFac,
 } from "../../../api/adminApi";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [faculty, setFaculty] = useState([]);
-  const [clubAdminId, setClubAdminId] = useState("");
+  const [refresh, setRefresh] = useState(false);
+  const [selectedFaculty, setSelectedFaculty] = useState(null);
 
   const [formValue, setFormValue] = useState({
     name: "",
     description: "",
-    facultyName: "",
   });
 
   const fetchClubData = async () => {
@@ -36,50 +37,51 @@ const ClubList = () => {
     }
   };
 
-  useEffect(() => {
-    fetchClubData();
-  }, []);
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
+  useEffect(() => {
+    fetchClubData();
+    fetchFacultyData();
+  }, [refresh]);
   const handleAddClub = async () => {
     try {
-      const response = await addClub(formValue);
+      if (!selectedFaculty) {
+        alert("Please select a faculty");
+        return;
+      }
+
+      const clubData = {
+        ...formValue,
+        facultyId: selectedFaculty._id,
+        facultyName: selectedFaculty.name,
+      };
+
+      const response = await addClub(clubData);
       console.log("Club created ", response);
+      setFormValue({
+        name: "",
+        description: "",
+      });
+      setSelectedFaculty(null);
+      setRefresh(true);
+      toggleModal();
+     
     } catch (err) {
       console.error("Error:", err);
     }
-
-    toggleModal();
   };
 
-  useEffect(() => {
-    axios
-      .get("/admin/faculty", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((data) => {
-        console.log(data.data);
-        FacultyName(data.data);
-      });
-  
-    const fetchFacultyName = async () => {
-      let data = await StudentClubAdminGetApi(clubAdminId);
-      FacultyName(data.name);
-    };
-    fetchFacultyName();
-  }, [clubAdminId]);
-  
-
-  const [AdminName, setAdminName] = useState("");
-  console.log(AdminName);
-  const FacultyName = (data) => {
-    setFaculty(data);
+  const fetchFacultyData = async () => {
+    try {
+      const response = await getStudentClubFac();
+      setFaculty(response);
+    } catch (err) {
+      console.error("Error fetching faculty data:", err);
+    }
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,10 +91,39 @@ const ClubList = () => {
     }));
   };
 
-  const handleDeleteClub = (id) => {
-    const updatedList = clubList.filter((club) => club.id !== id);
-    setClubList(updatedList);
+  const handleFacultyChange = (e) => {
+    const selectedFacultyId = e.target.value;
+    const facultyData = faculty.find((f) => f._id === selectedFacultyId);
+    setSelectedFaculty(facultyData);
   };
+
+  const handleDeleteClub = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this club. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#212A3E',
+        cancelButtonColor: 'red',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (result.isConfirmed) {
+        
+        await deleteClub(id);
+       
+        const updatedClubList = clubList.filter((club) => club._id !== id);
+        setClubList(updatedClubList);
+        Swal.fire('Deleted!', 'The club has been deleted.', 'success');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
+    }
+  };
+  
 
   return (
     <div className="container" style={{ marginTop: "50px" }}>
@@ -114,7 +145,7 @@ const ClubList = () => {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleDeleteClub(club.id)}
+                    onClick={() => handleDeleteClub(club._id)}
                   >
                     Delete
                   </Button>
@@ -150,20 +181,25 @@ const ClubList = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Faculty</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                name="facultyName"
-                onChange={(e) => setClubAdminId(e.target.value)}
-              >
-                <option hidden> Select Club Co-odinator</option>
-                {faculty.map((value, index) => (
-                  <option key={index} value={value._id}>
-                    {value.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+        <Form.Label>Faculty</Form.Label>
+        <Form.Select
+          aria-label="Default select example"
+          name="facultyName"
+          onChange={handleFacultyChange}
+          value={selectedFaculty ? selectedFaculty._id : ""}
+        >
+          <option hidden>Select Club Co-ordinator</option>
+          {faculty?.length > 0 ? (
+            faculty.map((value) => (
+              <option key={value._id} value={value._id}>
+                {value.name}
+              </option>
+            ))
+          ) : (
+            <option value="">No faculty available</option>
+          )}
+        </Form.Select>
+      </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>

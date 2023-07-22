@@ -9,6 +9,9 @@ const {
   getStudMark,
   getAllSubjects,
   saveStudentMark,
+  getClubReq,
+  postFacClubReqUpdate,
+  
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
 const router = express.Router();
@@ -36,5 +39,8 @@ router.post('/saveAttendance',verifyFaculty, postFacStudAttendance )
 router.get('/viewMarkStatus', verifyFaculty, getStudMark)
 router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.post("/saveMark", verifyFaculty, saveStudentMark)
+router.get("/viewClubReq", verifyFaculty, getClubReq)
+router.post("/saveReq", verifyFaculty, postFacClubReqUpdate)
+
 
 module.exports = router;

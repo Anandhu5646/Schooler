@@ -6,6 +6,7 @@ const studentModel = require("../models/studentModel");
 const attendanceModel = require("../models/attendanceModel");
 const subjectModel = require("../models/subjectModel");
 const markModel = require("../models/markModel");
+const clubRequestModel = require("../models/clubRequestModel");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -38,8 +39,7 @@ let facultyController = {
       faculty.pic = req.file;
 
       const updatedFaculty = await faculty.save();
-
-      console.log(updatedFaculty, "lllllllllllllllll");
+    
       return res.json({
         success: true,
         message: "faculty profile updated successfully",
@@ -165,7 +165,29 @@ let facultyController = {
       console.error(error)
       res.json({success:false,error, message:"Server error"})
     }
-  }  
+  },
+  
+  getClubReq:async (req,res)=>{
+    try {
+      const id = req.faculty.id;
+      const request= await clubRequestModel.find({facultyId:id}).sort({_id:-1})
+      res.json({success:true, request})
+    } catch (error) {
+      console.log(error)
+      res.json({success:false, error, message:"Server Error"})
+    }
+  },
+  postFacClubReqUpdate:async (req,res)=>{
+    try {
+      console.log(id,'ererererer',status)
+      await clubRequestModel.updateOne({ _id: req.body.id },
+         { status: req.body.status })
+         console.log("updated status", status)
+      res.json({ success: true });
+    } catch (error) {
+      res.json({success:false,error, message:"Server error"})
+    }
+  }
 
 
 

@@ -1,9 +1,13 @@
 const mongoose= require("mongoose")
 
 const clubReqSchema = new mongoose.Schema({
-    studName:{
+    studentName:{
         type:String,
         required:true
+    },
+    className:{
+        type:String,
+        required: true
     },
     clubName:{
         type:String,
@@ -32,6 +36,6 @@ const clubReqSchema = new mongoose.Schema({
     ,date : { type : Date, default: Date.now }
 })
 
-const clubRequestModel=mongoose.model("club",clubReqSchema)
+const clubRequestModel=mongoose.model("clubRequest",clubReqSchema)
 
 module.exports =clubRequestModel;

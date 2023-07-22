@@ -80,7 +80,67 @@ export async function getClub(){
   }
 }
 
-export async function facultyClubReqSend(studentName, studentId, className,
-  clubId, clubName, clubFac, clubFacId){
+
+export async function facultyClubReqSend(studentName, studentId, className, clubId, clubName, facultyName, facultyId) {
+  try {
+    const response = await axios.post('/student/clubReq', {
+      studentName,
+      className,
+      clubName,
+      status: 'Request Send',
+      facultyId,
+      facultyName,
+      studentId,
+      clubId,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+
+    if (response.data === false) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something Wrong',
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        text: response.data,
+      });
+    }
+    console.log(response.data, 'data');
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error(error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!',
+    });
+    throw error;
+  }
+}
+
+export async function studClubStatus(){
+  try {
+    const response= await axios.get("/student/clubStatus",
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    }
+    )
+    if(response.data.success){
+      console.log(response.data,'dfdfdfdfdffdfdf')
+      return response.data.statuss
+    }
+  } catch (error) {
     
   }
+}
+
