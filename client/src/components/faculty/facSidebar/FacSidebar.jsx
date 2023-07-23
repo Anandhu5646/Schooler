@@ -118,6 +118,7 @@ function FacSidebar() {
     
     setSelectedItem(state?.index)
   },[state])
+
   const closeModal = () => {   
     setShowModal(false);
   };
@@ -136,7 +137,7 @@ function FacSidebar() {
   const handleItemClick = (index) => {
     if (index === drawerItems.length - 1) {
       openModal();
-      // handleLogout();
+      
     } else {
       setSelectedItem(index);
     }

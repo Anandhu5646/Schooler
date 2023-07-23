@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -16,7 +16,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
@@ -97,11 +97,15 @@ function StudSidebar() {
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showModal, setShowModal] =useState(false);
-  
+  const {state}= useLocation()
+
   const openModal = () => {
     setShowModal(true);
   };
-  
+  useEffect(()=>{
+    
+    setSelectedItem(state?.index)
+  },[state])
   const closeModal = () => {   
     setShowModal(false);
   };
@@ -223,6 +227,7 @@ const iconStyle={
                 },
               }}
               component={Link}
+              state= {{index}}
               to={item.to}
             >
               <ListItemButton

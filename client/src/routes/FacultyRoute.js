@@ -7,6 +7,7 @@ import FacultyProfile from '../pages/faculty/facultyHome/FacultyProfile';
 import FacMarkAttendance from '../pages/faculty/facultyAttendance/FacMarkAttendance';
 import FacMarkUpload from '../pages/faculty/facultyMarkUpload/FacMarkUpload';
 import FacultyClubReq from '../pages/faculty/facultyClubReq/FacultyClubReq';
+import ProtectedFacultyRoute from '../utils/ProtectedFacultyRoute';
 
 function FacultyRoute() {
   const { faculty, refresh } = useSelector((state) => state);
@@ -15,31 +16,34 @@ function FacultyRoute() {
 
   useEffect(() => {
     (async function () {
-      let { data } = await axios.get("/faculty/auth/check");
-      dispatch({
-        type: "faculty",
-        payload: { login: data?.loggedIn, details: data?.faculty },
-      });
+      try {
+        let { data } = await axios.get("/faculty/auth/check");
+        dispatch({
+          type: "faculty",
+          payload: { login: data?.loggedIn, details: data?.faculty },
+        });
+      } catch (error) {
+        console.error("Error fetching faculty data:", error);
+      }
     })();
-  }, [refresh]);
+  }, [dispatch, refresh]);
+
   return (
     <Routes>
-        <>
-          {faculty.login && <Route path="/" element={<FacultyProfile/>} />}
-          {faculty.login === false && <Route path="/" element={<FacultyLogin />} />}
+      {faculty?.login === false && <Route path="/login" element={<FacultyLogin />} />}
+      {faculty?.login === false && <Route path="/" element={<FacultyLogin />} />}
+      {faculty?.login && <Route path="/login" element={<Navigate to="/faculty/" />} />}
   
+      {faculty !== undefined && (
+        <Route element={<ProtectedFacultyRoute faculty={faculty} />}>
+          <Route index element={<FacultyProfile />} />
           <Route path="/attendance" element={<FacMarkAttendance />} />
           <Route path="/mark" element={<FacMarkUpload />} />
           <Route path="/clubReq" element={<FacultyClubReq />} />
-          {/* <Route path="/classes" element={<AdminClass />} />
-          <Route path="/subjects" element={<AdminSubject />} />
-          <Route path="/logout" element={<Navigate to="/" />} /> */}
-  
-          {faculty.login === false && <Route path="/login" element={<FacultyLogin />} />}
-          {faculty.login && <Route path="/login" element={<Navigate to="/faculty/" />} />}
-        </>
-      </Routes> 
-  )
+        </Route>
+      )}
+    </Routes>
+  );
 }
 
-export default FacultyRoute
+export default FacultyRoute;

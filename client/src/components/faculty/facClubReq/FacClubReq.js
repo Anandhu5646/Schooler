@@ -3,48 +3,63 @@ import { Button, Table } from "react-bootstrap";
 import { Badge, IconButton } from "@mui/material";
 import styled from "styled-components";
 import { FacClubReqUpdated, getStudClubReq } from "../../../api/facultyApi";
-import { MdDone,MdDelete,MdCancel } from "react-icons/md";
+import { MdDone, MdDelete, MdCancel } from "react-icons/md";
 import Swal from "sweetalert2";
-
 
 const StyledTableRow = styled.tr`
   &:nth-of-type(even) {
     background-color: #f2f2f2;
   }
 `;
-function FacClubReq() {
 
+function FacClubReq() {
   const [requests, setRequests] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [status, setStatus] = useState("");
 
   const fetchClubReq = async () => {
     const response = await getStudClubReq();
     setRequests(response);
     setRefresh(true);
   };
+ 
+  // ==================================================
+
+  const Accept = "Now You are a Member";
+  const Reject = "Request Send";
+
+  const handleActions = async (id, status) => {
+    let response = await FacClubReqUpdated(id, status);
+    if (response) {
+      Swal.fire({
+        icon: "success",
+        text: status === "Now You are a Member" ? "Request Accepted" : status,
+      });
+    }
+    setStatus(status);
+  };
+
+  const handleDelete = async () => {
+    console.log("delete");
+    setRefresh(true);
+  };
+
+
+
+  const getStatusBackgroundColor = (status) => {
+    switch (status) {
+      case "Now You are a Member":
+        return "limegreen";
+      case "Request Send":
+        return "orange";
+      default:
+        return "inherit";
+    }
+  
+  };
   useEffect(() => {
     fetchClubReq();
-  }, [refresh]);
-// ==================================================
-
-const Accept="Now You are a Member"
-const Reject="Request Send"
-
-  const handleActions = async (id,status) => {
-
-    let response=await FacClubReqUpdated(id,status)
-    if (response===true) {
-      Swal.fire({
-        icon: 'success',
-        text: status==='Now You are a Member' ? 'Request Accepted' : status
-
-      })
-    }
-  const handleDelete = async () => {
-
-    console.log("delete");
-  };
-  // ============================================================
+  }, [refresh, status]);
   return (
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
       <div className="d-flex justify-content-between mb-3">
@@ -108,7 +123,7 @@ const Reject="Request Send"
                 <td>{club.studentName}</td>
                 <td>{club.className}</td>
                 <td>{club.clubName}</td>
-                <td>
+                <td style={{ backgroundColor: getStatusBackgroundColor(club.status) }}>
                   {club.status === "Now You are a Member"
                     ? "Request Accepted"
                     : club.status === "Request Send"
@@ -118,43 +133,48 @@ const Reject="Request Send"
                 <td>
                   {club.status === "Now You are a Member" ? (
                     <IconButton
-                    style={{color:'red'}}
+                      type="button"
+                      style={{ color: "red" }}
                       variant="danger"
-                      onClick={() => handleActions(club._id,Reject)}
+                      onClick={() => handleActions(club._id, Reject)}
                     >
-                      <MdCancel/>
+                      <MdCancel />
                     </IconButton>
-                  ) : club.status === "Reject" ? (
+                  ) : club.status === "Request Send" ? (
                     <IconButton
-                    style={{color:'green'}}
+                      type="button"
+                      style={{ color: "green" }}
                       variant="success"
-                      onClick={() => handleActions(club._id,Accept)}
+                      onClick={() => handleActions(club._id, Accept)}
                     >
-                     <MdDone/>
+                      <MdDone />
                     </IconButton>
                   ) : (
                     <>
-                      <IconButton 
-                      style={{color:'green'}}
+                      <IconButton
+                        type="button"
+                        style={{ color: "green" }}
                         variant="success"
-                        onClick={() => handleActions(club._id,Accept)}
+                        onClick={() => handleActions(club._id, Accept)}
                       >
-                       <MdDone/>
+                        <MdDone />
                       </IconButton>{" "}
                       <IconButton
-                      style={{color:'red'}}
+                        style={{ color: "red" }}
                         variant="danger"
-                        onClick={() => handleActions(club._id,Reject)}
+                        type="button"
+                        onClick={() => handleActions(club._id, Reject)}
                       >
-                       <MdCancel/>
+                        <MdCancel />
                       </IconButton>
                     </>
                   )}
                   <IconButton
                     aria-label="delete"
+                    type="button"
                     onClick={() => handleDelete(club._id)}
                   >
-                    <MdDelete/>
+                    <MdDelete />
                   </IconButton>
                 </td>
               </StyledTableRow>
@@ -169,5 +189,5 @@ const Reject="Request Send"
     </div>
   );
 }
-}
+
 export default FacClubReq;

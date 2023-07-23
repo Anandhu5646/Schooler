@@ -111,7 +111,7 @@ function Clubs() {
                               data.status === "Request Send"
                                 ? "orange"
                                 : data.status === "Now You are a Member"
-                                ? "green"
+                                ? "limegreen"
                                 : "red",
                           }}
                         >

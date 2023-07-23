@@ -179,7 +179,7 @@ let facultyController = {
   },
   postFacClubReqUpdate:async (req,res)=>{
     try {
-      console.log(id,'ererererer',status)
+      
       await clubRequestModel.updateOne({ _id: req.body.id },
          { status: req.body.status })
          console.log("updated status", status)

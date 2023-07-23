@@ -210,7 +210,8 @@ export async function getStudClubReq(){
     throw error;
   }
 }
-export async function FacClubReqUpdated(id, status){
+
+export async function FacClubReqUpdated(id,status){
   try {
     const response=await axios.post(`/faculty/saveReq`,{id,status},
     {
@@ -219,9 +220,9 @@ export async function FacClubReqUpdated(id, status){
     })
     
    if(response.data.success){
-      return true
+      return response.data
     }else{
-      return false
+      return response.error
     }
   } catch (error) {
     Swal.fire({

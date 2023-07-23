@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -26,7 +26,7 @@ import SubjectIcon from "@mui/icons-material/Subject";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
@@ -109,19 +109,19 @@ function Sidebar() {
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [showModal, setShowModal] =useState(false);
-  
+  const {state}= useLocation()
+
   const openModal = () => {
     setShowModal(true);
   };
-  
+  useEffect(()=>{
+    
+    setSelectedItem(state?.index)
+  },[state])
   const closeModal = () => {   
     setShowModal(false);
   };
   
-  // const handleItemClick = (index) => {
-  //   setSelectedItem(index);
-  // };
-
   const drawerItems = [
     { text: "Dashboard", icon: <DashboardIcon />, to: "/admin/" },
     { text: "Faculty", icon: <GroupIcon />, to: "/admin/faculty" },
@@ -236,6 +236,7 @@ function Sidebar() {
                 },
               }}
               component={Link}
+              state={{index}}
               to={item.to}
             >
               <ListItemButton

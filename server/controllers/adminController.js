@@ -363,7 +363,7 @@ let adminController = {
       if (!faculty) {
         return res.status(404).json({ success: false, message: 'Faculty not found' });
       }
-      console.log(faculty,'uuuuuuuuuuuuuuu');
+      
       res.status(200).json({ success: true, faculty });
     } catch (error) {
       console.error('Error fetching faculty details:', error);
@@ -386,6 +386,18 @@ let adminController = {
         .json({ err: true, error, message: "Something went wrong" });
     }
   },
+
+  dashBoard:async(erq,res)=>{
+    try {
+      let totalStudents= await studentModel.count()
+      let totalFaculties= await facultyModel.count()
+      let totalClubs= await clubModel.count()
+      res.json({success:true, student:totalStudents, faculty:totalFaculties,
+      club:totalClubs})
+    } catch (error) {
+      res.json({success:false,error, message:"Server error"})
+    }
+  }
    
 };
 
