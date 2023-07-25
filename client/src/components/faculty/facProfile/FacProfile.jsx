@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon, MDBBtn } from 'mdb-react-ui-kit';
 import { facultySubmitPass, fetchFaculty, sentOttpFac } from '../../../api/facultyApi';
-import { Link } from 'react-router-dom';
+import './FacProfile.css'
 import { MdEditSquare } from 'react-icons/md';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
@@ -421,7 +421,7 @@ const handleChangePassword = async()=>{
           <TextField
             margin="dense"
             id="address"
-            label="Change Profile Photo"
+            // label="Change Profile Photo"
             type="file"
             fullWidth
             variant="standard"

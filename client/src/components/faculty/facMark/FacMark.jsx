@@ -17,6 +17,7 @@ import {
 } from "../../../api/facultyApi";
 import "./FacMark.css";
 import { FcUpload } from "react-icons/fc";
+import Swal from "sweetalert2";
  
 
 function MarkAttendanceTable({ students }) {
@@ -78,10 +79,11 @@ function MarkAttendanceTable({ students }) {
         return student;
       });
       setStudentsList(updatedStudentsList);
-
-      // Save the updated studentsList to local storage
       localStorage.setItem("studentsList", JSON.stringify(updatedStudentsList));
-
+      Swal.fire({
+        icon:"success",
+        text:"Uploaded mark successfully"
+      })
       setShowModal(false);
     } catch (error) {
       console.error("Error saving mark data:", error);

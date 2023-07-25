@@ -10,6 +10,7 @@ import StudSubjects from "../pages/student/studSubjects/StudSubjects";
 import StudentClubs from "../pages/student/studentClubs/StudentClubs";
 import ProtectedStudentRoute from "../utils/ProtectedStudentRoute";
 import StudentComplain from "../pages/student/studentComplain/StudentComplain";
+import StudentViewComplain from "../pages/student/studentViewComplain/StudentViewComplain";
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -42,8 +43,8 @@ function StudentRoute() {
         <Route path="/mark" element={<StudResult />} />
         <Route path="/clubs" element={<StudentClubs />} />
         <Route path="/complain" element={<StudentComplain />} />
-        <Route path="/subjects" element={<StudSubjects />} />
-        {/* <Route path="/logout" element={<Navigate to="/login" />} /> */}
+        <Route path="/viewComplain" element={<StudentViewComplain />} />
+        {/* <Route path="/timeTable" element={< />} /> */}
       </Route>
     </Routes>
   );

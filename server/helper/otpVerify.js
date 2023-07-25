@@ -26,7 +26,7 @@ let sentOtp=(email,otp)=>{
               <h2>${otp}</h2>
             `,
           }
-    console.log(email,'dfdfdfdfdfd')
+  
           transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               console.log("email sent error ", error)

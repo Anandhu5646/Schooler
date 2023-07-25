@@ -40,11 +40,8 @@ function FacClubReq() {
   };
 
   const handleDelete = async () => {
-    console.log("delete");
     setRefresh(true);
   };
-
-
 
   const getStatusBackgroundColor = (status) => {
     switch (status) {

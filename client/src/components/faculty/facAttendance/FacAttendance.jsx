@@ -14,6 +14,7 @@ import {
   fetchStudentsByclass,
   saveAttendanceData,
 } from "../../../api/facultyApi";
+import Swal from "sweetalert2";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -91,7 +92,10 @@ const FacAttendance = () => {
       );
       console.log(attendanceData, "attendanceData");
       await saveAttendanceData(attendanceData);
-
+      Swal.fire({
+        icon:"success",
+        text:"Uploaded attendance successfully"
+      })
       handleCloseModal();
       handleRefresh();
     } catch (error) {

@@ -11,6 +11,7 @@ import AdminSubject from "../pages/admin/adminSubjects/AdminSubject";
 import AdminLogin from "../pages/admin/adminLogin/AdminLogin";
 import ProtectedAdminRoute from "../utils/ProtectedAdminRoute";
 import CheckComplain from "../pages/admin/checkComplain/CheckComplain";
+import AdminNotice from "../pages/admin/adminNotice/AdminNotice";
 
 function AdminRoute() {
   const { admin, refresh } = useSelector((state) => state);
@@ -40,6 +41,7 @@ function AdminRoute() {
           <Route path="/faculty" element={<AdminFaculty />} />
           <Route path="/student" element={<AdminStudent />} />
           <Route path="/club" element={<AdminClub />} />
+          <Route path="/notice" element={<AdminNotice />} />
           <Route path="/classes" element={<AdminClass />} />
           <Route path="/subjects" element={<AdminSubject />} />
           <Route path="/complain" element={<CheckComplain />} />
