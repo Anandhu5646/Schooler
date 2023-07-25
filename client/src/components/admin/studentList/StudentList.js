@@ -1,319 +1,622 @@
-import React, { useEffect, useState } from 'react';
+
+
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Table, Button, Modal, Form, Row, Col, Container } from "react-bootstrap";
+import avatar from "../../../assets/avatar.jpg";
 import {
-  MDBBadge,
-  MDBBtn,
-  MDBTable,
-  MDBTableHead,
-  MDBTableBody,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBModalFooter,
-  MDBInput,
-} from 'mdb-react-ui-kit';
-
-import avatar from '../../../assets/avatar.jpg';
-import { Link } from 'react-router-dom';
-import { fetchStudentList,addStudent,deleteStudent } from '../../../api/adminApi';
-import { useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+  fetchStudentList,
+  addStudent,
+  deleteStudent,
+  updateStudent,
+  saveUpdateStudent,
+} from "../../../api/adminApi";
+import Swal from "sweetalert2";
 
 function StudentList() {
-  const {refresh}= useSelector((state)=> state)
+  const [refresh, setRefresh] = useState(false);
   const [studentList, setStudentList] = useState([]);
-
-
+  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const fetchStudentData = async () => {
-  try {
-    const students = await fetchStudentList()
-    setStudentList(students)
-  } catch (err) {
-    console.error('Error:', err);
-  }
-};
-
-
-  
-  const [showModal, setShowModal] = useState(false);
-  const [formValue, setFormValue] = useState({
-    name: '',
-    age: '',
-    qualification: '',
-    dob: '',
-    teachingArea: '',
-    email: '',
-    password: '',
-    mobile: '',
-    joiningYear: '',
-    gender: '',
-    address: '',
-    className: '',
-  });
+    try {
+      const students = await fetchStudentList();
+      setStudentList(students);
+      setRefresh(true);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+// ================================
+  const [formValue, setFormValue] = useState({
+    name: "",
+    age: "",
+   fatherName: "",
+    dob: "",
+    motherName: "",
+    email: "",
+    password: "",
+    mobile: "",
+    admYear: "",
+    gender: "",
+    address: "",
+    className: "",
+    rollNo:""
+  });
 
   const onChange = (e) => {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
-
+// ==================================
   const handleAddStudent = async () => {
-  try {
-    const response = await addStudent(formValue);
-    console.log("data saved successfully", response);
-    toast.success('student added successfully!', {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  } catch (err) {
-    console.error('Error:', err);
-    toast.error('Error adding student!', {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  }
-
-  toggleModal();
-};
-
-  const deleteStud = async (id) => {
-  try {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You are about to delete this student. This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#212A3E',
-      cancelButtonColor: 'red',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
-      await deleteStudent(id);
-      const updatedStudentList = studentList.filter((student) => student._id !== id);
-      setStudentList(updatedStudentList);
-      Swal.fire('Deleted!', 'The student has been deleted.', 'success');
+    try {
+      const response = await addStudent(formValue);
+      console.log("data saved successfully", response);
+      toast.success("student added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setRefresh(!refresh);
+    } catch (err) {
+      console.error("Error:", err);
+      toast.error("Error adding student!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-  } catch (error) {
-    console.error('Error:', error);
-    Swal.fire('Error', 'An error occurred while deleting the student.', 'error');
-  }
-};
 
-useEffect(() => {
+    toggleModal();
+  };
+  useEffect(() => {
     fetchStudentData();
   }, [refresh]);
- 
+  // ============================================
+  const deleteStud = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to delete this student. This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#212A3E",
+        cancelButtonColor: "red",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
 
+      if (result.isConfirmed) {
+        await deleteStudent(id);
+        const updatedStudentList = studentList.filter(
+          (student) => student._id !== id
+        );
+        setStudentList(updatedStudentList);
+        Swal.fire("Deleted!", "The student has been deleted.", "success");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire(
+        "Error",
+        "An error occurred while deleting the student.",
+        "error"
+      );
+    }
+  };
+// =================== edit code ==================
+const [name,setName]=React.useState('')
+const [email,setEmail]=React.useState('')
+const [mobile,setMobile]=React.useState('')
+const [dob,setDob]=React.useState('')
+const [admYear,setAdmyear]=React.useState('')
+const [motherName,setMotherName]=React.useState('')
+const [address,setAddress]=React.useState('')
+const [className,setClassName]=React.useState('')
+const [gender,setGender]=React.useState('')
+const [fatherName,setFatherName]=React.useState('')
+const [age,setAge]=React.useState('')
+const [rollNo,setRollNo]=React.useState('')
+const[id,setid]=React.useState('')
+const [ErrMsg,setErrmsg]=React.useState('')
+
+
+const handleOpenEdit=async (id) => { 
+  
+  setid(id)
+  let response=await  updateStudent(id)
+ 
+  setOpen(true);
+  setName(response.name)
+  setEmail(response.email)
+  setMobile(response.mobile)
+  setDob(response.dob)
+  setAdmyear(response.admYear)
+  setAddress(response.address)
+  setFatherName(response.fatherName)
+  setMotherName(response.motherName)
+  setGender(response.gender)
+  setAge(response.age)
+  setRollNo(response.rollNo)
+  setClassName(response.className)
+ console.log(response);
+  
+}
+const handleClose = () => {
+  setOpen(false);
+};
+const handlesaveEditStudent=()=>{
+  if (id.trim()&&name.trim()&&email.trim()&&mobile.trim()&&address.trim()&&fatherName.trim()&&
+  dob.trim()&&admYear.trim()&&motherName.trim()&&gender.trim()&&age.trim()&&rollNo.trim()&&
+ className.trim()) {
+  
+saveUpdateStudent(id,name,email,mobile,address,fatherName,
+  dob,admYear,motherName,gender,age,className,rollNo)
+  setRefresh(!refresh)
+  setOpen(false);
+}else{
+  setErrmsg('Fill All The Fields')
+}
+}
   return (
-    <div className='' style={{ width: '80%', marginLeft: '200px', marginTop: '50px' }}>
-      <div className='d-flex justify-content-between align-items-end mb-5'>
+    <div
+      className=""
+      style={{ width: "80%", marginLeft: "200px", marginTop: "50px" }}
+    >
+      <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Student List</h1>
-        <Link to=''>
-          <MDBBtn style={{ background: '#394867' }} onClick={toggleModal}>
+        <Link to="">
+          <Button
+            variant="primary"
+            style={{ background: "#394867" }}
+            onClick={toggleModal}
+          >
             Add student
-          </MDBBtn>
+          </Button>
         </Link>
       </div>
-      <MDBTable align='middle'>
-        <MDBTableHead>
+      <Table striped bordered hover responsive>
+        <thead>
           <tr>
-            <th scope='col'>No.</th>
-            <th scope='col'>Image</th>
-            <th scope='col'>Name</th>
-            <th scope='col'>Class</th>
-            <th scope='col'>Adm Year</th>
-            <th scope='col'>Mobile</th>
-            <th scope='col'>DOB</th>
-            <th scope='col'>Age</th>
-            <th scope='col' className='d-flex ms-4'>
-              Action
-            </th>
+            <th>No.</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Adm Year</th>
+            <th>Mobile</th>
+            <th>DOB</th>
+            <th>Age</th>
+            <th className=" ms-5">Action</th>
           </tr>
-        </MDBTableHead>
+        </thead>
 
-        <MDBTableBody>
+        <tbody>
           {studentList.map((student, index) => (
-
             <tr key={student._id}>
               <td>{index + 1}</td>
               <td>
-                <img src={avatar} alt='' style={{ width: '45px', height: '45px' }} className='rounded-circle' />
+                <img
+                  src={avatar}
+                  alt=""
+                  style={{ width: "45px", height: "45px" }}
+                  className="rounded-circle"
+                />
               </td>
               <td>
-                <div className='d-flex align-items-center'>
-                  <div className='ms-3'>
-                    <p className='fw-bold mb-1'>{student.name}</p>
+                <div className="d-flex align-items-center">
+                  <div className="ms-3">
+                    <p className="fw-bold mb-1">{student.name}</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p className='fw-normal mb-1'>{student.className}</p>
+                <p className="fw-normal mb-1">{student.className}</p>
               </td>
               <td>
-                <p className='fw-normal mb-1'>{student.admYear}</p>
+                <p className="fw-normal mb-1">{student.admYear}</p>
               </td>
               <td>
-                <p className='fw-normal mb-1'>{student.mobile}</p>
+                <p className="fw-normal mb-1">{student.mobile}</p>
               </td>
               <td>{student.dob}</td>
               <td>{student.age}</td>
               <td>
-                <Link to={`/editstudentList/${student._id}`}>
-                  <MDBBtn color='link' rounded size='sm'>
-                    Edit
-                  </MDBBtn>
-                </Link>
-                
-                  <MDBBtn type='button' color='link' onClick={()=> deleteStud(student._id)} rounded size='sm'>
-                    X
-                  </MDBBtn>
                
+                  <Button variant="link" rounded size="sm"
+                  onClick={()=> handleOpenEdit(student._id)}>
+                    Edit
+                  </Button>
+               
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={() => deleteStud(student._id)}
+                  rounded
+                  size="sm"
+                >
+                  X
+                </Button>
               </td>
             </tr>
           ))}
-        </MDBTableBody>
-      </MDBTable> 
-      <MDBModal show={showModal} onHide={toggleModal} tabIndex='-1'>
-  <MDBModalDialog>
-    <form>
-      <MDBModalContent>
-        <MDBModalHeader style={{ marginTop: '50px' }}>
-          <MDBModalTitle>Add Student</MDBModalTitle>
-          <MDBBtn className='btn-close' color='none' onClick={toggleModal} />
-        </MDBModalHeader>
-        <MDBModalBody>
-          <div className='mb-3'>
-            <MDBInput value={formValue.name} name='name' onChange={onChange} label="Student's Name" required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.fatherName} name='fatherName' onChange={onChange} label="Father's Name" required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.motherName} name='motherName' onChange={onChange} label="Mother's Name" required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.dob} name='dob' onChange={onChange} type='date' label='Date of Birth' required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.age} name='age' onChange={onChange} type='number' label='Age' required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.className} name='className' onChange={onChange} label='Class' required />
-          </div>
-          <div className='mb-3'>
-            <div className='form-check'>
-              <input
-                type='radio'
-                className='form-check-input'
-                id='maleRadio'
-                name='gender'
-                value='male'
-                checked={formValue.gender === 'male'}
-                onChange={onChange}
-                required
-              />
-              <label className='form-check-label' htmlFor='maleRadio'>
-                Male
-              </label>
-            </div>
+        </tbody>
+      </Table>
+      <Modal show={showModal} onHide={toggleModal} centered>
+        <Modal.Header closeButton style={{ marginTop: "50px" }}>
+          <Modal.Title>Add Student</Modal.Title>
+        </Modal.Header>
+        <Form>
+          <Modal.Body>
+            <Container>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Student's Name</Form.Label>
+                  <Form.Control
+                    value={formValue.name}
+                    name="name"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Father's Name</Form.Label>
+                  <Form.Control
+                    value={formValue.fatherName}
+                    name="fatherName"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Mother's Name</Form.Label>
+                  <Form.Control
+                    value={formValue.motherName}
+                    name="motherName"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Date of Birth</Form.Label>
+                  <Form.Control
+                    value={formValue.dob}
+                    name="dob"
+                    type="date"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>Age</Form.Label>
+                  <Form.Control
+                    value={formValue.age}
+                    name="age"
+                    type="number"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>Class</Form.Label>
+                  <Form.Control
+                    value={formValue.className}
+                    name="className"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    value={formValue.email}
+                    name="email"
+                    type="email"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    value={formValue.password}
+                    name="password"
+                    type="password"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Mobile</Form.Label>
+                  <Form.Control
+                    value={formValue.mobile}
+                    name="mobile"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>Admission Year</Form.Label>
+                  <Form.Control
+                    value={formValue.admYear}
+                    name="admYear"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    value={formValue.address}
+                    name="address"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+                <Col>
+                  <Form.Label>Roll No.</Form.Label>
+                  <Form.Control
+                    value={formValue.rollNo}
+                    name="rollNo"
+                    onChange={onChange}
+                    required
+                  />
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Gender</Form.Label>
+                  <div className="mb-3">
+                    <Form.Check
+                      type="radio"
+                      label="Male"
+                      name="gender"
+                      value="male"
+                      checked={formValue.gender === "male"}
+                      onChange={onChange}
+                      required
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="Female"
+                      name="gender"
+                      value="female"
+                      checked={formValue.gender === "female"}
+                      onChange={onChange}
+                      required
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="Other"
+                      name="gender"
+                      value="other"
+                      checked={formValue.gender === "other"}
+                      onChange={onChange}
+                      required
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={toggleModal}>
+              Close
+            </Button>
+            <Button
+              onClick={handleAddStudent}
+              style={{ background: "#394867" }}
+            >
+              Save
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
 
-            <div className='form-check'>
-              <input
-                type='radio'
-                className='form-check-input'
-                id='femaleRadio'
-                name='gender'
-                value='female'
-                checked={formValue.gender === 'female'}
-                onChange={onChange}
-                required
-              />
-              <label className='form-check-label' htmlFor='femaleRadio'>
-                Female
-              </label>
-            </div>
 
-            <div className='form-check'>
-              <input
-                type='radio'
-                className='form-check-input'
-                id='otherRadio'
-                name='gender'
-                value='other'
-                checked={formValue.gender === 'other'}
-                onChange={onChange}
-                required
-              />
-              <label className='form-check-label' htmlFor='otherRadio'>
-                Other
-              </label>
-            </div>
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.email} name='email' onChange={onChange} type='email' label='Email' required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput
-              value={formValue.password}
-              name='password'
-              onChange={onChange}
-              type='password'
-              label='Password'
-              required
-            />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.mobile} name='mobile' onChange={onChange} label='Mobile' required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput
-              value={formValue.admYear}
-              name='admYear'
-              onChange={onChange}
-              label='Admission Year'
-              required
-            />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.address} name='address' onChange={onChange} label='Address' required />
-          </div>
-          <div className='mb-3'>
-            <MDBInput value={formValue.rollNo} name='rollNo' onChange={onChange} label='Roll No.' required />
-          </div>
-        </MDBModalBody>
+{/* ======================== edit modal ======================= */}
 
-        <MDBModalFooter>
-          <MDBBtn color='secondary' onClick={toggleModal}>
+<Modal show={open} onHide={handleClose} centered>
+      <Modal.Header closeButton style={{ marginTop: "50px" }}>
+        <Modal.Title>Edit Student</Modal.Title>
+        <p style={{color:'red'}}>{ErrMsg}</p>
+      </Modal.Header>
+      <Form>
+        <Modal.Body>
+          <Container>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Student's Name</Form.Label>
+                <Form.Control
+                  
+                  name="name"
+                  value={name}
+            onChange={(e)=>setName(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Father's Name</Form.Label>
+                <Form.Control
+                  value={fatherName}
+                  name="fatherName"
+                  onChange={(e)=>setFatherName(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Mother's Name</Form.Label>
+                <Form.Control
+                  value={motherName}
+                  name="motherName"
+                  onChange={(e)=>setMotherName(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control
+                  value={dob}
+                  name="dob"
+                  type="date"
+                  onChange={(e)=>setDob(e.target.value)}
+                  required
+                />
+              </Col>
+              <Col>
+                <Form.Label>Age</Form.Label>
+                <Form.Control
+                  value={age}
+                  name="age"
+                  type="number"
+                  onChange={(e)=>setAge(e.target.value)}
+                  required
+                />
+              </Col>
+              <Col>
+                <Form.Label>Class</Form.Label>
+                <Form.Control
+                  value={className}
+                  name="className"
+                  onChange={(e)=>setClassName(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  value={email}
+                  name="email"
+                  type="email"
+                  onChange={(e)=>setEmail(e.target.value)}
+                  required
+                />
+              </Col>
+             
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Mobile</Form.Label>
+                <Form.Control
+                  value={mobile}
+                  name="mobile"
+                  onChange={(e)=>setMobile(e.target.value)}
+                  required
+                />
+              </Col>
+              <Col>
+                <Form.Label>Admission Year</Form.Label>
+                <Form.Control
+                  value={admYear}
+                  name="admYear"
+                  onChange={(e)=>setAdmyear(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  value={address}
+                  name="address"
+                  onChange={(e)=>setAddress(e.target.value)}
+                  required
+                />
+              </Col>
+              <Col>
+                <Form.Label>Roll No.</Form.Label>
+                <Form.Control
+                  value={rollNo}
+                  name="rollNo"
+                  onChange={(e)=>setRollNo(e.target.value)}
+                  required
+                />
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <Form.Label>Gender</Form.Label>
+                <div className="mb-3">
+                  <Form.Check
+                    type="radio"
+                    label="Male"
+                    name="gender"
+                    value="male"
+                    checked={gender === "male"}
+                    onChange={(e)=>setGender(e.target.value)}
+                    required
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Female"
+                    name="gender"
+                    value="female"
+                    checked={gender === "female"}
+                    onChange={(e)=>setGender(e.target.value)}
+                    required
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Other"
+                    name="gender"
+                    value="other"
+                    checked={gender === "other"}
+                    onChange={(e)=>setGender(e.target.value)}
+                    required
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
             Close
-          </MDBBtn>
-          <MDBBtn onClick={handleAddStudent} style={{ background: '#394867' }}>
+          </Button>
+          <Button
+            onClick={handlesaveEditStudent}
+            type="submit"
+            style={{ background: "#394867" }}
+          >
             Save
-          </MDBBtn>
-        </MDBModalFooter>
-      </MDBModalContent>
-    </form>
-  </MDBModalDialog>
-</MDBModal>
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
 
       <ToastContainer />
     </div>

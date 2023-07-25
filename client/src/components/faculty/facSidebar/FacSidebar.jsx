@@ -18,13 +18,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
-import SchoolIcon from "@mui/icons-material/School";
+import { MdWarningAmber ,MdOutlineMessage,MdAddCircleOutline,MdFilePresent,MdOutlineUploadFile} from "react-icons/md";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import ClassIcon from "@mui/icons-material/Class";
-import SubjectIcon from "@mui/icons-material/Subject";
-import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
-import EmailIcon from "@mui/icons-material/Email";
+
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
@@ -65,7 +61,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -123,15 +118,18 @@ function FacSidebar() {
     setShowModal(false);
   };
  
-
+  const iconStyle={
+    fontSize:"23px"
+    
+  }
   const drawerItems = [
     { text: "Profile", icon: <DashboardIcon />, to: "/faculty/" },
-    { text: "Upload Attendance", icon: <GroupIcon />, to: "/faculty/attendance" },
-    { text: "Upload Mark", icon: <GroupIcon />, to: "/faculty/mark" },
+    { text: "Upload Attendance", icon: <span style={iconStyle}><MdFilePresent /></span>, to: "/faculty/attendance" },
+    { text: "Upload Mark", icon: <span style={iconStyle}><MdOutlineUploadFile /></span>, to: "/faculty/mark" },
     { text: "Student Clublist", icon: <LocalLibraryIcon />, to: "/faculty/clubList" },
-    { text: "Club Join Request", icon: <LocalLibraryIcon />, to: "/faculty/clubReq" },
-    { text: "Notices", icon: <LocalLibraryIcon />, to: "/faculty/notice" },
-    { text: "Register Complain", icon: <LocalLibraryIcon />, to: "/faculty/complain" },
+    { text: "Club Join Request", icon: <span style={iconStyle}><MdAddCircleOutline /></span>, to: "/faculty/clubReq" },
+    { text: "Notices", icon: <span style={iconStyle}><MdOutlineMessage /></span>, to: "/faculty/notice" },
+    { text: "Register Complain",icon: <span style={iconStyle}><MdWarningAmber/></span>, to: "/faculty/complain" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {

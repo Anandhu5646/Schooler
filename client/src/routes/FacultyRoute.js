@@ -8,6 +8,7 @@ import FacMarkAttendance from '../pages/faculty/facultyAttendance/FacMarkAttenda
 import FacMarkUpload from '../pages/faculty/facultyMarkUpload/FacMarkUpload';
 import FacultyClubReq from '../pages/faculty/facultyClubReq/FacultyClubReq';
 import ProtectedFacultyRoute from '../utils/ProtectedFacultyRoute';
+import FacultyComplain from '../pages/faculty/facultyComplain/FacultyComplain';
 
 function FacultyRoute() {
   const { faculty, refresh } = useSelector((state) => state);
@@ -40,6 +41,7 @@ function FacultyRoute() {
           <Route path="/attendance" element={<FacMarkAttendance />} />
           <Route path="/mark" element={<FacMarkUpload />} />
           <Route path="/clubReq" element={<FacultyClubReq />} />
+          <Route path="/complain" element={<FacultyComplain />} />
         </Route>
       )}
     </Routes>

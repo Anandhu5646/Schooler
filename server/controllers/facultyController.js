@@ -7,6 +7,7 @@ const attendanceModel = require("../models/attendanceModel");
 const subjectModel = require("../models/subjectModel");
 const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
+const complainModel = require("../models/complainModel");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -186,6 +187,27 @@ let facultyController = {
       res.json({ success: true });
     } catch (error) {
       res.json({success:false,error, message:"Server error"})
+    }
+  },
+  postFacComplain:async(req,res)=>{
+    try {
+      const facultyName=req.faculty.name
+      const facultyId= req.faculty.id
+      const facultyClass= req.faculty.className
+      const currentDate = new Date();
+      await complainModel.create({
+        title:req.body.title,
+        content:req.body.content,
+        name:facultyName,
+        className:facultyClass,
+        date:currentDate.toLocaleDateString(),
+        complainterId:facultyId,
+        complainPerson:'Faculty'
+
+      })
+      res.json({success:true})
+    } catch (error) {
+      res.json({success:false, error, message:"Server error"})
     }
   }
 

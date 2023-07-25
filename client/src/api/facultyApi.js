@@ -233,3 +233,25 @@ export async function FacClubReqUpdated(id,status){
     throw error;
   }
 }
+export async function saveFacultyComplain(title, content){
+  try {
+    const response= await axios.post("/faculty/saveComplaint",{title, content}
+    ,{
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    if(response.data.success){
+      console.log(response.data,'dfdddfdddddddddddddddd');
+      return response.data
+    }else{
+      return response.error
+    } 
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while registering complain",
+    });
+    throw error;
+  }
+}

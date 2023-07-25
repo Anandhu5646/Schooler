@@ -2,12 +2,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-
-export async function authAdmin(){
-  const response= await axios.get("/admin/auth")
-  return response
+export async function authAdmin() {
+  const response = await axios.get("/admin/auth");
+  return response;
 }
-
 
 export async function fetchStudentList() {
   try {
@@ -153,7 +151,6 @@ export async function fetchClubList() {
 
 export async function addClub(clubData) {
   try {
-    
     const { facultyId, facultyName, name, description } = clubData;
     const response = await axios.post("/admin/addClub", {
       facultyId,
@@ -181,7 +178,6 @@ export async function addClub(clubData) {
     throw error;
   }
 }
-
 
 export async function fetchClassList() {
   try {
@@ -259,7 +255,10 @@ export async function deleteFac(id) {
 }
 export async function deleteClub(id) {
   try {
-    const response = await axios.post(`/admin/deleteClub/${id}`,  { headers: { "Content-Type": "application/json" }, withCredentials: true });
+    const response = await axios.post(`/admin/deleteClub/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
 
     if (response.data.success) {
       Swal.fire({
@@ -302,7 +301,7 @@ export async function deleteStudent(id) {
     console.error(error);
   }
 }
-export async function deleteSubjects(id){
+export async function deleteSubjects(id) {
   try {
     const response = await axios.post(
       "/admin/deleteSubject",
@@ -323,23 +322,38 @@ export async function deleteSubjects(id){
       });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
-export async function fecthFacultyDetails(id){
-  const response=  await axios.get(`/admin/viewFaculties/${id}`,
-   { headers: { "Content-Type": "application/json" }, withCredentials: true })
-   if(response.data.success){
-    return response.data.faculty
-   }else{
-     Swal.fire({
-        icon: "error",
-        title: "Oops..!!",
-        text: "An error occurred while fetching faculty",
-      });
-   }
+export async function fecthFacultyDetails(id) {
+  const response = await axios.get(`/admin/viewFaculties/${id}`, {
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+  });
+  if (response.data.success) {
+    return response.data.faculty;
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while fetching faculty",
+    });
+  }
 }
-export async function updateFaculty(id, name, email, mobile, dob, joiningYear, teachingArea, qualification, address, gender, age, className) {
+export async function updateFaculty(
+  id,
+  name,
+  email,
+  mobile,
+  dob,
+  joiningYear,
+  teachingArea,
+  qualification,
+  address,
+  gender,
+  age,
+  className
+) {
   try {
     const formData = new FormData();
     formData.append("name", name);
@@ -386,10 +400,10 @@ export async function updateFaculty(id, name, email, mobile, dob, joiningYear, t
 }
 
 export const getStudentClubFac = async () => {
-  try{
-  const response = await axios.get(`/admin/faculty`);
-   
-    return response.data
+  try {
+    const response = await axios.get(`/admin/faculty`);
+
+    return response.data;
   } catch (err) {
     console.error("Error:", err);
     Swal.fire({
@@ -399,7 +413,141 @@ export const getStudentClubFac = async () => {
     });
     return null;
   }
+};
 
+export async function getComplaints() {
+  try {
+    const response = await axios.get("/admin/complain");
+    if (response.data.success) {
+      return response.data.complaints;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while fetching complaints..!",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong",
+    });
+    return null;
+  }
 }
 
+export async function deleteComplain(id) {
+  try {
+    const response = await axios.post(
+      `/admin/deleteComplain/${id}`,
 
+      { headers: { "Content-Type": "application/json" }, withCredentials: true }
+    );
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Confirmation!!",
+        text: response.data.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while deleting faculty",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "Something went wrong",
+    });
+    throw error;
+  }
+}
+export async function updateStudent(id) {
+  try {
+    let response = await axios.get(
+      "/admin/updateStudent",
+      { params: { id } },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    if (response.data.success) {
+      return response.data.student;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error occured while getting student details",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "Something went wrong",
+    });
+    throw error;
+  }
+}
+export async function saveUpdateStudent(
+  id,
+  name,
+  email,
+  mobile,
+  address,
+  age,
+  dob,
+  admYear,
+  rollNo,
+  gender,
+  fatherName,
+  motherName,
+  className
+) {
+  try {
+    let response = await axios.post(
+      "/admin/updateStudent",
+      {
+        id,
+        name,
+        email,
+        mobile,
+        address,
+        dob,
+        admYear,
+        rollNo,
+        gender,
+        fatherName,
+        motherName,
+        className,
+        age,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.data.success) {
+      return response.data;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error while updating student details",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "Something went wrong",
+    });
+    throw error;
+  }
+}

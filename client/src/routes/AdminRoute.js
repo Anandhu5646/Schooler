@@ -10,6 +10,7 @@ import AdminClass from "../pages/admin/adminClasses/AdminClass";
 import AdminSubject from "../pages/admin/adminSubjects/AdminSubject";
 import AdminLogin from "../pages/admin/adminLogin/AdminLogin";
 import ProtectedAdminRoute from "../utils/ProtectedAdminRoute";
+import CheckComplain from "../pages/admin/checkComplain/CheckComplain";
 
 function AdminRoute() {
   const { admin, refresh } = useSelector((state) => state);
@@ -41,6 +42,7 @@ function AdminRoute() {
           <Route path="/club" element={<AdminClub />} />
           <Route path="/classes" element={<AdminClass />} />
           <Route path="/subjects" element={<AdminSubject />} />
+          <Route path="/complain" element={<CheckComplain />} />
           <Route path="/logout" element={<Navigate to="/" />} />
         </>
       </Route>

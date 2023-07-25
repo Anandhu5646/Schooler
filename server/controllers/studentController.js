@@ -4,6 +4,7 @@ const sentOTP= require('../helper/otpVerify')
 const bcrypt = require("bcryptjs");
 const clubModel = require('../models/clubModel');
 const clubRequestModel = require('../models/clubRequestModel');
+const complainModel = require('../models/complainModel');
 
 let studentController={
 
@@ -118,13 +119,34 @@ getSendReqStatus: async(req,res)=>{
   try {
    
     const statuss= await clubRequestModel.find().sort({_id:-1})
-    console.log(statuss,'statussssssss')
     res.json({success:true, statuss})
   } catch (error) {
     res.json({success:false, error, message:"Server error"})
     console.log(error)
   }
 
+},
+postStudComplaint:async(req,res)=>{
+  try {
+    const studentId= req.student.id
+    const studentName=req.student.name
+    const studentClass=req.student.className
+    const currentDate = new Date();
+    await complainModel.create({
+      title: req.body.title,
+      content:req.body.content,
+      name:studentName,
+      complainterId:studentId,
+      complainPerson:'Student',
+      className:studentClass,
+      date: currentDate.toLocaleDateString()
+      
+    })
+
+    res.json({success:true})
+  } catch (error) {
+    res.json({success:false, error, message:"Server error"})
+  }
 }
     
 }

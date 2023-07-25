@@ -1,6 +1,7 @@
 const adminModel = require("../models/adminModel");
 const classModel = require("../models/classModel");
 const clubModel = require("../models/clubModel");
+const complainModel = require("../models/complainModel");
 const facultyModel = require("../models/facultyModel");
 const noticeModel = require("../models/noticeModel");
 const studentModel = require("../models/studentModel");
@@ -298,6 +299,16 @@ let adminController = {
       console.log(error);
     }
   },
+  deleteComplain:async (req,res)=>{
+    try {
+      const {id}= req.params; 
+      await complainModel.findByIdAndDelete({_id:id})
+      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+    } catch (error) {
+      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      console.log(error);
+    }
+  },
   deleteSubject: async (req,res)=>{
     try {
       const {id}= req.body; 
@@ -311,7 +322,6 @@ let adminController = {
   deleteClubs: async (req,res)=>{
     try {
       const {id}= req.params;
-      console.log('sdfdfdfdfdfdfdfdfdfd',id)
       await clubModel.findByIdAndDelete({_id:id})
       return res.json({error:false, success:true, message: "deleted successfully"})
     } catch (error) {
@@ -387,7 +397,7 @@ let adminController = {
     }
   },
 
-  dashBoard:async(erq,res)=>{
+  dashBoard:async(req,res)=>{
     try {
       let totalStudents= await studentModel.count()
       let totalFaculties= await facultyModel.count()
@@ -397,7 +407,69 @@ let adminController = {
     } catch (error) {
       res.json({success:false,error, message:"Server error"})
     }
+  },
+  getAllcomplaints:async(req,res)=>{
+    try {
+      let complaints= await complainModel.find().sort({_id:-1})
+      res.json({success:true, complaints})
+    } catch (error) {
+      res.json({success:false, error, message:"Server error"})
+      console.log(error)
+    }
+  },
+  getUpdateStudent:async(req,res)=>{
+    try {
+      let id = req.query.id
+      if (id == undefined) {
+          res.json({
+              name: '',
+              email: '',
+              mobile: '',
+              dob: '',
+              admYear: '',
+             fatherName: '',
+              motherName: '',
+              address: '',
+              className: '',
+              gender: '',
+              rollNo: '',
+              age: '',
+          })
+          return
+      }
+      let student = await studentModel.findOne({ _id: id })
+      res.json({success:true,student})
+    } catch (error) {
+      res.json({success:false, error, message:"Server error"})
+    }
   }
+  ,postAdminUpdateStudent:async(req,res)=>{
+    try {
+      const id = req.body.id;
+      const updateStudent = {
+          name: req.body.name,
+          email: req.body.email,
+          mobile: req.body.mobile,
+          dob: req.body.dob,
+          admYear: req.body.admYear,
+          address: req.body.address,
+          fatherName: req.body.fatherName,
+          gender: req.body.gender,
+          motherName: req.body.motherName,
+          rollNo: req.body.rollNo,
+          className: req.body.className,
+          age:req.body.age
+      };
+      let response = await studentModel.updateOne({ _id: id }, updateStudent);
+      console.log(response,'fdfdfdfdfdfdfdfdf');
+      res.json({success:true, message:"Sutdent details updated"});
+
+      console.log('updated succesfully')
+  
+    } catch (error) {
+      console.log("server error")
+    }
+  },
    
 };
 

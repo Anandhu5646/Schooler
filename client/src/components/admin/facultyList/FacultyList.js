@@ -309,7 +309,7 @@ function FacultyList() {
   useEffect(() => {
     fetchFacultyData();
   }, [refresh]);
-  console.log(errors.name, "eeeeeeeeeeeeeeeeeee");
+
   return (
     <div
       className=""
@@ -428,18 +428,7 @@ function FacultyList() {
                   <span className="text-danger">{errors.email.message}</span>
                 )}
               </div>
-              {/* <div className="mb-3">
-            <Form.Control
-              {...register("password")}
-              type="password"
-              placeholder="Password"
-              defaultValue={editFaculty ? editFaculty.password: ''}
-              required
-            />
-            {errors.password && (
-              <span className="text-danger">{errors.password.message}</span>
-            )}
-          </div> */}
+              
               <div className="mb-3">
                 <Form.Control
                   {...register("mobile")}

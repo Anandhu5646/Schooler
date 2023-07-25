@@ -1,5 +1,5 @@
 const express= require("express");
-const { getStudProfile, postStudEditProfile, sentOtp, verifyOtp, changePassword, getStudClubs, postClubRequest, getSendReqStatus } = require("../controllers/studentController");
+const { getStudProfile, postStudEditProfile, sentOtp, verifyOtp, changePassword, getStudClubs, postClubRequest, getSendReqStatus, postStudComplaint } = require("../controllers/studentController");
 const verifyStudent = require("../middleware/verifyStudent");
 const router= express.Router()
 const multer= require("multer")
@@ -22,6 +22,7 @@ router.post("/changePass", verifyStudent, changePassword)
 router.get("/clubs",verifyStudent, getStudClubs)
 router.post("/clubReq", verifyStudent, postClubRequest)
 router.get("/clubStatus", verifyStudent, getSendReqStatus)
+router.post("/saveComplaint", verifyStudent, postStudComplaint)
 
 
 module.exports = router;

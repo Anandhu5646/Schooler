@@ -11,6 +11,7 @@ const {
   saveStudentMark,
   getClubReq,
   postFacClubReqUpdate,
+  postFacComplain,
   
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
@@ -41,6 +42,7 @@ router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.post("/saveMark", verifyFaculty, saveStudentMark)
 router.get("/viewClubReq", verifyFaculty, getClubReq)
 router.post("/saveReq", verifyFaculty, postFacClubReqUpdate)
+router.post("/saveComplaint", verifyFaculty, postFacComplain)
 
 
 module.exports = router;

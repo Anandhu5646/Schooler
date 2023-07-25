@@ -31,7 +31,7 @@ import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-
+import { PiStudentDuotone ,PiChalkboardTeacherThin} from "react-icons/pi";
 
 
 
@@ -121,16 +121,19 @@ function Sidebar() {
   const closeModal = () => {   
     setShowModal(false);
   };
-  
+  const iconStyle={
+    fontSize:"23px"
+    
+  }
   const drawerItems = [
     { text: "Dashboard", icon: <DashboardIcon />, to: "/admin/" },
-    { text: "Faculty", icon: <GroupIcon />, to: "/admin/faculty" },
-    { text: "Students", icon: <GroupIcon />, to: "/admin/student" },
+    { text: "Faculty", icon: <span style={iconStyle}><PiChalkboardTeacherThin/></span>, to: "/admin/faculty" },
+    { text: "Students", icon: <span style={iconStyle}><PiStudentDuotone /></span>, to: "/admin/student" },
     { text: "Clubs", icon: <LocalLibraryIcon />, to: "/admin/club" },
     { text: "Notice", icon: <WarningAmberIcon />, to: "/admin/notice" },
     { text: "Classes", icon: <ClassIcon />, to: "/admin/classes" },
     { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },
-    { text: "Check complain", icon: <NotificationImportantIcon />, to: "/complain" },
+    { text: "Check complain", icon: <NotificationImportantIcon />, to: "/admin/complain" },
     { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];

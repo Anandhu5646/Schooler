@@ -13,9 +13,9 @@ import {
   fetchClubList,
   getStudentClubFac,
 } from "../../../api/adminApi";
-import axios from "axios";
 import Swal from "sweetalert2";
-
+import { IconButton } from "@mui/material";
+import {MdDelete} from "react-icons/md";
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -142,13 +142,21 @@ const ClubList = () => {
                 <Card.Text>Club Description :{club.description}</Card.Text>
                 <Card.Text>Club Co-ordinator :{club.facultyName}</Card.Text>
                 <div className="p-3 d-flex justify-content-end">
-                  <Button
+                  {/* <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleDeleteClub(club._id)}
+                    
                   >
                     Delete
-                  </Button>
+                  </Button> */}
+                  <IconButton
+                      type="button"
+                      style={{ color: "red" }}
+                      variant="success"
+                      onClick={() => handleDeleteClub(club._id)}
+                    >
+                    <MdDelete />
+                    </IconButton>
                 </div>
               </Card.Body>
             </Card>

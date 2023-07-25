@@ -144,3 +144,30 @@ export async function studClubStatus(){
   }
 }
 
+export async function saveStudentComplain(title,content){
+  try {
+    const response= await axios.post("/student/saveComplaint",{title,content}, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    })
+    if(response.data.success){
+      return response.data
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: response.data.message
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something Wrong',
+    });
+    throw error
+  }
+}
+
