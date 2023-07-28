@@ -10,6 +10,7 @@ import FacultyClubReq from '../pages/faculty/facultyClubReq/FacultyClubReq';
 import ProtectedFacultyRoute from '../utils/ProtectedFacultyRoute';
 import FacultyComplain from '../pages/faculty/facultyComplain/FacultyComplain';
 import FacultyMakeTimetable from '../pages/faculty/facultyMakeTimetable/FacultyMakeTimetable';
+import FacNotice from '../pages/faculty/facultyNotice/FacNotice';
 
 function FacultyRoute() {
   const { faculty, refresh } = useSelector((state) => state);
@@ -44,6 +45,7 @@ function FacultyRoute() {
           <Route path="/clubReq" element={<FacultyClubReq />} />
           <Route path="/complain" element={<FacultyComplain />} />
           <Route path="/timeTable" element={<FacultyMakeTimetable />} />
+          <Route path="/notice" element={<FacNotice />} />
         </Route>
       )}
     </Routes>

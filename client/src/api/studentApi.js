@@ -170,4 +170,15 @@ export async function saveStudentComplain(title,content){
     throw error
   }
 }
-
+export async function getAttendance(){
+  try {
+    const response=await axios.get("/student/attendance", {
+      headers:{"Content-Type":"application/json"}, withCredentials:true
+    })
+    if(response.data.success){
+      return response.data.attendance
+    }
+  } catch (error) {
+    
+  }
+}

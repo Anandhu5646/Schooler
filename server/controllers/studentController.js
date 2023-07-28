@@ -6,6 +6,7 @@ const clubModel = require('../models/clubModel');
 const clubRequestModel = require('../models/clubRequestModel');
 const complainModel = require('../models/complainModel');
 const noticeModel = require('../models/noticeModel');
+const attendanceModel = require('../models/attendanceModel');
 
 let studentController={
 
@@ -154,6 +155,18 @@ getStudViewNotice:async(req,res)=>{
     const notice= await noticeModel.find().sort({_id:-1})
    
     res.json({success:true, notice})
+  } catch (error) {
+    res.json({success:false, error, message:"Server error"})
+  }
+},
+getStudViewAttendance:async(req,res)=>{
+  const studentid=req.student.id
+  try {
+    const attendance= await attendanceModel.find({studentId:studentid}).sort({_id:-1})
+    console.log(attendance,'attendance')
+    res.json({success:true, attendance})
+
+
   } catch (error) {
     res.json({success:false, error, message:"Server error"})
   }

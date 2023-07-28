@@ -20,12 +20,14 @@ const studentMarkSchema = new mongoose.Schema({
     required:true
   },
   status: {
-    type: Boolean,
-    default: false
+    type: String,
+    default:"Pending"
   },
-  subject:{
+  subjectId:{
     type:String,
-    
+  },
+  subjectName:{
+    type:String,
   }
 });
 

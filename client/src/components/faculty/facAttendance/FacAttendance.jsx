@@ -13,7 +13,7 @@ import {
   fetchStudentsByclass,
   saveAttendanceData,
 } from "../../../api/facultyApi";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {  IconButton, Menu, MenuItem } from "@mui/material";
 
@@ -41,18 +41,18 @@ const FacAttendance = () => {
  
   const [students, setStudents] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [select, setselect] = React.useState(null);
+  const open = Boolean(select);
  
 
   const [selectedStudent, setSelectedStudent] = useState(null); 
 
   const handleClick = (event, row) => {
     setSelectedStudent(row); 
-    setAnchorEl(event.currentTarget);
+    setselect(event.currentTarget);
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setselect(null);
   };
 
  
@@ -65,9 +65,6 @@ const FacAttendance = () => {
     }
   };
 
-  useEffect(() => {
-    fetchStudData();
-  }, [refresh]);
 
   // ==========================================
   const handleSaveAttendance = async (status) => {
@@ -76,31 +73,33 @@ const FacAttendance = () => {
         ...selectedStudent,
         status: status,
       };
-  
       await saveAttendanceData(updatedStudent);
-  
-     
-      // setStudents((prevStudents) =>
-      //   prevStudents.map((student) =>
-      //     student._id === updatedStudent._id ? updatedStudent : student
-      //   )
-      // );
-  
+      setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student.studentId === updatedStudent.studentId
+          ? { ...student, status: updatedStudent.status }
+          : student
+      )
+    );
       if (status === "Present") {
-        toast.success(`${updatedStudent.studentName} is ${status}`);
+        toast.success(`${updatedStudent.studentName} is ${status}`,{position:toast.POSITION.BOTTOM_LEFT});
+        
       } else if (status === "Absent") {
-        toast.error(`${updatedStudent.studentName} is ${status}`);
+        toast.error(`${updatedStudent.studentName} is ${status}`,{position:toast.POSITION.BOTTOM_LEFT});
       } else {
-        toast.info(`${updatedStudent.studentName} is taking ${status} leave`);
+        toast.info(`${updatedStudent.studentName} is taking ${status} leave`,{position:toast.POSITION.BOTTOM_LEFT});
       }
-  
+      setRefresh(true)
       handleClose();
     } catch (error) {
       console.error("Failed to save attendance data:", error);
       toast.error("Failed to save attendance data");
     }
   };
-  
+  useEffect(() => {
+    fetchStudData();
+  }, [refresh]);
+
   // ===================================
 
   return (
@@ -110,15 +109,17 @@ const FacAttendance = () => {
       <TableContainer component={Paper} className="facultyResultTable">
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableBody>
-            <TableRow>
-              <StyledTableCell>Date</StyledTableCell>
-              <StyledTableCell>Student Name</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Actions</StyledTableCell>
+          <TableRow className="table-head">
+              <StyledTableCell style={{color:"white"}}>No.</StyledTableCell>
+              <StyledTableCell style={{color:"white"}}>Date</StyledTableCell>
+              <StyledTableCell style={{color:"white"}}>Student Name</StyledTableCell>
+              <StyledTableCell style={{color:"white"}}>Status</StyledTableCell>
+              <StyledTableCell style={{color:"white"}}>Actions</StyledTableCell>
             </TableRow>
             {students.length > 0 ? (
               students.map((row, i) => (
                 <StyledTableRow key={i}>
+                <StyledTableCell>{i+1}</StyledTableCell>
                   <StyledTableCell>{row.date}</StyledTableCell>
                   <StyledTableCell>{row.studentName}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
@@ -136,8 +137,8 @@ const FacAttendance = () => {
                       </IconButton>
                       <Menu
                         id="long-menu"
-                        anchorEl={anchorEl}
-                        open={open && selectedStudent?._id === row._id} // Show menu only for the selected student
+                        anchorEl={select}
+                        open={open && selectedStudent?._id === row._id} 
                         onClose={handleClose}
                         PaperProps={{
                           style: {

@@ -443,7 +443,7 @@ const handleChangePassword = async()=>{
     <MDBContainer className="py-5 h-100 outside-container">
       <MDBRow className="justify-content-center align-items-center h-100">
         <MDBCol lg="6" className="mb-4 mb-lg-0">
-          <MDBCard className="mb-3" style={{ borderRadius: '.5rem', color: "black", boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+          <MDBCard className="mb-3 fac-profile-container custom-card" style={{ color: "black", background: "#fff", boxShadow: "0 0 10px rgba(36, 31, 31, 0.8)", borderRadius: "10px" }}>
             <MDBRow className="g-0">
               <MDBCol md="4" className="gradient-custom text-center text-white" style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem', background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)' }}>
                 <MDBCardImage
@@ -454,7 +454,7 @@ const handleChangePassword = async()=>{
                   fluid
                 />
                 <MDBTypography tag="h5" className="fw-bold mb-4">{faculty.name}</MDBTypography>
-                <MDBIcon far icon="edit" className="mb-5" />
+                
               </MDBCol>
               <MDBCol md="8">
                 <MDBCardBody className="p-4">
@@ -509,7 +509,7 @@ const handleChangePassword = async()=>{
                       <MDBCardText className="text-muted">{faculty.address}</MDBCardText>
                     </MDBCol>
                   </MDBRow>
-                  <Button variant="text" onClick={handleOpenModals} style={{ marginLeft: "200px" }}>Change Password?</Button>
+                  <Button variant="text" className='change-pass' onClick={handleOpenModals} style={{ marginLeft: "200px" }}>Change Password?</Button>
                 </MDBCardBody>
               </MDBCol>
             </MDBRow>

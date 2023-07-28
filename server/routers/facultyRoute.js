@@ -12,6 +12,7 @@ const {
   getClubReq,
   postFacClubReqUpdate,
   postFacComplain,
+  getFacViewNotice,
   
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
@@ -32,15 +33,17 @@ const upload = multer({ storage: storage });
 
 
 router.get("/", verifyFaculty, getFacProfile);
+router.get('/viewAttendance', verifyFaculty, getStudentAttendance)
+router.get('/viewMarkStatus', verifyFaculty, getStudMark)
+router.get('/viewSubjects', verifyFaculty, getAllSubjects)
+router.get("/viewClubReq", verifyFaculty, getClubReq)
+router.get("/notice", verifyFaculty, getFacViewNotice)
+
 router.post("/", verifyFaculty, upload.single("pic"), postFacEditProfile);
 router.post("/sentOtp", verifyFaculty, sentOtpFac);
 router.post("/changePass", verifyFaculty, changePasswordFac);
-router.get('/viewAttendance', verifyFaculty, getStudentAttendance)
 router.post('/viewAttendance',verifyFaculty, postFacStudAttendance )
-router.get('/viewMarkStatus', verifyFaculty, getStudMark)
-router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.post("/saveMark", verifyFaculty, saveStudentMark)
-router.get("/viewClubReq", verifyFaculty, getClubReq)
 router.post("/saveReq", verifyFaculty, postFacClubReqUpdate)
 router.post("/saveComplaint", verifyFaculty, postFacComplain)
 

@@ -8,6 +8,7 @@ const subjectModel = require("../models/subjectModel");
 const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
 const complainModel = require("../models/complainModel");
+const noticeModel = require("../models/noticeModel");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -210,6 +211,7 @@ let facultyController = {
   getStudMark: async (req, res) => {
     const className = req.faculty.className;
     try {
+     
       const students = await studentModel.find({ className });
 
       res.json({
@@ -237,18 +239,19 @@ let facultyController = {
       });
     }
   },
-
+ 
   saveStudentMark: async (req, res) => {
     try {
-      const { studentId, subject, marks, grade } = req.body;
-
-      const mark = await markModel.create({
+      const { studentId, subjectId,subjectName, marks, grade } = req.body;
+      
+      await markModel.create({
         student: studentId,
-        subject,
+        subjectId,
         marks,
         markingDate: new Date().toLocaleDateString(),
         grade,
-        status: true,
+        status:"Uploaded",
+        subjectName:subjectName
       });
 
       res
@@ -259,7 +262,7 @@ let facultyController = {
       res.json({ success: false, error, message: "Server error" });
     }
   },
-
+ 
   getClubReq: async (req, res) => {
     try {
       const id = req.faculty.id;
@@ -304,5 +307,14 @@ let facultyController = {
       res.json({ success: false, error, message: "Server error" });
     }
   },
+  getFacViewNotice:async(req,res)=>{
+    try {
+      const notice= await noticeModel.find().sort({_id:-1})
+     
+      res.json({success:true, notice})
+    } catch (error) {
+      res.json({success:false, error, message:"Server error"})
+    }
+  }
 };
 module.exports = facultyController;

@@ -1,0 +1,37 @@
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .custom-card {
+    width: 100%; 
+    margin-bottom: 20px;
+    background-color: #e0f3ff; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-card .card-header {
+    background-color: #021c36b7; 
+    color: #fff; 
+  }
+  
+  .custom-card .card-footer {
+    text-align: right; 
+  }
+  
+  .custom-card .card-footer .btn-primary {
+    background-color: #05182cb6; 
+    border-color: #007bff;
+  }
+  
+  @media (max-width:768px){
+    .container{
+        margin-left: 70px;
+       
+    }
+    .card-out{
+        width: 310px;
+    }
+  }

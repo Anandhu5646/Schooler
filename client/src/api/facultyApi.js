@@ -128,6 +128,7 @@ export async function getStudentByClass(){
 
     if (response.data.success) {
       return response.data.students;
+      
     } else {
       Swal.fire({
         icon: "error",
@@ -173,11 +174,12 @@ export async function getAllSubj(){
   }
 }
 
-export async function saveMarkData(studentId, subject, marks, grade) {
+export async function saveMarkData(studentId, subjectId,subjectName, marks, grade) {
   try {
     const response = await axios.post("/faculty/saveMark", {
       studentId: studentId,
-      subject: subject,
+      subjectId: subjectId,
+      subjectName:subjectName,
       marks: marks,
       grade: grade
     });
