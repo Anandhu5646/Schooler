@@ -123,8 +123,6 @@ const ClubList = () => {
       Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
     }
   };
-  
-
   return (
     <div className="container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
@@ -142,13 +140,7 @@ const ClubList = () => {
                 <Card.Text>Club Description :{club.description}</Card.Text>
                 <Card.Text>Club Co-ordinator :{club.facultyName}</Card.Text>
                 <div className="p-3 d-flex justify-content-end">
-                  {/* <Button
-                    variant="danger"
-                    size="sm"
-                    
-                  >
-                    Delete
-                  </Button> */}
+                 
                   <IconButton
                       type="button"
                       style={{ color: "red" }}

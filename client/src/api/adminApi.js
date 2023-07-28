@@ -231,9 +231,8 @@ export async function addClass(classData) {
 }
 export async function deleteFac(id) {
   try {
-    const response = await axios.post(
-      "/admin/deleteFaculty",
-      { id },
+    const response = await axios.delete(
+      `/admin/deleteFaculty/${id}`,
       { headers: { "Content-Type": "application/json" }, withCredentials: true }
     );
     if (response.data.success) {

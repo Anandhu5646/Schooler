@@ -40,7 +40,7 @@ let facultyController = {
       faculty.pic = req.file;
 
       const updatedFaculty = await faculty.save();
-    
+
       return res.json({
         success: true,
         message: "faculty profile updated successfully",
@@ -88,27 +88,111 @@ let facultyController = {
   },
 
   getStudentAttendance: async (req, res) => {
-    const className = req.faculty.className;
-
+    const clasName = req.faculty.className;
+    let currentDate = new Date().toLocaleDateString();
     try {
-      const students = await studentModel.find({ className });
+      let previous = await attendanceModel
+        .find({
+          $and: [
+            { date: currentDate },
+            { facultyId: req.faculty.id },
+            { className: clasName },
+          ],
+        })
+        .lean();
+      if (previous.length == 0) {
+        let student = await studentModel.find({ className: clasName }).lean();
+        let studentArr = [];
+        if (student.length == 0) {
+          res.json({ success: true, studentArr });
+        } else {
+          for (let i = 0; i < student.length; i++) {
+            let students = {
+              date: new Date().toLocaleDateString(),
+              studentName: student[i].name,
+              studentId: student[i]._id,
+              facultyName: req.faculty.name,
+              facultyId: req.faculty.id,
+              className: clasName,
+              status: "Not uploaded",
+            };
+            studentArr.push(students);
+          }
 
-      res.json({
-        success: true,
-        students,
-        message: "student data fetched successfully",
-      });
+          res.json({ success: true, studentArr });
+        }
+      } else {
+        let student = await studentModel.find({ className: clasName }).lean();
+        let studentArr = [];
+        if (student.length == 0) {
+          res.json({ success: true, studentArr });
+        } else {
+          for (let i = 0; i < student.length; i++) {
+            let status = "Not uploaded";
+            let students = {
+              date: new Date().toLocaleDateString(),
+              studentName: student[i].name,
+              studentId: student[i]._id,
+              facultyName: req.faculty.name,
+              facultyId: req.faculty.id,
+              className: clasName,
+              status: status,
+            };
+            studentArr.push(students);
+          }
+          for (let j = 0; j < previous.length; j++) {
+            for (let k = 0; k < studentArr.length; k++) {
+              if (previous[j].studentId == studentArr[k].studentId) {
+                studentArr[k].status = previous[j].status;
+              }
+            }
+          }
+        }
+
+        res.json({ success: true, studentArr });
+      }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to fetch students" });
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch students" });
     }
   },
 
-  postFacStudAttendance: async (req, res) => {
-    const attendanceData = req.body;
-    
+  postFacStudAttendance : async (req, res) => {
     try {
-      await attendanceModel.create(attendanceData);
+      console.log("Request Body:", req.body); 
+      const attendanceData = req.body.attendanceData;
+     
+      console.log("Attendance Data:", attendanceData);
+      let previous = await attendanceModel
+        .find({
+          $and: [
+            { date: req.body.attendanceData.date }, 
+            { studentId: req.body.attendanceData.studentId },
+            { className: req.body.attendanceData.className }, 
+          ],
+        })
+        .lean();
+    
+      if (previous.length === 0) {
+        let data = await attendanceModel.create(attendanceData);
+        console.log("created", data);
+      } else {
+        let updatedList = await attendanceModel.updateOne(
+          { _id: previous[0]._id },
+          {
+            date: req.body.attendanceData.date,
+            studentName: req.body.attendanceData.studentName,
+            studentId: req.body.attendanceData.studentId,
+            facultyName: req.body.attendanceData.facultyName,
+            facultyId: req.body.attendanceData.facultyId,
+            className: req.body.attendanceData.className,
+            status: req.body.attendanceData.status,
+          }
+        );
+        console.log("dsdsdsdsdsdsd", updatedList);
+      }
       res.json({
         success: true,
         message: "Attendance data saved successfully",
@@ -120,6 +204,8 @@ let facultyController = {
         .json({ success: false, error: "Failed to save attendance data" });
     }
   },
+
+  
 
   getStudMark: async (req, res) => {
     const className = req.faculty.className;
@@ -135,84 +221,88 @@ let facultyController = {
       console.log(error);
       res
         .status(500)
-        .json({ success: false, error: "Failed to save attendance data" }); 
+        .json({ success: false, error: "Failed to save attendance data" });
     }
   },
 
-  getAllSubjects: async(req,res)=>{
+  getAllSubjects: async (req, res) => {
     try {
-      const subjects= await subjectModel.find()
-      res.json({success:true, subjects})
+      const subjects = await subjectModel.find();
+      res.json({ success: true, subjects });
     } catch (error) {
-      res.json({success:false, error, message:"Failed to display subjects"})
+      res.json({
+        success: false,
+        error,
+        message: "Failed to display subjects",
+      });
     }
   },
 
-  saveStudentMark: async (req,res)=>{
+  saveStudentMark: async (req, res) => {
     try {
       const { studentId, subject, marks, grade } = req.body;
-      
+
       const mark = await markModel.create({
         student: studentId,
         subject,
         marks,
         markingDate: new Date().toLocaleDateString(),
         grade,
-        status: true
+        status: true,
       });
-  
-      res.status(200).json({ success: true, message: 'Mark data saved successfully' });
+
+      res
+        .status(200)
+        .json({ success: true, message: "Mark data saved successfully" });
     } catch (error) {
-      console.error(error)
-      res.json({success:false,error, message:"Server error"})
+      console.error(error);
+      res.json({ success: false, error, message: "Server error" });
     }
   },
-  
-  getClubReq:async (req,res)=>{
+
+  getClubReq: async (req, res) => {
     try {
       const id = req.faculty.id;
-      const request= await clubRequestModel.find({facultyId:id}).sort({_id:-1})
-      res.json({success:true, request})
+      const request = await clubRequestModel
+        .find({ facultyId: id })
+        .sort({ _id: -1 });
+      res.json({ success: true, request });
     } catch (error) {
-      console.log(error)
-      res.json({success:false, error, message:"Server Error"})
+      console.log(error);
+      res.json({ success: false, error, message: "Server Error" });
     }
   },
-  postFacClubReqUpdate:async (req,res)=>{
+  postFacClubReqUpdate: async (req, res) => {
     try {
-      
-      await clubRequestModel.updateOne({ _id: req.body.id },
-         { status: req.body.status })
-         console.log("updated status", status)
+      await clubRequestModel.updateOne(
+        { _id: req.body.id },
+        { status: req.body.status }
+      );
+      console.log("updated status", status);
       res.json({ success: true });
     } catch (error) {
-      res.json({success:false,error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" });
     }
   },
-  postFacComplain:async(req,res)=>{
+  postFacComplain: async (req, res) => {
     try {
-      const facultyName=req.faculty.name
-      const facultyId= req.faculty.id
-      const facultyClass= req.faculty.className
+      const facultyName = req.faculty.name;
+      const facultyId = req.faculty.id;
+      const facultyClass = req.faculty.className;
       const currentDate = new Date();
       await complainModel.create({
-        title:req.body.title,
-        content:req.body.content,
-        name:facultyName,
-        className:facultyClass,
-        date:currentDate.toLocaleDateString(),
-        complainterId:facultyId,
-        complainPerson:'Faculty'
-
-      })
-      res.json({success:true})
+        title: req.body.title,
+        content: req.body.content,
+        name: facultyName,
+        className: facultyClass,
+        date: currentDate.toLocaleDateString(),
+        complainterId: facultyId,
+        complainPerson: "Faculty",
+      });
+      res.json({ success: true });
     } catch (error) {
-      res.json({success:false, error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" });
     }
-  }
-
-
-
-
+  },
 };
 module.exports = facultyController;

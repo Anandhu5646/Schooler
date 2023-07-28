@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "git": "^0.1.5"
+    "git": "^0.1.5",
+    "notistack": "^3.0.1",
+    "papaparse": "^5.4.1",
+    "react-dropzone": "^14.2.3"
   }
 }

@@ -75,12 +75,12 @@ export async function fetchStudentsByclass() {
     });
 
     if (response.data.success) {
-      return response.data.students;
+      return response.data.studentArr;
     } else {
       Swal.fire({
         icon: "error",
         title: "Oops..!!",
-        text: "Something went wrong while fetching data",
+        text: response.data.error
       });
     }
   } catch (error) {
@@ -94,7 +94,7 @@ export async function fetchStudentsByclass() {
 }
 export async function saveAttendanceData(attendanceData) {
   try {
-    const response = await axios.post('/faculty/saveAttendance', attendanceData, {
+    const response = await axios.post('/faculty/viewAttendance', {attendanceData}, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     });

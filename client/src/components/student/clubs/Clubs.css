@@ -1,0 +1,10 @@
+@media (max-width:768px){
+    .column1{
+        margin-left: 0px;
+        width: 310px;
+       
+    }
+}
+.card-column{
+    background-color: #e0f3ff;
+}

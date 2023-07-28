@@ -126,7 +126,7 @@ function FacSidebar() {
     { text: "Profile", icon: <DashboardIcon />, to: "/faculty/" },
     { text: "Upload Attendance", icon: <span style={iconStyle}><MdFilePresent /></span>, to: "/faculty/attendance" },
     { text: "Upload Mark", icon: <span style={iconStyle}><MdOutlineUploadFile /></span>, to: "/faculty/mark" },
-    { text: "Student Clublist", icon: <LocalLibraryIcon />, to: "/faculty/clubList" },
+    { text: "Time Table", icon: <LocalLibraryIcon />, to: "/faculty/timeTable" },
     { text: "Club Join Request", icon: <span style={iconStyle}><MdAddCircleOutline /></span>, to: "/faculty/clubReq" },
     { text: "Notices", icon: <span style={iconStyle}><MdOutlineMessage /></span>, to: "/faculty/notice" },
     { text: "Register Complain",icon: <span style={iconStyle}><MdWarningAmber/></span>, to: "/faculty/complain" },

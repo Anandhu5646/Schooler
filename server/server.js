@@ -12,12 +12,14 @@ const studentRoute = require('./routers/studentRoute.js');
 const adminAuthRoute= require('./routers/adminAuthRoute.js') 
 const facultyAuthRoute= require('./routers/facultyAuthRoute.js')
 const studentAuthRoute= require("./routers/studentAuthRoute.js")
+const bodyParser = require('body-parser');
 
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser({ limit: '10mb' }));
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended:false}));
+app.use(express.urlencoded({ extended:false ,limit: '10mb'}));
 app.use(express.static(path.resolve() + "/public"));
+
 
 app.use(
   cors({

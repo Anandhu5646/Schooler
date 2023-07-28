@@ -36,7 +36,7 @@ router.post("/", verifyFaculty, upload.single("pic"), postFacEditProfile);
 router.post("/sentOtp", verifyFaculty, sentOtpFac);
 router.post("/changePass", verifyFaculty, changePasswordFac);
 router.get('/viewAttendance', verifyFaculty, getStudentAttendance)
-router.post('/saveAttendance',verifyFaculty, postFacStudAttendance )
+router.post('/viewAttendance',verifyFaculty, postFacStudAttendance )
 router.get('/viewMarkStatus', verifyFaculty, getStudMark)
 router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.post("/saveMark", verifyFaculty, saveStudentMark)

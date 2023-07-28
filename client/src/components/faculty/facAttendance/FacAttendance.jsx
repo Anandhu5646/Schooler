@@ -4,17 +4,18 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./FacAttendance.css";
-import Badge from "@mui/material/Badge";
-import { Button, Modal } from "react-bootstrap";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {  Container } from "react-bootstrap";
 import {
   fetchStudentsByclass,
   saveAttendanceData,
 } from "../../../api/facultyApi";
-import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {  IconButton, Menu, MenuItem } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,25 +38,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const FacAttendance = () => {
-  const [isClicked, setIsClicked] = useState(false);
+ 
   const [students, setStudents] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [markAttendance, setMarkAttendance] = useState(() => {
-    const storedAttendance = localStorage.getItem("markAttendance");
-    return storedAttendance ? JSON.parse(storedAttendance) : {};
-  });
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+ 
 
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-    setShowModal(true);
+  const [selectedStudent, setSelectedStudent] = useState(null); 
+
+  const handleClick = (event, row) => {
+    setSelectedStudent(row); 
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  const buttonStyle = {
-    backgroundColor: isClicked ? "#035603" : "rgb(12 165 12)",
-  };
-
+ 
   const fetchStudData = async () => {
     try {
       const response = await fetchStudentsByclass();
@@ -69,191 +69,108 @@ const FacAttendance = () => {
     fetchStudData();
   }, [refresh]);
 
-  useEffect(() => {
-    localStorage.setItem("markAttendance", JSON.stringify(markAttendance));
-  }, [markAttendance]);
-
-  const handleRefresh = () => {
-    setRefresh((prevRefresh) => !prevRefresh);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  const handleMarkAttendance = async () => {
+  // ==========================================
+  const handleSaveAttendance = async (status) => {
     try {
-      const attendanceData = Object.entries(markAttendance).map(
-        ([studentId, status]) => ({
-          student: studentId,
-          status: status ? "Present" : "Absent",
-          date: selectedDate,
-        })
-      );
-      console.log(attendanceData, "attendanceData");
-      await saveAttendanceData(attendanceData);
-      Swal.fire({
-        icon:"success",
-        text:"Uploaded attendance successfully"
-      })
-      handleCloseModal();
-      handleRefresh();
+      const updatedStudent = {
+        ...selectedStudent,
+        status: status,
+      };
+  
+      await saveAttendanceData(updatedStudent);
+  
+     
+      // setStudents((prevStudents) =>
+      //   prevStudents.map((student) =>
+      //     student._id === updatedStudent._id ? updatedStudent : student
+      //   )
+      // );
+  
+      if (status === "Present") {
+        toast.success(`${updatedStudent.studentName} is ${status}`);
+      } else if (status === "Absent") {
+        toast.error(`${updatedStudent.studentName} is ${status}`);
+      } else {
+        toast.info(`${updatedStudent.studentName} is taking ${status} leave`);
+      }
+  
+      handleClose();
     } catch (error) {
-      console.error(error);
+      console.error("Failed to save attendance data:", error);
+      toast.error("Failed to save attendance data");
     }
   };
-
-  const handleAttendanceChange = (studentId, status) => {
-    setMarkAttendance((prevAttendance) => ({
-      ...prevAttendance,
-      [studentId]: status,
-    }));
-  };
+  
+  // ===================================
 
   return (
-    <div>
-      <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
-        <div className="d-flex justify-content-between">
-          <h2>Mark Attendance</h2>
-          <div className="">
-            <Button
-              className="ms-2"
-              style={{ background: "green" }}
-              onClick={handleClick}
-            >
-              Mark Attendance
-            </Button>
-            <Button
-              className="ms-2"
-              style={{ background: "#212A3E" }}
-              onClick={handleRefresh}
-            >
-              Report
-            </Button>
-          </div>
-        </div>
-        <hr></hr>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Sl No</StyledTableCell>
-                <StyledTableCell>Student Name</StyledTableCell>
-                <StyledTableCell>Roll No</StyledTableCell>
-                <StyledTableCell>Class</StyledTableCell>
-                <StyledTableCell>Attendance Status</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {students && students.length > 0 ? (
-                students.map((student, index) => (
-                  <StyledTableRow key={student._id}>
-                    <StyledTableCell>{index + 1}</StyledTableCell>
-                    <StyledTableCell>{student.name}</StyledTableCell>
-                    <StyledTableCell>{student.rollNo}</StyledTableCell>
-                    <StyledTableCell>{student.className}</StyledTableCell>
-                    <StyledTableCell style={{ paddingLeft: "70px" }}>
-                      <Badge
-                        badgeContent={
-                          markAttendance[student._id] ? "Present" : "Absent"
-                        }
-                        color={
-                          markAttendance[student._id] ? "success" : "error"
-                        }
-                        sx={{ minWidth: "fit-content", borderRadius: 999 }}
-                      />
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))
-              ) : (
-                <StyledTableRow>
-                  <StyledTableCell colSpan={5} align="center">
-                    No students found
+    <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
+    <Container>
+      <h1>Mark Attendance</h1>
+      <TableContainer component={Paper} className="facultyResultTable">
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableBody>
+            <TableRow>
+              <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Student Name</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
+              <StyledTableCell>Actions</StyledTableCell>
+            </TableRow>
+            {students.length > 0 ? (
+              students.map((row, i) => (
+                <StyledTableRow key={i}>
+                  <StyledTableCell>{row.date}</StyledTableCell>
+                  <StyledTableCell>{row.studentName}</StyledTableCell>
+                  <StyledTableCell>{row.status}</StyledTableCell>
+                  <StyledTableCell>
+                    <div>
+                      <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={(e) => handleClick(e, row)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        open={open && selectedStudent?._id === row._id} // Show menu only for the selected student
+                        onClose={handleClose}
+                        PaperProps={{
+                          style: {
+                            width: "20ch",
+                          },
+                        }}
+                      >
+                        <MenuItem onClick={() => handleSaveAttendance("Present")}>
+                          Present
+                        </MenuItem>
+                        <MenuItem onClick={() => handleSaveAttendance("Absent")}>
+                          Absent
+                        </MenuItem>
+                        <MenuItem onClick={() => handleSaveAttendance("Half Day")}>
+                          Half Day
+                        </MenuItem>
+                      </Menu>
+                    </div>
                   </StyledTableCell>
                 </StyledTableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-
-      {/*============== Attendance Modal ====================== */}
-      <form>
-        <Modal show={showModal} onHide={handleCloseModal} style={{marginTop:"100px", zIndex:10000}}>
-          <Modal.Header closeButton>
-            <Modal.Title >
-              Mark Attendance
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h5>Date: {selectedDate.toLocaleDateString()}</h5>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Sl No</StyledTableCell>
-                    <StyledTableCell>Student Name</StyledTableCell>
-                    <StyledTableCell>
-                      <strong>Present</strong>
-                    </StyledTableCell>
-                    <StyledTableCell>
-                      <strong>Absent</strong>
-                    </StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {students && students.length > 0 ? (
-                    students.map((student, index) => (
-                      <StyledTableRow key={student._id}>
-                        <StyledTableCell>{index + 1}</StyledTableCell>
-                        <StyledTableCell>{student.name}</StyledTableCell>
-                        <StyledTableCell>
-                          <input
-                            type="checkbox"
-                            checked={markAttendance[student._id] === true}
-                            onChange={() =>
-                              handleAttendanceChange(student._id, true)
-                            }
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell>
-                          <input
-                            type="checkbox"
-                            checked={markAttendance[student._id] === false}
-                            onChange={() =>
-                              handleAttendanceChange(student._id, false)
-                            }
-                          />
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))
-                  ) : (
-                    <StyledTableRow>
-                      <StyledTableCell colSpan={4} align="center">
-                        No students found
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Close
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              onClick={handleMarkAttendance}
-              style={{ background: "#212A3E" }}
-            >
-              Save Attendance
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </form>
-    </div>
+              ))
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={4} align="center">
+                  Attends Not found
+                </StyledTableCell>
+              </StyledTableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
+  </div>
   );
 };
 

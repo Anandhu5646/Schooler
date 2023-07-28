@@ -1,0 +1,5 @@
+@media (max-width:768px){
+    .outer-container{
+        margin-left: 70px !important;
+    }
+}

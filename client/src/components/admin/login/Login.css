@@ -3,4 +3,17 @@ body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
    
   }
+.card-row{
+  box-shadow: 0 4px 6px rgba(22, 10, 58, 0.2), 0 6px 8px rgba(3, 5, 126, 0.562);
+
+}
+  @media(max-width:768px){
+    .container-out{
+      margin-left: 11px;
+     
+    }
+    .card-row{
+     box-shadow: 0 4px 6px rgba(22, 10, 58, 0.2), 0 6px 8px rgba(3, 5, 126, 0.562);
+    }
+  }
   

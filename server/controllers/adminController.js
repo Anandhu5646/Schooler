@@ -8,6 +8,7 @@ const studentModel = require("../models/studentModel");
 const subjectModel = require("../models/subjectModel");
 const bcrypt = require("bcryptjs");
 
+
 let salt = bcrypt.genSaltSync(10);
 
 let adminController = {
@@ -99,7 +100,7 @@ let adminController = {
 
   postAdminAddSubject: async (req, res) => {
     try {
-      let { subName, subCode,  subCredit } = req.body;
+      let { subName, subCode, subCredit } = req.body;
       let subject = new subjectModel({
         subName,
         subCode,
@@ -152,7 +153,7 @@ let adminController = {
   },
   postAdminAddClub: async (req, res) => {
     try {
-      let { name, description,facultyId, facultyName, date } = req.body;
+      let { name, description, facultyId, facultyName, date } = req.body;
       let club = new clubModel({
         name,
         description,
@@ -173,10 +174,8 @@ let adminController = {
   },
   getAdminStudents: async (req, res) => {
     try {
-
       let students = await studentModel.find();
       res.json({ success: true, err: false, students });
-     
     } catch (error) {
       console.log(error);
       res.json({ err: true, error, message: "something went wrong" });
@@ -186,7 +185,6 @@ let adminController = {
     try {
       const faculties = await facultyModel.find();
       res.json({ success: true, err: false, faculties });
-      
     } catch (error) {
       console.log(error);
       res
@@ -237,7 +235,7 @@ let adminController = {
   },
   editAdminStudent: async (req, res) => {
     try {
-      let id=req.params.id
+      let id = req.params.id;
       let {
         name,
         motherName,
@@ -252,89 +250,111 @@ let adminController = {
         mobile,
         rollNo,
         address,
-        
       } = req.body;
       console.log(id);
-      
+
       await studentModel.findByIdAndUpdate(id, {
         $set: {
-            name,
-            motherName,
-            fatherName,
-            dob,
-            age,
-            gender,
-            className,
-            admYear,
-            email,
-            password,
-            mobile,
-            rollNo,
-            address,
+          name,
+          motherName,
+          fatherName,
+          dob,
+          age,
+          gender,
+          className,
+          admYear,
+          email,
+          password,
+          mobile,
+          rollNo,
+          address,
         },
       });
-       res.status(200).json({ error: false ,success:true, message:"edited successfully"});
+      res
+        .status(200)
+        .json({ error: false, success: true, message: "edited successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: "server error", error });
       console.log(error);
     }
   },
-  deleteFaculty: async (req,res)=>{
+  deleteFaculty: async (req, res) => {
     try {
-      const {id}= req.body; 
-      await facultyModel.findByIdAndDelete({_id:id})
-      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+      const { id } = req.params;
+      await facultyModel.findByIdAndDelete({ _id: id });
+      return res
+        .status(200)
+        .json({ error: false, success: true, message: "deleted successfully" });
     } catch (error) {
-      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }
   },
-  deleteStudent: async (req,res)=>{
+  deleteStudent: async (req, res) => {
     try {
-      const {id}= req.body; 
-      await studentModel.findByIdAndDelete({_id:id})
-      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+      const { id } = req.body;
+      await studentModel.findByIdAndDelete({ _id: id });
+      return res
+        .status(200)
+        .json({ error: false, success: true, message: "deleted successfully" });
     } catch (error) {
-      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }
   },
-  deleteComplain:async (req,res)=>{
+  deleteComplain: async (req, res) => {
     try {
-      const {id}= req.params; 
-      await complainModel.findByIdAndDelete({_id:id})
-      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+      const { id } = req.params;
+      await complainModel.findByIdAndDelete({ _id: id });
+      return res
+        .status(200)
+        .json({ error: false, success: true, message: "deleted successfully" });
     } catch (error) {
-      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }
   },
-  deleteSubject: async (req,res)=>{
+  deleteSubject: async (req, res) => {
     try {
-      const {id}= req.body; 
-      await subjectModel.findByIdAndDelete({_id:id})
-      return res.status(200).json({error:false, success:true, message: "deleted successfully"})
+      const { id } = req.body;
+      await subjectModel.findByIdAndDelete({ _id: id });
+      return res
+        .status(200)
+        .json({ error: false, success: true, message: "deleted successfully" });
     } catch (error) {
-      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }
   },
-  deleteClubs: async (req,res)=>{
+  deleteClubs: async (req, res) => {
     try {
-      const {id}= req.params;
-      await clubModel.findByIdAndDelete({_id:id})
-      return res.json({error:false, success:true, message: "deleted successfully"})
+      const { id } = req.params;
+      await clubModel.findByIdAndDelete({ _id: id });
+      return res.json({
+        error: false,
+        success: true,
+        message: "deleted successfully",
+      });
     } catch (error) {
-      res.status(500).json({error:true,success:false, message:"Something went wrong"})
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }
   },
   postEditAdminFaculty: async (req, res) => {
-
     try {
-      console.log('wewewewewwewe')
-      let id=req.params.id
-      const faculty = await facultyModel.findById({_id:id});
+      console.log("wewewewewwewe");
+      let id = req.params.id;
+      const faculty = await facultyModel.findById({ _id: id });
       if (!faculty) {
         return res.json({ success: false, message: "faculty not found" });
       }
@@ -350,7 +370,6 @@ let adminController = {
       faculty.gender = req.body.gender;
       faculty.age = req.body.age;
       faculty.className = req.body.className;
-     
 
       const updatedFaculty = await faculty.save();
 
@@ -358,37 +377,39 @@ let adminController = {
       return res.json({
         success: true,
         message: "faculty details updated successfully",
-        faculty: updatedFaculty
+        faculty: updatedFaculty,
       });
     } catch (error) {
       res.json({ success: false, message: "server error", error });
       console.log(error);
     }
   },
-  getFacByid: async(req,res)=>{
+  getFacByid: async (req, res) => {
     try {
       const facultyId = req.params.id;
-     
-      const faculty = await facultyModel.findById(facultyId ,{password:0});
+
+      const faculty = await facultyModel.findById(facultyId, { password: 0 });
       if (!faculty) {
-        return res.status(404).json({ success: false, message: 'Faculty not found' });
+        return res
+          .status(404)
+          .json({ success: false, message: "Faculty not found" });
       }
-      
+
       res.status(200).json({ success: true, faculty });
     } catch (error) {
-      console.error('Error fetching faculty details:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+      console.error("Error fetching faculty details:", error);
+      res.status(500).json({ success: false, message: "Server error" });
     }
   },
   getClubFaculties: async (req, res) => {
     try {
-    const faculty = await facultyModel.find();
-   
-    if (!faculty) {
-      res.status(404).json({ error: "Faculty not found" });
-    } else {
-      res.json(faculty); 
-    }
+      const faculty = await facultyModel.find();
+
+      if (!faculty) {
+        res.status(404).json({ error: "Faculty not found" });
+      } else {
+        res.json(faculty);
+      }
     } catch (error) {
       console.log(error);
       res
@@ -397,81 +418,102 @@ let adminController = {
     }
   },
 
-  dashBoard:async(req,res)=>{
+  dashBoard: async (req, res) => {
     try {
-      let totalStudents= await studentModel.count()
-      let totalFaculties= await facultyModel.count()
-      let totalClubs= await clubModel.count()
-      res.json({success:true, student:totalStudents, faculty:totalFaculties,
-      club:totalClubs})
+      let totalStudents = await studentModel.count();
+      let totalFaculties = await facultyModel.count();
+      let totalClubs = await clubModel.count();
+      res.json({
+        success: true,
+        student: totalStudents,
+        faculty: totalFaculties,
+        club: totalClubs,
+      });
     } catch (error) {
-      res.json({success:false,error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" });
     }
   },
-  getAllcomplaints:async(req,res)=>{
+  getAllcomplaints: async (req, res) => {
     try {
-      let complaints= await complainModel.find().sort({_id:-1})
-      res.json({success:true, complaints})
+      let complaints = await complainModel.find().sort({ _id: -1 });
+      res.json({ success: true, complaints });
     } catch (error) {
-      res.json({success:false, error, message:"Server error"})
-      console.log(error)
+      res.json({ success: false, error, message: "Server error" });
+      console.log(error);
     }
   },
-  getUpdateStudent:async(req,res)=>{
+  getUpdateStudent: async (req, res) => {
     try {
-      let id = req.query.id
+      let id = req.query.id;
       if (id == undefined) {
-          res.json({
-              name: '',
-              email: '',
-              mobile: '',
-              dob: '',
-              admYear: '',
-             fatherName: '',
-              motherName: '',
-              address: '',
-              className: '',
-              gender: '',
-              rollNo: '',
-              age: '',
-          })
-          return
+        res.json({
+          name: "",
+          email: "",
+          mobile: "",
+          dob: "",
+          admYear: "",
+          fatherName: "",
+          motherName: "",
+          address: "",
+          className: "",
+          gender: "",
+          rollNo: "",
+          age: "",
+        });
+        return;
       }
-      let student = await studentModel.findOne({ _id: id })
-      res.json({success:true,student})
+      let student = await studentModel.findOne({ _id: id });
+      res.json({ success: true, student });
     } catch (error) {
-      res.json({success:false, error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" });
     }
-  }
-  ,postAdminUpdateStudent:async(req,res)=>{
+  },
+  postAdminUpdateStudent: async (req, res) => {
     try {
       const id = req.body.id;
       const updateStudent = {
-          name: req.body.name,
-          email: req.body.email,
-          mobile: req.body.mobile,
-          dob: req.body.dob,
-          admYear: req.body.admYear,
-          address: req.body.address,
-          fatherName: req.body.fatherName,
-          gender: req.body.gender,
-          motherName: req.body.motherName,
-          rollNo: req.body.rollNo,
-          className: req.body.className,
-          age:req.body.age
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        dob: req.body.dob,
+        admYear: req.body.admYear,
+        address: req.body.address,
+        fatherName: req.body.fatherName,
+        gender: req.body.gender,
+        motherName: req.body.motherName,
+        rollNo: req.body.rollNo,
+        className: req.body.className,
+        age: req.body.age,
       };
       let response = await studentModel.updateOne({ _id: id }, updateStudent);
-      console.log(response,'fdfdfdfdfdfdfdfdf');
-      res.json({success:true, message:"Sutdent details updated"});
+     
+      res.json({ success: true, message: "Sutdent details updated" });
 
-      console.log('updated succesfully')
-  
+      console.log("updated succesfully");
     } catch (error) {
-      console.log("server error")
+      console.log("server error");
     }
   },
-   
+  postUploadNotice: async (req, res) => {
+    try {
+      const { title, content } = req.body;
+  
+      if (!title || !content) {
+        return res.json({ success: false, message: 'Please fill in all the fields.' });
+      }
+      
+      const pdfData = Buffer.from(content, 'base64');
+      await noticeModel.create({
+        title,
+        content: pdfData,
+      });
+      console.log('uploaded success')
+      res.json({ success: true });
+    } catch (error) {
+      res.json({ success: false, error, message: 'Server down' });
+    }
+  },
+  
 };
 
 module.exports = adminController;
- 

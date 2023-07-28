@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const clubModel = require('../models/clubModel');
 const clubRequestModel = require('../models/clubRequestModel');
 const complainModel = require('../models/complainModel');
+const noticeModel = require('../models/noticeModel');
 
 let studentController={
 
@@ -144,6 +145,15 @@ postStudComplaint:async(req,res)=>{
     })
 
     res.json({success:true})
+  } catch (error) {
+    res.json({success:false, error, message:"Server error"})
+  }
+},
+getStudViewNotice:async(req,res)=>{
+  try {
+    const notice= await noticeModel.find().sort({_id:-1})
+   
+    res.json({success:true, notice})
   } catch (error) {
     res.json({success:false, error, message:"Server error"})
   }

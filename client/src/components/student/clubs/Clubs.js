@@ -5,6 +5,7 @@ import {
   getClub,
   studClubStatus,
 } from "../../../api/studentApi";
+import './Clubs.css'
 
 function Clubs() {
   const [clubList, setClubList] = useState([]);
@@ -97,8 +98,8 @@ function Clubs() {
         <Row>
           {club &&
             club.map((data, index) => (
-              <Col md={12} className="mb-4" key={data._id}>
-                <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
+              <Col md={12} className="mb-4 column1 " key={data._id}>
+                <Card className="shadow-sm card-column" >
                   <Card.Body>
                     <Card.Title>{data.clubName}</Card.Title>
                     <Card.Text>Description: {data.clubDes}</Card.Text>
