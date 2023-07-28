@@ -36,7 +36,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-
+function formatDateToDDMMYYYY(dateString) {
+  const dateObj = new Date(dateString);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 const FacAttendance = () => {
  
   const [students, setStudents] = useState([]);
@@ -120,7 +126,7 @@ const FacAttendance = () => {
               students.map((row, i) => (
                 <StyledTableRow key={i}>
                 <StyledTableCell>{i+1}</StyledTableCell>
-                  <StyledTableCell>{row.date}</StyledTableCell>
+                <StyledTableCell>{formatDateToDDMMYYYY(row.date)}</StyledTableCell>
                   <StyledTableCell>{row.studentName}</StyledTableCell>
                   <StyledTableCell>{row.status}</StyledTableCell>
                   <StyledTableCell>

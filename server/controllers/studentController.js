@@ -7,6 +7,8 @@ const clubRequestModel = require('../models/clubRequestModel');
 const complainModel = require('../models/complainModel');
 const noticeModel = require('../models/noticeModel');
 const attendanceModel = require('../models/attendanceModel');
+const markModel = require('../models/markModel');
+const { default: mongoose } = require('mongoose');
 
 let studentController={
 
@@ -163,15 +165,27 @@ getStudViewAttendance:async(req,res)=>{
   const studentid=req.student.id
   try {
     const attendance= await attendanceModel.find({studentId:studentid}).sort({_id:-1})
-    console.log(attendance,'attendance')
     res.json({success:true, attendance})
 
 
   } catch (error) {
     res.json({success:false, error, message:"Server error"})
   }
-}
-    
-}
+},
+getStudViewMArk: async (req, res) => {
+  const studentid = req.student.id;
 
+  try {
+    
+    const result = await markModel.find({ student: studentid }).sort({_id:-1})
+    res.json({ success: true, result });
+  } catch (error) {
+    res.json({ success: false, error, message: "Server error" });
+  }
+},
+
+
+
+
+}
 module.exports= studentController

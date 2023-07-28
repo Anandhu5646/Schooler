@@ -9,6 +9,8 @@ const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
 const complainModel = require("../models/complainModel");
 const noticeModel = require("../models/noticeModel");
+const moment = require('moment');
+const { default: mongoose } = require("mongoose");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -74,7 +76,6 @@ let facultyController = {
     try {
       const { newPassword } = req.body;
       const id = req.faculty.id;
-      console.log(newPassword, "new pass");
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
       const updatedFaculty = await facultyModel.updateOne(
@@ -160,28 +161,26 @@ let facultyController = {
     }
   },
 
-  postFacStudAttendance : async (req, res) => {
+  postFacStudAttendance: async (req, res) => {
     try {
-      console.log("Request Body:", req.body); 
       const attendanceData = req.body.attendanceData;
-     
-      console.log("Attendance Data:", attendanceData);
       let previous = await attendanceModel
-        .find({
+        .findOne({
           $and: [
             { date: req.body.attendanceData.date }, 
-            { studentId: req.body.attendanceData.studentId },
-            { className: req.body.attendanceData.className }, 
+            { studentId: req.body.attendanceData.studentId } 
           ],
         })
         .lean();
-    
-      if (previous.length === 0) {
+  
+      if (!previous) {
+        
         let data = await attendanceModel.create(attendanceData);
         console.log("created", data);
       } else {
+       
         let updatedList = await attendanceModel.updateOne(
-          { _id: previous[0]._id },
+          { _id: previous._id }, 
           {
             date: req.body.attendanceData.date,
             studentName: req.body.attendanceData.studentName,
@@ -192,7 +191,7 @@ let facultyController = {
             status: req.body.attendanceData.status,
           }
         );
-        console.log("dsdsdsdsdsdsd", updatedList);
+        console.log("updated", updatedList);
       }
       res.json({
         success: true,
@@ -205,6 +204,7 @@ let facultyController = {
         .json({ success: false, error: "Failed to save attendance data" });
     }
   },
+  
 
   
 
@@ -242,27 +242,62 @@ let facultyController = {
  
   saveStudentMark: async (req, res) => {
     try {
-      const { studentId, subjectId,subjectName, marks, grade } = req.body;
-      
-      await markModel.create({
-        student: studentId,
-        subjectId,
-        marks,
-        markingDate: new Date().toLocaleDateString(),
-        grade,
-        status:"Uploaded",
-        subjectName:subjectName
-      });
+      let faculName=req.faculty.name
+      let faculid= req.faculty.id
+      const { studentId, subjectId, subjectName, marks, grade } = req.body;
 
-      res
-        .status(200)
-        .json({ success: true, message: "Mark data saved successfully" });
+      if (!mongoose.Types.ObjectId.isValid(studentId)) {
+        return res.status(400).json({ success: false, message: "Invalid studentId" });
+      }
+  
+      let previousMark = await markModel.findOne({
+        $and: [
+          {markingDate: new Date().toLocaleDateString()},
+          {student: studentId },
+          {subjectName:subjectName},
+          {marks:marks},
+          {grade:grade}
+        ],
+      });
+  
+      if (!previousMark) {
+       
+        await markModel.create({
+          student: studentId,
+          subjectId,
+          marks,
+          markingDate: new Date().toLocaleDateString(),
+          grade,
+          status: "Uploaded",
+          subjectName: subjectName,
+          facultyId:faculid,
+          facultyName:faculName
+        });
+        res.status(200).json({ success: true, message: "Mark data saved successfully" });
+      } else {
+        
+        await markModel.updateOne(
+          { _id: previousMark._id },
+          {
+            student: studentId,
+            subjectId,
+            marks,
+            markingDate: new Date().toLocaleDateString(),
+            grade,
+            status: "Uploaded",
+            subjectName: subjectName,
+            facultyId:faculid,
+            facultyName:faculName
+          }
+        );
+        res.status(200).json({ success: true, message: "Mark data updated successfully" });
+      }
     } catch (error) {
       console.error(error);
       res.json({ success: false, error, message: "Server error" });
     }
   },
- 
+  
   getClubReq: async (req, res) => {
     try {
       const id = req.faculty.id;

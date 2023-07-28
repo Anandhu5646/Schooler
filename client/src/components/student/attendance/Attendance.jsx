@@ -27,9 +27,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
-function formatDate(dateString) {
-  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  return new Date(dateString).toLocaleDateString('en-GB', options);
+
+function formatDateToDDMMYYYY(dateString) {
+  const dateObj = new Date(dateString);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 function Attendance() {
@@ -37,9 +41,8 @@ function Attendance() {
 
   const fetchAttendanceData = async () => {
     try {
-      const response = await getAttendance()
+      const response = await getAttendance();
       setAttendanceData(response);
-
     } catch (error) {
       console.error('Error fetching attendance data:', error);
     }
@@ -51,29 +54,25 @@ function Attendance() {
 
   return (
     <div style={{ marginTop: '50px', width: '90%', marginLeft: '100px' }}>
-    <h1>View Attendance</h1>
-    <hr></hr>
+      <h1>View Attendance</h1>
+      <hr />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Sl No.</StyledTableCell>
-              <StyledTableCell >Date</StyledTableCell>
-              <StyledTableCell >Marked By</StyledTableCell>
-              <StyledTableCell >Status</StyledTableCell>
-              
+              <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Marked By</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {attendanceData.map((row,i) => (
+            {attendanceData.map((row, i) => (
               <StyledTableRow key={row._id}>
-                <StyledTableCell >
-                  {i+1}
-                </StyledTableCell>
-                <StyledTableCell >{row.date}</StyledTableCell>
-                <StyledTableCell >{row.facultyName}</StyledTableCell>
-                <StyledTableCell >{row.status}</StyledTableCell>
-                
+                <StyledTableCell>{i + 1}</StyledTableCell>
+                <StyledTableCell>{formatDateToDDMMYYYY(row.date)}</StyledTableCell>
+                <StyledTableCell>{row.facultyName}</StyledTableCell>
+                <StyledTableCell>{row.status}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

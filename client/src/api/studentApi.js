@@ -179,6 +179,30 @@ export async function getAttendance(){
       return response.data.attendance
     }
   } catch (error) {
-    
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something Wrong',
+    });
+    throw error
   }
 }
+export async function studentMarks() {
+  try {
+    const response = await axios.get("/student/mark", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+    if (response.data.success) {
+      return response.data.result;
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong',
+    });
+    throw error;
+  }
+}
+
