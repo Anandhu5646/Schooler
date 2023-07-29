@@ -255,8 +255,6 @@ let facultyController = {
           {markingDate: new Date().toLocaleDateString()},
           {student: studentId },
           {subjectName:subjectName},
-          {marks:marks},
-          {grade:grade}
         ],
       });
   

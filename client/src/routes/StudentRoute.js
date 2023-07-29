@@ -12,6 +12,7 @@ import ProtectedStudentRoute from "../utils/ProtectedStudentRoute";
 import StudentComplain from "../pages/student/studentComplain/StudentComplain";
 import StudentViewComplain from "../pages/student/studentViewComplain/StudentViewComplain";
 import StudentNotice from "../pages/student/studentNotice/StudentNotice";
+import StudentPayment from "../pages/student/studentPayment/StudentPayment";
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -46,6 +47,7 @@ function StudentRoute() {
         <Route path="/complain" element={<StudentComplain />} />
         <Route path="/viewComplain" element={<StudentViewComplain />} />
         <Route path="/notice" element={<StudentNotice />} />
+        <Route path="/payment" element={<StudentPayment/>} />
       </Route>
     </Routes>
   );

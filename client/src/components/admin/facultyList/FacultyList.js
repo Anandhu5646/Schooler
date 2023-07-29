@@ -209,7 +209,7 @@ function FacultyList() {
         "An error occurred while deleting the faculty.",
         "error"
       );
-    }
+    } 
   };
   const columns = [
     {

@@ -4,6 +4,7 @@ const clubModel = require("../models/clubModel");
 const complainModel = require("../models/complainModel");
 const facultyModel = require("../models/facultyModel");
 const noticeModel = require("../models/noticeModel");
+const paymentModel = require("../models/paymentModel");
 const studentModel = require("../models/studentModel");
 const subjectModel = require("../models/subjectModel");
 const bcrypt = require("bcryptjs");
@@ -513,6 +514,42 @@ let adminController = {
       res.json({ success: false, error, message: 'Server down' });
     }
   },
+  postPaymentMsgToStud:async(req,res)=>{
+    try {
+     
+     const { title, amount, lastDate } = req.body.paymentData;
+      let currentDate = new Date().toLocaleDateString();
+      let payment= new paymentModel({
+        title,amount,currentDate,lastDate
+      })
+     await payment.save()
+      res.json({success:true,
+      message:"Payment Message send successfully"})
+    } catch (error) {
+      console.log(error)
+      res.json({error, success:false, message:"Server error"})
+    }
+  },
+  getPaymentList:async(req,res)=>{
+    try {
+      const payment= await paymentModel.find().sort({_id:-1})
+      res.json({payment,success:true})
+    } catch (error) {
+      res.json({success:false, error, message:"Server error"})
+    }
+  },
+  deletePaymentList: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await paymentModel.findByIdAndDelete({ _id: id });
+      return res.json({ success: true, message: "deleted successfully" });
+    } catch (error) {
+      res.json({ success: false, message: "Something went wrong" });
+      console.log(error);
+    }
+  },
+  
+
   
 };
 

@@ -32,9 +32,7 @@ import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { PiStudentDuotone ,PiChalkboardTeacherThin} from "react-icons/pi";
-
-
-
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 
 const drawerWidth = 330;
@@ -134,7 +132,7 @@ function Sidebar() {
     { text: "Classes", icon: <ClassIcon />, to: "/admin/classes" },
     { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },
     { text: "Check complain", icon: <NotificationImportantIcon />, to: "/admin/complain" },
-    { text: "Verify email", icon: <EmailIcon />, to: "/verify-email" },
+    { text: "Payment", icon: <CurrencyRupeeIcon/>, to: "/admin/payment" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {

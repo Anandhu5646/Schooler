@@ -21,9 +21,9 @@ import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import { MdCoPresent ,MdAssignment,MdSubject,MdViewTimeline,MdAccountBox, MdMarkunread, MdWarningAmber, MdOutlineDiversity1, MdPayments
+import { MdCoPresent ,MdAssignment,MdViewTimeline,MdAccountBox, MdMarkunread, MdWarningAmber, MdOutlineDiversity1, MdPayments
 } from "react-icons/md";
-
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 const drawerWidth = 330;
 
@@ -123,7 +123,7 @@ const iconStyle={
     { text: "Notices", icon: <span style={iconStyle}><MdMarkunread /></span>, to: "/student/notice" },
     { text: "Register Complain", icon: <span style={iconStyle}><MdWarningAmber /></span>, to: "/student/complain" },
     { text: "Join Clubs", icon: <span style={iconStyle}><MdOutlineDiversity1/></span>, to: "/student/clubs" },
-    { text: "Payments", icon: <span style={iconStyle}><MdPayments /></span>, to: "/student/payment" },
+    { text: "Payments", icon: <span style={iconStyle}><CurrencyRupeeIcon /></span>, to: "/student/payment" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {

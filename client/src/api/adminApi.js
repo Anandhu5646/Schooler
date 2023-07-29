@@ -550,3 +550,68 @@ export async function saveUpdateStudent(
     throw error;
   }
 }
+
+export async function savePayment(paymentData){
+  try {
+    
+    const response= await axios.post("/admin/addPayment",{paymentData},  {
+      headers: {
+        "Content-Type": "application/json",
+      },withCredentials:true
+    })
+    if(response.data.success){
+      return response.data
+    }else{
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error while saving payment message",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "Something went wrong",
+    });
+    throw error;
+  }
+}
+export async function getPayment(){
+  try {
+    const response= await axios.get("/admin/payment",{
+      headers: {
+        "Content-Type": "application/json",
+      },withCredentials:true
+    })
+
+    if(response.data.success){
+      return response.data.payment
+    }
+  } catch (error) {
+    
+  }
+}
+export async function deletePayment(id) {
+  try {
+    const response = await axios.post(
+      `/admin/deletePayment/${id}`,
+      { headers: { "Content-Type": "application/json" }, withCredentials: true }
+    );
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Confirmation!!",
+        text: response.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while deleting faculty",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
