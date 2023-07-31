@@ -43,6 +43,7 @@ function StudProfile() {
     try {
       const studentData = await fetchStudent();
       setStudent(studentData);
+      setClassName(studentData.className)
     } catch (error) {
       console.error("Error:", error);
     }
@@ -79,7 +80,6 @@ function StudProfile() {
     setAddress(student.address);
     setRollNo(student.rollNo);
     setGender(student.gender);
-    getClasses();
   };
 
   const handleClose = () => {
@@ -319,8 +319,8 @@ function StudProfile() {
 
       {/*============== student profile ==================== */}
       <section className="">
-        {student && (
-          <MDBContainer className="py-5 h-100 outside-container">
+  {student && (
+    <MDBContainer className="py-5 h-100 outside-container">
       <MDBRow className="justify-content-center align-items-center h-100">
         <MDBCol lg="6" className="mb-4 mb-lg-0">
           <MDBCard className="mb-3 fac-profile-container custom-card" style={{ color: "black", background: "#fff", boxShadow: "0 0 10px rgba(36, 31, 31, 0.8)", borderRadius: "10px" }}>
@@ -342,56 +342,56 @@ function StudProfile() {
                     <Button onClick={HandleClickOpen} variant="secondary"><MDBIcon /><MdEditSquare /></Button>
                   </div>
                   <hr className="mt-0 mb-4" />
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                  <div className="row pt-1">
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Email</MDBTypography>
                       <MDBCardText className="text-muted">{student.email}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Phone</MDBTypography>
                       <MDBCardText className="text-muted">{student.mobile}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Mother Name</MDBTypography>
                       <MDBCardText className="text-muted">{student.motherName}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Father Name</MDBTypography>
                       <MDBCardText className="text-muted">{student.fatherName}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Date of Birth</MDBTypography>
                       <MDBCardText className="text-muted">{student.dob}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Age</MDBTypography>
                       <MDBCardText className="text-muted">{student.age}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Class</MDBTypography>
                       <MDBCardText className="text-muted">{student.className}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Admission Year</MDBTypography>
                       <MDBCardText className="text-muted">{student.admYear}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Address</MDBTypography>
                       <MDBCardText className="text-muted">{student.address}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Roll No</MDBTypography>
                       <MDBCardText className="text-muted">{student.rollNo}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
+                    </div>
+                  </div>
                   <Button
                     variant="text"
                     className="mt-4"
@@ -406,8 +406,9 @@ function StudProfile() {
         </MDBCol>
       </MDBRow>
     </MDBContainer>
-        )}
-      </section>
+  )}
+</section>
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Update Student Details</DialogTitle>
         <DialogContent>
@@ -472,27 +473,26 @@ function StudProfile() {
             onChange={(event) => setAdmyear(event.target.value)}
           />
 
-          <FormControl margin="dense" fullWidth>
-            <InputLabel id="classname-label">Select Class</InputLabel>
-            {classes?.length > 0 && (
-              <Select
-                labelId="classname-label"
-                id="className"
-                variant="standard"
-                fullWidth
-                name="className"
-                value={className}
-                onChange={(event) => setClassName(event.target.value)}
-              >
-                {classes.map((data) => (
-                  <MenuItem key={data._id} value={data.className}>
-                    {data.className}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
-
+<FormControl margin="dense" fullWidth>
+        <InputLabel id="classname-label">Select Class</InputLabel>
+        {classes?.length > 0 && (
+          <Select
+            labelId="classname-label"
+            id="className"
+            variant="standard"
+            fullWidth
+            name="className"
+            value={className}
+            onChange={(event) => setClassName(event.target.value)}
+          >
+            {classes.map((data) => (
+              <MenuItem key={data._id} value={data.className}>
+                {data.className}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </FormControl>
           <FormControl margin="dense" fullWidth>
             <InputLabel id="gender-label">Select Gender</InputLabel>
             <Select
@@ -549,7 +549,6 @@ function StudProfile() {
           <TextField
             margin="dense"
             id="address"
-            label="Change Profile Photo"
             type="file"
             fullWidth
             variant="standard"

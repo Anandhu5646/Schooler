@@ -9,8 +9,9 @@ const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
 const complainModel = require("../models/complainModel");
 const noticeModel = require("../models/noticeModel");
-const moment = require('moment');
+const moment = require("moment");
 const { default: mongoose } = require("mongoose");
+const timeTableModel = require("../models/timeTableModel");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -167,20 +168,18 @@ let facultyController = {
       let previous = await attendanceModel
         .findOne({
           $and: [
-            { date: req.body.attendanceData.date }, 
-            { studentId: req.body.attendanceData.studentId } 
+            { date: req.body.attendanceData.date },
+            { studentId: req.body.attendanceData.studentId },
           ],
         })
         .lean();
-  
+
       if (!previous) {
-        
         let data = await attendanceModel.create(attendanceData);
         console.log("created", data);
       } else {
-       
         let updatedList = await attendanceModel.updateOne(
-          { _id: previous._id }, 
+          { _id: previous._id },
           {
             date: req.body.attendanceData.date,
             studentName: req.body.attendanceData.studentName,
@@ -204,14 +203,10 @@ let facultyController = {
         .json({ success: false, error: "Failed to save attendance data" });
     }
   },
-  
-
-  
 
   getStudMark: async (req, res) => {
     const className = req.faculty.className;
     try {
-     
       const students = await studentModel.find({ className });
 
       res.json({
@@ -239,27 +234,28 @@ let facultyController = {
       });
     }
   },
- 
+
   saveStudentMark: async (req, res) => {
     try {
-      let faculName=req.faculty.name
-      let faculid= req.faculty.id
+      let faculName = req.faculty.name;
+      let faculid = req.faculty.id;
       const { studentId, subjectId, subjectName, marks, grade } = req.body;
 
       if (!mongoose.Types.ObjectId.isValid(studentId)) {
-        return res.status(400).json({ success: false, message: "Invalid studentId" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid studentId" });
       }
-  
+
       let previousMark = await markModel.findOne({
         $and: [
-          {markingDate: new Date().toLocaleDateString()},
-          {student: studentId },
-          {subjectName:subjectName},
+          { markingDate: new Date().toLocaleDateString() },
+          { student: studentId },
+          { subjectName: subjectName },
         ],
       });
-  
+
       if (!previousMark) {
-       
         await markModel.create({
           student: studentId,
           subjectId,
@@ -268,12 +264,13 @@ let facultyController = {
           grade,
           status: "Uploaded",
           subjectName: subjectName,
-          facultyId:faculid,
-          facultyName:faculName
+          facultyId: faculid,
+          facultyName: faculName,
         });
-        res.status(200).json({ success: true, message: "Mark data saved successfully" });
+        res
+          .status(200)
+          .json({ success: true, message: "Mark data saved successfully" });
       } else {
-        
         await markModel.updateOne(
           { _id: previousMark._id },
           {
@@ -284,18 +281,20 @@ let facultyController = {
             grade,
             status: "Uploaded",
             subjectName: subjectName,
-            facultyId:faculid,
-            facultyName:faculName
+            facultyId: faculid,
+            facultyName: faculName,
           }
         );
-        res.status(200).json({ success: true, message: "Mark data updated successfully" });
+        res
+          .status(200)
+          .json({ success: true, message: "Mark data updated successfully" });
       }
     } catch (error) {
       console.error(error);
       res.json({ success: false, error, message: "Server error" });
     }
   },
-  
+
   getClubReq: async (req, res) => {
     try {
       const id = req.faculty.id;
@@ -340,13 +339,55 @@ let facultyController = {
       res.json({ success: false, error, message: "Server error" });
     }
   },
-  getFacViewNotice:async(req,res)=>{
+  getFacViewNotice: async (req, res) => {
     try {
-      const notice= await noticeModel.find().sort({_id:-1})
+      const notice = await noticeModel.find().sort({ _id: -1 });
+
+      res.json({ success: true, notice });
+    } catch (error) {
+      res.json({ success: false, error, message: "Server error" });
+    }
+  },
+  postFacTimeTable: async (req, res) => {
+    try {
+      const facultyName = req.faculty.name;
+      const facultyId = req.faculty.id;
+      const { title, content } = req.body;
+      if (!title || !content) {
+        return res.json({
+          success: false,
+          message: "Please fill in all the fields.",
+        });
+      }
      
-      res.json({success:true, notice})
+      const pdfData = Buffer.from(content, "base64");
+      await timeTableModel.create({
+        title,
+        content: pdfData,
+        facultyName: facultyName,
+        facultyId: facultyId,
+        date: new Date().toLocaleDateString()
+      });
+      res.json({success:true, message:"Successfully created timetable"})
+    } catch (error) {
+      res.json({success:false, error, message:"Server down"})
+    }
+  },
+  viewTimeTable:async(req,res)=>{
+    try {
+      const timetable= await timeTableModel.find().sort({_id:-1})
+      res.json({success:true, timetable})
     } catch (error) {
       res.json({success:false, error, message:"Server error"})
+    }
+  },
+  deleteTImeTable:async(req,res)=>{
+    try {
+      const {id}= req.params
+      await timeTableModel.findByIdAndDelete({_id:id})
+      res.json({success:true, message:"Deleted successfully"})
+    } catch (error) {
+      res.json({success:false, message:"Something went wrong"})
     }
   }
 };

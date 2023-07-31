@@ -52,8 +52,7 @@ const Notice = () => {
           }
         });
       };
-
-      // Read the selected PDF file as a Data URL
+      
       if (content) {
         reader.readAsDataURL(content);
       }

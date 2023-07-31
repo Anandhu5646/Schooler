@@ -16,6 +16,7 @@ function FacProfile() {
     try {
       const facultyData = await fetchFaculty(); 
       setFaculty(facultyData);
+      setClassName(facultyData.className)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -52,7 +53,7 @@ function FacProfile() {
     setAge(faculty.age)
     setAddress(faculty.address)
     setGender(faculty.gender)
-    getClasses()
+   
   }
   const handleClose = () => {
     setOpen(false)
@@ -438,7 +439,7 @@ const handleChangePassword = async()=>{
       </Dialog>
 
 {/* ====================================================================== */}
-    <section className="">
+<section className="">
   {faculty && (
     <MDBContainer className="py-5 h-100 outside-container">
       <MDBRow className="justify-content-center align-items-center h-100">
@@ -454,7 +455,6 @@ const handleChangePassword = async()=>{
                   fluid
                 />
                 <MDBTypography tag="h5" className="fw-bold mb-4">{faculty.name}</MDBTypography>
-                
               </MDBCol>
               <MDBCol md="8">
                 <MDBCardBody className="p-4">
@@ -463,52 +463,48 @@ const handleChangePassword = async()=>{
                     <Button onClick={HandleClickOpen} variant="secondary"><MDBIcon /><MdEditSquare /></Button>
                   </div>
                   <hr className="mt-0 mb-4" />
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                  <div className="row pt-1">
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Email</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.email}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Phone</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.mobile}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Teaching Area</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.teachingArea}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Qualification</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.qualification}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Date of Birth</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.dob}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Age</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.age}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Class</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.className}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Joining Year</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.joiningYear}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
+                    </div>
+                  </div>
+                  <div className="row pt-1">
+                    <div className="col-12 mb-3">
                       <MDBTypography tag="h6" className="fw-bold">Address</MDBTypography>
                       <MDBCardText className="text-muted">{faculty.address}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
+                    </div>
+                  </div>
                   <Button variant="text" className='change-pass' onClick={handleOpenModals} style={{ marginLeft: "200px" }}>Change Password?</Button>
                 </MDBCardBody>
               </MDBCol>
@@ -519,6 +515,7 @@ const handleChangePassword = async()=>{
     </MDBContainer>
   )}
 </section>
+
     </div>
 
   );

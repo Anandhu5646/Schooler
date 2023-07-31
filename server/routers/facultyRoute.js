@@ -13,6 +13,9 @@ const {
   postFacClubReqUpdate,
   postFacComplain,
   getFacViewNotice,
+  postFacTimeTable,
+  viewTimeTable,
+  deleteTImeTable,
   
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
@@ -38,6 +41,7 @@ router.get('/viewMarkStatus', verifyFaculty, getStudMark)
 router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.get("/viewClubReq", verifyFaculty, getClubReq)
 router.get("/notice", verifyFaculty, getFacViewNotice)
+router.get("/timeTable", verifyFaculty, viewTimeTable)
 
 router.post("/", verifyFaculty, upload.single("pic"), postFacEditProfile);
 router.post("/sentOtp", verifyFaculty, sentOtpFac);
@@ -46,6 +50,8 @@ router.post('/viewAttendance',verifyFaculty, postFacStudAttendance )
 router.post("/saveMark", verifyFaculty, saveStudentMark)
 router.post("/saveReq", verifyFaculty, postFacClubReqUpdate)
 router.post("/saveComplaint", verifyFaculty, postFacComplain)
+router.post("/saveTimeTable", verifyFaculty, postFacTimeTable)
+router.post("/deleteTimetable/:id", verifyFaculty, deleteTImeTable)
 
 
 module.exports = router;

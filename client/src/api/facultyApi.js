@@ -257,3 +257,28 @@ export async function saveFacultyComplain(title, content){
     throw error;
   }
 }
+
+export async function deleteTimeTable(id){
+  try {
+    const response= await axios.post(`/faculty/deleteTimeTable/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    if (response.data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Confirmation!!",
+        text: response.data.message,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops..!!",
+        text: "An error occurred while deleting faculty",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+ 
+}

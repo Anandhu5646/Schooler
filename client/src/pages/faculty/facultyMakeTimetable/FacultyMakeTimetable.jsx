@@ -1,12 +1,12 @@
 import React from 'react'
 import FacSidebar from '../../../components/faculty/facSidebar/FacSidebar'
-import MakeTimeTable from '../../../components/faculty/makeTimetable/MakeTimeTable'
+import UploadTimeTable from '../../../components/faculty/makeTimetable/UploadTimeTable'
 
 function FacultyMakeTimetable() {
   return (
     <div>
         <FacSidebar/>
-        <MakeTimeTable/>
+        <UploadTimeTable/>
     </div>
   )
 }

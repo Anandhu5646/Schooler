@@ -18,7 +18,6 @@ import {
 import "./FacMark.css";
 import { MdUpload } from "react-icons/md";
 import Swal from "sweetalert2";
- 
 
 function MarkAttendanceTable() {
   const [studentsList, setStudentsList] = useState([]);
@@ -38,7 +37,7 @@ function MarkAttendanceTable() {
       console.error("Error fetching student list:", error);
     }
   };
-  
+
   const handleUploadMark = (student) => {
     setSelectedStudent(student);
     setShowModal(true);
@@ -47,7 +46,7 @@ function MarkAttendanceTable() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  
+
   const fetchSubjects = async () => {
     try {
       const response = await getAllSubj();
@@ -57,7 +56,7 @@ function MarkAttendanceTable() {
     }
   };
   useEffect(() => {
-    fetchStudents()
+    fetchStudents();
     fetchSubjects();
   }, []);
   useEffect(() => {
@@ -71,37 +70,44 @@ function MarkAttendanceTable() {
   }, [selectedSubject, subjects]);
   const saveMark = async () => {
     try {
-      await saveMarkData(selectedStudent, selectedSubject,subjectName, markValue, gradeValue);
+      await saveMarkData(
+        selectedStudent,
+        selectedSubject,
+        subjectName,
+        markValue,
+        gradeValue
+      );
 
       Swal.fire({
         icon: "success",
         text: "Uploaded mark successfully",
       });
-      setMarkValue("")
-      setSelectedStudent("")
-      setGradeValue("")
+      setMarkValue("");
+      setSelectedStudent("");
+      setGradeValue("");
       setShowModal(false);
     } catch (error) {
       console.error("Error saving mark data:", error);
     }
   };
-  
 
   return (
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
       <div className="d-flex justify-content-between">
-        <h2>Mark Results</h2>
+        <h1>Mark Results</h1>
       </div>
       <hr />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+      <TableContainer component={Paper} >
+        <Table sx={{ minWidth: 600 }} aria-label="customized table">
           <TableHead>
             <TableRow style={{ background: "black" }}>
               <TableCell style={{ color: "white" }}>Sl No</TableCell>
               <TableCell style={{ color: "white" }}>Student Name</TableCell>
               <TableCell style={{ color: "white" }}>Roll No</TableCell>
               <TableCell style={{ color: "white" }}>Class</TableCell>
-              <TableCell style={{ color: "white" ,paddingLeft:"45px"}}>Upload</TableCell>
+              <TableCell align="center" style={{ color: "white" }}>
+                Upload
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -112,22 +118,21 @@ function MarkAttendanceTable() {
                   <TableCell>{student.name}</TableCell>
                   <TableCell>{student.rollNo}</TableCell>
                   <TableCell>{student.className}</TableCell>
-              
-                  <TableCell>
+                  <TableCell align="center">
                     <Button
                       onClick={() => handleUploadMark(student._id)}
                       variant="primary"
                       size="sm"
-                      style={{background:"grey" ,marginLeft:"29px"}}
+                      style={{ background: "grey" }}
                     >
-                    <MdUpload/>
+                      <MdUpload />
                     </Button>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center">
+                <TableCell colSpan={5} align="center">
                   No students found
                 </TableCell>
               </TableRow>
@@ -135,7 +140,6 @@ function MarkAttendanceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-
       {/*============== Modal ======================*/}
 
       <Modal
@@ -200,9 +204,11 @@ function MarkAttendanceTable() {
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={saveMark}
-          style={{background:"#394867"}}
-           >
+          <Button
+            variant="primary"
+            onClick={saveMark}
+            style={{ background: "#394867" }}
+          >
             Save
           </Button>
         </Modal.Footer>
