@@ -11,22 +11,9 @@ import Swal from 'sweetalert2';
 
 
 function FacProfile() {
-  const [faculty, setFaculty] = useState(null);
-  const fetchfacultyData = async () => {
-    try {
-      const facultyData = await fetchFaculty(); 
-      setFaculty(facultyData);
-      setClassName(facultyData.className)
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-  const [refresh, setRefresh] = useState(false)
-  useEffect(() => {
-    fetchfacultyData();
-  }, [refresh]);
-  const [open, setOpen] = useState(false)
 
+  const [faculty, setFaculty] = useState(null);
+  const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [mobile, setMobile] = useState('')
@@ -39,7 +26,7 @@ function FacProfile() {
   const [age, setAge] = useState('')
   const [className, setClassName] = useState('')
   const [pic, setPic] = useState('')
-  const [action, setAction]= useState('profile')
+  const [action, setAction] = useState('profile')
   const HandleClickOpen = async () => {
 
     setOpen(true);
@@ -53,8 +40,23 @@ function FacProfile() {
     setAge(faculty.age)
     setAddress(faculty.address)
     setGender(faculty.gender)
-   
+    setClassName(faculty.className)
+
   }
+  const fetchfacultyData = async () => {
+    try {
+      const facultyData = await fetchFaculty();
+      setFaculty(facultyData);
+      setClassName(facultyData.className)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  const [refresh, setRefresh] = useState(false)
+  useEffect(() => {
+    fetchfacultyData();
+    getClasses()
+  }, [refresh]);
   const handleClose = () => {
     setOpen(false)
   }
@@ -68,7 +70,6 @@ function FacProfile() {
       console.error('Error fetching classes:', error);
     }
   };
-
 
   const [errmsg, setErrmsg] = useState('')
   const HandleSave = async () => {
@@ -107,35 +108,33 @@ function FacProfile() {
   };
 
 
-// =====================otp modal=====================
+  // =====================otp modal=====================
 
-const [openVerifyModal, setOpenVerifyModal] = useState(false);
-const [openChangePwdModal, setOpenChangePwdModal] = useState(false);
-const [emailOrPhone, setEmailOrPhone] = useState('');
-const [otp, setOtp] = useState('');
-const [errMsg, setErrMsg] = useState('');
-const [text, setText] = useState('Enter your registered email or phone number');
-const [label1, setLabel1] = useState('Email or Phone');
-const [btnText, setBtnText] = useState('Send OTP');
+  const [openVerifyModal, setOpenVerifyModal] = useState(false);
+  const [openChangePwdModal, setOpenChangePwdModal] = useState(false);
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+  const [text, setText] = useState('Enter your registered email or phone number');
+  const [label1, setLabel1] = useState('Email or Phone');
+  const [btnText, setBtnText] = useState('Send OTP');
 
-const [cameOtp, setCameOtp]= useState(0)
-
-
-const handleOpenModals = () => {
-  setOpenVerifyModal(true);
-  setEmailOrPhone('');
-  setOtp('');
-  setErrMsg('');
-  setText('Enter your registered email or phone');
-  setLabel1('Email or Phone');
-  setBtnText('Send OTP');
-};
-const handleCloseModals = () => {
-  setOpenVerifyModal(false);
-  setOpenChangePwdModal(false);
-  setNewPassword('');
-  setConfirmPassword('');
-};
+  const [cameOtp, setCameOtp] = useState(0)
+  const handleOpenModals = () => {
+    setOpenVerifyModal(true);
+    setEmailOrPhone('');
+    setOtp('');
+    setErrMsg('');
+    setText('Enter your registered email or phone');
+    setLabel1('Email or Phone');
+    setBtnText('Send OTP');
+  };
+  const handleCloseModals = () => {
+    setOpenVerifyModal(false);
+    setOpenChangePwdModal(false);
+    setNewPassword('');
+    setConfirmPassword('');
+  };
 
 
   const handleSendOTP = async () => {
@@ -150,109 +149,109 @@ const handleCloseModals = () => {
 
     try {
       const data = await sentOttpFac(emailOrPhone);
-     if(data.otp===false){
-      setErrMsg("otp wrong")
-     }
+      if (data.otp === false) {
+        setErrMsg("otp wrong")
+      }
 
-     
-     setCameOtp(data.otp)
-     setText('Enter your OTP')
-     setLabel1('Enter OTP')
-     setBtnText('Verify')
-     setErrMsg('')
-     setAction('otp')
-   
-      console.log(data.otp,'otp')
+
+      setCameOtp(data.otp)
+      setText('Enter your OTP')
+      setLabel1('Enter OTP')
+      setBtnText('Verify')
+      setErrMsg('')
+      setAction('otp')
+
+      console.log(data.otp, 'otp')
     } catch (error) {
       console.error('Error sending OTP:', error);
     }
   };
 
-const handleVerifyOTP = () => {
-  
-  if (otp === '') {
-    setErrMsg('OTP is required');
-    return;
+  const handleVerifyOTP = () => {
+
+    if (otp === '') {
+      setErrMsg('OTP is required');
+      return;
+    }
+
+    if (otp == cameOtp) {
+
+      setErrMsg('')
+      handleclickPasOpen()
+      setOpenChangePwdModal(true);
+    } else {
+      setErrMsg("otp incorrect")
+    }
+
+  };
+  // =====================password change ======================
+
+
+  const [openPas, setOpenPas] = useState(false)
+
+  const handleclickPasOpen = () => {
+    setOpenPas(true)
   }
-  
-  if(otp==cameOtp){
 
-    setErrMsg('')
-    handleclickPasOpen()
-    setOpenChangePwdModal(true);
-  }else{
-    setErrMsg("otp incorrect")
+  const handleCloseModals1 = () => {
+    setOpenPas(false)
   }
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-};
-// =====================password change ======================
-
-
-const [ openPas, setOpenPas]=useState(false)
-
-const handleclickPasOpen =()=>{
-  setOpenPas(true)
-}
-
-const handleCloseModals1 = ()=>{
-  setOpenPas(false)
-}
-const [newPassword, setNewPassword] = useState('');
-const [confirmPassword, setConfirmPassword] = useState('');
-
-const handleChangePassword = async()=>{
-  if(newPassword===confirmPassword && newPassword.trim() && confirmPassword.trim()){
-    await facultySubmitPass(newPassword)
-    handleCloseModals1()
-    handleCloseModals(false)
-    setOpenChangePwdModal(false);
+  const handleChangePassword = async () => {
+    if (newPassword === confirmPassword && newPassword.trim() && confirmPassword.trim()) {
+      await facultySubmitPass(newPassword)
+      handleCloseModals1()
+      handleCloseModals(false)
+      setOpenChangePwdModal(false);
       Swal.fire({
         icon: 'success',
         title: 'Successful',
         text: 'Password Updated',
       });
 
-  }else{
-    setErrMsg('password not match')
+    } else {
+      setErrMsg('password not match')
+    }
   }
-} 
 
 
 
   return (
     <div>
-{/* =========================== otp modal ======================= */}
+      {/* =========================== otp modal ======================= */}
 
-<div>
+      <div>
 
-<Dialog open={openVerifyModal} onClose={handleCloseModals}>
-  <DialogTitle>OTP Verification</DialogTitle>
-  <DialogContent>
-    <DialogContentText>{text}</DialogContentText>
-    {/* <DialogContentText>{errMsg}</DialogContentText> */}
-    <TextField
-      autoFocus
-      margin="dense"
-      label={label1}
-      type="text"
-      value={btnText === 'Verify' ? otp : emailOrPhone}
-      onChange={(e) => (btnText === 'Verify' ? setOtp(e.target.value) : setEmailOrPhone(e.target.value))}
-      fullWidth
-    />
-    {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={btnText === 'Verify' ? handleVerifyOTP : handleSendOTP} autoFocus>
-      {btnText}
-    </Button>
-  </DialogActions>
-</Dialog>
-</div>
+        <Dialog open={openVerifyModal} onClose={handleCloseModals}>
+          <DialogTitle>OTP Verification</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{text}</DialogContentText>
+            {/* <DialogContentText>{errMsg}</DialogContentText> */}
+            <TextField
+              autoFocus
+              margin="dense"
+              label={label1}
+              type="text"
+              value={btnText === 'Verify' ? otp : emailOrPhone}
+              onChange={(e) => (btnText === 'Verify' ? setOtp(e.target.value) : setEmailOrPhone(e.target.value))}
+              fullWidth
+            />
+            {errMsg && <p style={{ color: 'red' }}>{errMsg}</p>}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={btnText === 'Verify' ? handleVerifyOTP : handleSendOTP} autoFocus>
+              {btnText}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
 
 
-{/* ====================== password change ==================== */}
+      {/* ====================== password change ==================== */}
 
-<Dialog open={openPas} onClose={handleCloseModals1}>
+      <Dialog open={openPas} onClose={handleCloseModals1}>
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           <TextField
@@ -277,11 +276,8 @@ const handleChangePassword = async()=>{
           <Button onClick={handleChangePassword}>Change Password</Button>
         </DialogActions>
       </Dialog>
-
-
-
-{/* ======================edit modal================================ */}
-<Dialog open={open} onClose={handleClose}>
+      {/* ======================edit modal================================ */}
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Update Faculty Details</DialogTitle>
         <DialogContent>
           <p style={{ color: 'red', }}>{errmsg}</p>
@@ -347,7 +343,7 @@ const handleChangePassword = async()=>{
 
           <FormControl margin="dense" fullWidth>
             <InputLabel id="classname-label">Select Class</InputLabel>
-            {(classes.length > 0 &&
+            {(classes.length > 0 && (
               <Select
                 labelId="classname-label"
                 id="className"
@@ -358,10 +354,12 @@ const handleChangePassword = async()=>{
                 onChange={(event) => setClassName(event.target.value)}
               >
                 {classes.map((data) => (
-                  <MenuItem key={data._id} value={data.className}>{data.className}</MenuItem>
+                  <MenuItem key={data._id} value={data.className}>
+                    {data.className}
+                  </MenuItem>
                 ))}
               </Select>
-            )}
+            ))}
           </FormControl>
 
           <FormControl margin="dense" fullWidth>
@@ -402,7 +400,6 @@ const handleChangePassword = async()=>{
             name="qualification"
             value={qualification}
             onChange={(event) => setQualification(event.target.value)
-
             }
           />
           <TextField
@@ -438,83 +435,84 @@ const handleChangePassword = async()=>{
         </DialogActions>
       </Dialog>
 
-{/* ====================================================================== */}
-<section className="">
-  {faculty && (
-    <MDBContainer className="py-5 h-100 outside-container">
-      <MDBRow className="justify-content-center align-items-center h-100">
-        <MDBCol lg="6" className="mb-4 mb-lg-0">
-          <MDBCard className="mb-3 fac-profile-container custom-card" style={{ color: "black", background: "#fff", boxShadow: "0 0 10px rgba(36, 31, 31, 0.8)", borderRadius: "10px" }}>
-            <MDBRow className="g-0">
-              <MDBCol md="4" className="gradient-custom text-center text-white" style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem', background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)' }}>
-                <MDBCardImage
-                  src={faculty.pic.length > 0 ? `http://localhost:1800/images/${faculty.pic[0].filename}` : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp'}
-                  alt="Avatar"
-                  className="rounded-circle my-5"
-                  style={{ width: '120px', height: '120px', border: '4px solid #fff' }}
-                  fluid
-                />
-                <MDBTypography tag="h5" className="fw-bold mb-4">{faculty.name}</MDBTypography>
-              </MDBCol>
-              <MDBCol md="8">
-                <MDBCardBody className="p-4">
-                  <div className='d-flex justify-content-between align-items-center'>
-                    <MDBTypography tag="h6" className="fw-bold">Information</MDBTypography>
-                    <Button onClick={HandleClickOpen} variant="secondary"><MDBIcon /><MdEditSquare /></Button>
-                  </div>
-                  <hr className="mt-0 mb-4" />
-                  <div className="row pt-1">
-                    <div className="col-12 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Email</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.email}</MDBCardText>
-                    </div>
-                    <div className="col-12 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Phone</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.mobile}</MDBCardText>
-                    </div>
-                    <div className="col-12 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Teaching Area</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.teachingArea}</MDBCardText>
-                    </div>
-                    <div className="col-12 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Qualification</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.qualification}</MDBCardText>
-                    </div>
-                  </div>
-                  <div className="row pt-1">
-                    <div className="col-md-6 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Date of Birth</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.dob}</MDBCardText>
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Age</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.age}</MDBCardText>
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Class</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.className}</MDBCardText>
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Joining Year</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.joiningYear}</MDBCardText>
-                    </div>
-                  </div>
-                  <div className="row pt-1">
-                    <div className="col-12 mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Address</MDBTypography>
-                      <MDBCardText className="text-muted">{faculty.address}</MDBCardText>
-                    </div>
-                  </div>
-                  <Button variant="text" className='change-pass' onClick={handleOpenModals} style={{ marginLeft: "200px" }}>Change Password?</Button>
-                </MDBCardBody>
+      {/* ====================================================================== */}
+      <section className="">
+        {faculty && (
+          <MDBContainer className="py-5 h-100 outside-container">
+            <MDBRow className="justify-content-center align-items-center h-100">
+              <MDBCol lg="6" className="mb-4 mb-lg-0">
+                <MDBCard className="mb-3 fac-profile-container custom-card" style={{ color: "black", background: "#fff", boxShadow: "0 0 10px rgba(36, 31, 31, 0.8)", borderRadius: "10px" }}>
+                  <MDBRow className="g-0">
+                    <MDBCol md="4" className="gradient-custom text-center text-white" style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem', background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)' }}>
+                      <MDBCardImage
+                        src={faculty.pic.length > 0 ? `http://localhost:1800/images/${faculty.pic[0].filename}` : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp'}
+
+                        alt="Avatar"
+                        className="rounded-circle my-5"
+                        style={{ width: '120px', height: '120px', border: '4px solid #fff' }}
+                        fluid
+                      />
+                      <MDBTypography tag="h5" className="fw-bold mb-4">{faculty.name}</MDBTypography>
+                    </MDBCol>
+                    <MDBCol md="8">
+                      <MDBCardBody className="p-4">
+                        <div className='d-flex justify-content-between align-items-center'>
+                          <MDBTypography tag="h6" className="fw-bold">Information</MDBTypography>
+                          <Button onClick={HandleClickOpen} variant="secondary"><MDBIcon /><MdEditSquare /></Button>
+                        </div>
+                        <hr className="mt-0 mb-4" />
+                        <div className="row pt-1">
+                          <div className="col-12 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Email</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.email}</MDBCardText>
+                          </div>
+                          <div className="col-12 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Phone</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.mobile}</MDBCardText>
+                          </div>
+                          <div className="col-12 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Teaching Area</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.teachingArea}</MDBCardText>
+                          </div>
+                          <div className="col-12 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Qualification</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.qualification}</MDBCardText>
+                          </div>
+                        </div>
+                        <div className="row pt-1">
+                          <div className="col-md-6 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Date of Birth</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.dob}</MDBCardText>
+                          </div>
+                          <div className="col-md-6 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Age</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.age}</MDBCardText>
+                          </div>
+                          <div className="col-md-6 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Class</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.className}</MDBCardText>
+                          </div>
+                          <div className="col-md-6 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Joining Year</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.joiningYear}</MDBCardText>
+                          </div>
+                        </div>
+                        <div className="row pt-1">
+                          <div className="col-12 mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">Address</MDBTypography>
+                            <MDBCardText className="text-muted">{faculty.address}</MDBCardText>
+                          </div>
+                        </div>
+                        <Button variant="text" className='change-pass' onClick={handleOpenModals} style={{ marginLeft: "200px" }}>Change Password?</Button>
+                      </MDBCardBody>
+                    </MDBCol>
+                  </MDBRow>
+                </MDBCard>
               </MDBCol>
             </MDBRow>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-  )}
-</section>
+          </MDBContainer>
+        )}
+      </section>
 
     </div>
 

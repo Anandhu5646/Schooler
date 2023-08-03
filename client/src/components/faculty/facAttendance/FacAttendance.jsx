@@ -112,7 +112,6 @@ const FacAttendance = () => {
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
     <Container>
       <h1>Mark Attendance</h1>
-      <hr></hr>
       <TableContainer component={Paper} className="facultyResultTable">
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableBody>

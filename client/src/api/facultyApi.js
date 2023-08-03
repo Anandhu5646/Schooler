@@ -258,12 +258,13 @@ export async function saveFacultyComplain(title, content){
   }
 }
 
-export async function deleteTimeTable(id){
+export async function deleteTimeTables(id) {
   try {
-    const response= await axios.post(`/faculty/deleteTimeTable/${id}`, {
+    const response = await axios.post(`/faculty/deleteTimeTable/${id}`, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
-    })
+    });
+
     if (response.data.success) {
       Swal.fire({
         icon: "success",
@@ -278,7 +279,11 @@ export async function deleteTimeTable(id){
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting timetable:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "An error occurred while deleting timetable",
+    });
   }
- 
 }

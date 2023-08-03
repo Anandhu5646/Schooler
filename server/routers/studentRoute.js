@@ -1,7 +1,7 @@
 const express= require("express");
 const { getStudProfile, postStudEditProfile, sentOtp, 
      changePassword, getStudClubs,
-     postClubRequest, getSendReqStatus, postStudComplaint, getStudViewNotice, getStudViewAttendance, getStudViewMArk } = require("../controllers/studentController");
+     postClubRequest, getSendReqStatus, postStudComplaint, getStudViewNotice, getStudViewAttendance, getStudViewMArk, viewStudTimetable } = require("../controllers/studentController");
 const verifyStudent = require("../middleware/verifyStudent");
 const router= express.Router()
 const multer= require("multer")
@@ -23,6 +23,7 @@ router.get("/clubStatus", verifyStudent, getSendReqStatus)
 router.get("/notice", verifyStudent, getStudViewNotice)
 router.get("/attendance", verifyStudent, getStudViewAttendance)
 router.get("/mark",verifyStudent, getStudViewMArk)
+router.get("/timeTable", verifyStudent, viewStudTimetable)
 
 router.post("/",verifyStudent,upload.single('pic'),postStudEditProfile)
 router.post("/sentOtp",verifyStudent,sentOtp)

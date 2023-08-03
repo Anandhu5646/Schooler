@@ -9,6 +9,7 @@ const noticeModel = require('../models/noticeModel');
 const attendanceModel = require('../models/attendanceModel');
 const markModel = require('../models/markModel');
 const { default: mongoose } = require('mongoose');
+const timeTableModel = require('../models/timeTableModel');
 
 let studentController={
 
@@ -183,7 +184,18 @@ getStudViewMArk: async (req, res) => {
     res.json({ success: false, error, message: "Server error" });
   }
 },
+viewStudTimetable:async(req,res)=>{
+  const studClass= req.student.className
+  console.log(studClass,'stdClass')
+  try {
+    const timetable= await timeTableModel.find({className:studClass})
 
+    console.log(timetable,'timetable...............')
+    res.json({success:true, timetable})
+  } catch (error) {
+    res.json({success:false, message:"Server error"})
+  }
+}
 
 
 

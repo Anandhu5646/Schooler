@@ -114,7 +114,7 @@ export async function facultyClubReqSend(studentName, studentId, className, club
     console.log(response.data, 'data');
     return response.data;
   } catch (error) {
-    // Handle error here
+   
     console.error(error);
     Swal.fire({
       icon: 'error',
@@ -205,4 +205,27 @@ export async function studentMarks() {
     throw error;
   }
 }
-
+export async function getTimeTable()
+{
+  try {
+    const response= await axios.get("/student/timeTable",{
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    } )
+    if(response.data.success){
+      return response.data.timetable
+    }else{
+      Swal.fire({
+        icon:"error",
+        text:response.data.message
+      })
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong',
+    });
+    throw error;
+  }
+}

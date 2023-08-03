@@ -16,6 +16,7 @@ const {
   postFacTimeTable,
   viewTimeTable,
   deleteTImeTable,
+  downloadPdf,
   
 } = require("../controllers/facultyController");
 const verifyFaculty = require("../middleware/verifyFaculty");
@@ -42,6 +43,8 @@ router.get('/viewSubjects', verifyFaculty, getAllSubjects)
 router.get("/viewClubReq", verifyFaculty, getClubReq)
 router.get("/notice", verifyFaculty, getFacViewNotice)
 router.get("/timeTable", verifyFaculty, viewTimeTable)
+
+
 
 router.post("/", verifyFaculty, upload.single("pic"), postFacEditProfile);
 router.post("/sentOtp", verifyFaculty, sentOtpFac);

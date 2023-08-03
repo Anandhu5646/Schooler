@@ -84,6 +84,17 @@ function FacultyList() {
 
   const handleAddFaculty = async () => {
     try {
+      await validationSchema.validate(formValue, { abortEarly: false });
+      const response = await addFaculty(formValue);
+      toast.success("Faculty added successfully!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setFormValue({
         name: "",
         age: "",
@@ -98,19 +109,7 @@ function FacultyList() {
         address: "",
         className: "",
       });
-      await validationSchema.validate(formValue, { abortEarly: false });
-      const response = await addFaculty(formValue);
-      console.log("data saved successfully", response);
-      toast.success("Faculty added successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setRefresh(true);
+      setRefresh(!true);
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error adding faculty!", {

@@ -4,82 +4,94 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Button, Modal, Form } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
-import { deleteTimeTable } from "../../../api/facultyApi";
+import { deleteTimeTables } from "../../../api/facultyApi";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 
-
-function UploadTimeTable() {
+// function PDFViewer({ pdfUrl }) {
+//   return (
+//     <iframe
+//       src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+//       style={{ width: "100%", height: "500px", border: "none" }}
+//     />
+//   );
+// }
+function UploadTImeTable() {
   const [timetables, setTimetables] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(null);
-  const [errMsg, setErrMsg] = useState(""); 
-  const [refresh, setRefresh]= useState(false)
+  const [errMsg, setErrMsg] = useState("");
+  const [refresh, setRefresh] = useState(false)
+  const fetchTimeTable = async () => {
 
-
-  const fetchTimeTable=async()=>{
-    const response= await axios.get("/faculty/timeTable")
-    if(response.data.success){
+    const response = await axios.get("/faculty/timeTable")
+    if (response.data.success) {
       setTimetables(response.data.timetable)
+      console.log(response.data)
 
-    }else{
-     Swal.fire({
-      icon:"error",
-      text:"Failed to fetch time table"
-     })
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Failed to fetch time table"
+      })
     }
   }
+
 
   const toggleOpenModal = () => {
     setShowModal(true);
   };
-const toggleCloseModal=()=>{
-  setShowModal(false)
-}
-// ============================= add timetable ================
+  const toggleCloseModal = () => {
+    setShowModal(false)
+  }
+  // ============================= add timetable ================
   const handleSubmit = (e) => {
     e.preventDefault();
-   
+
     if (title.trim() === "" || content === null) {
       setErrMsg("Please fill in all the fields.");
       return;
     }
     try {
-     
+
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64String = reader.result.split(",")[1];
+        console.log(reader.result)
+        const base64String = reader.result
+       
         axios.post(
           "/faculty/saveTimeTable",
-          { title, content: base64String }, 
+          { title, content: base64String },
           { headers: { "Content-Type": "application/json" }, withCredentials: true }
         )
-        .then(response => {
-          if (response.data.success) {
-     
-            Swal.fire({
-              icon: "success",
-              text: "Time table uploaded successfully"
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              text: "Something went wrong"
-            });
-          }
-          setRefresh(true)
-          setContent(null)
-          setTitle("")
-        })
-        .catch(error => {
-          if (error.response && error.response.data && error.response.data.message) {
-            setErrMsg(error.response.data.message);
-          } else {
-            setErrMsg("An error occurred while processing your request.");
-          }
-        });
+          .then(response => {
+            if (response.data.success) {
+
+              Swal.fire({
+                icon: "success",
+                text: "Time table uploaded successfully"
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                text: "Something went wrong"
+              });
+            }
+            setRefresh(true)
+            setContent(null)
+            setTitle("")
+          })
+          .catch(error => {
+            if (error.response && error.response.data && error.response.data.message) {
+              setErrMsg(error.response.data.message);
+            } else {
+              setErrMsg("An error occurred while processing your request.");
+            }
+          });
       };
 
-      
+
       if (content) {
         reader.readAsDataURL(content);
       }
@@ -87,46 +99,43 @@ const toggleCloseModal=()=>{
     } catch (error) {
       setErrMsg("An error occurred while processing your request.");
     }
-   
+
   };
-// ===============================================================
-useEffect(()=>{
-  fetchTimeTable()
-},[refresh])
+  // ===============================================================
+  useEffect(() => {
+    fetchTimeTable()
+  }, [refresh])
 
 
-const handleDeleteTimetable = async (id) => {
-  try {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You are about to delete this timetable. This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#212A3E',
-      cancelButtonColor: 'red',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    });
+  const handleDeleteTimetable = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this timetable. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#212A3E',
+        cancelButtonColor: 'red',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      });
+      if (result.isConfirmed) {
 
-    if (result.isConfirmed) {
-      
-      await deleteTimeTable(id);
-     
-      const updatedTimeTableList = timetables.filter((timeTable) => timeTable._id !== id);
-      setTimetables(updatedTimeTableList);
-      Swal.fire('Deleted!', 'The club has been deleted.', 'success');
+        await deleteTimeTables(id);
+
+        const updatedTimeTableList = timetables.filter((timeTable) => timeTable._id !== id);
+        setTimetables(updatedTimeTableList);
+        Swal.fire('Deleted!', 'The club has been deleted.', 'success');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
-  }
-};
-const handleDownloadPDF = (pdfUrl, title) => {
-  const link = document.createElement("a");
-  link.href = pdfUrl;
-  link.download = `${title}.pdf`;
-  link.click();
-};
+  };
+  
+
+
+
   return (
     <div className="container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
@@ -144,34 +153,26 @@ const handleDownloadPDF = (pdfUrl, title) => {
                   <Card.Title>{timetable.title}</Card.Title>
                   <Card.Text>
                     Timetable File:{" "}
-                    <a
-                      href={timetable.content}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() =>
-                  handleDownloadPDF(
-                    `data:application/pdf;base64,${timetable.content}`,timetable.title
-                  )
-                }
-                    >
-                      Download Timetable
+                    
+                    <a href={timetable.content} download="file.pdf">
+                      Download pdf
                     </a>
                   </Card.Text>
                   <div className="p-3 d-flex justify-content-end">
-                  <IconButton
-                    variant="success"
-                    style={{ color: "red" }}
-                    onClick={() => handleDeleteTimetable(timetable._id)}
-                  >
-                    <MdDelete />
-                  </IconButton>
-                </div>
+                    <IconButton
+                      variant="success"
+                      style={{ color: "red" }}
+                      onClick={() => handleDeleteTimetable(timetable._id)}
+                    >
+                      <MdDelete />
+                    </IconButton>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
           ))
         ) : (
-          
+
           <Col md={12} className="mb-4">
             <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
               <Card.Body>
@@ -203,10 +204,10 @@ const handleDownloadPDF = (pdfUrl, title) => {
             </Form.Group>
 
             <Form.Group className="mt-2" controlId="content">
-              <Form.Label>Upload Timetable (PDF)</Form.Label>
+              <Form.Label>Upload Timetable</Form.Label>
               <Form.Control
                 type="file"
-                accept=".pdf"
+                // accept=".pdf"
                 onChange={(e) => setContent(e.target.files[0])}
                 required
               />
@@ -231,4 +232,4 @@ const handleDownloadPDF = (pdfUrl, title) => {
   );
 }
 
-export default UploadTimeTable;
+export default UploadTImeTable;

@@ -6,13 +6,12 @@ import StudentProfile from "../pages/student/studentProfile/StudentProfile";
 import StudentLogin from "../pages/student/studentLogin/StudentLogin";
 import StudAttendance from "../pages/student/studAttendance/StudAttendance";
 import StudResult from "../pages/student/studResult/StudResult";
-import StudSubjects from "../pages/student/studSubjects/StudSubjects";
 import StudentClubs from "../pages/student/studentClubs/StudentClubs";
 import ProtectedStudentRoute from "../utils/ProtectedStudentRoute";
 import StudentComplain from "../pages/student/studentComplain/StudentComplain";
-import StudentViewComplain from "../pages/student/studentViewComplain/StudentViewComplain";
 import StudentNotice from "../pages/student/studentNotice/StudentNotice";
 import StudentPayment from "../pages/student/studentPayment/StudentPayment";
+import StudentViewTimeTable from "../pages/student/studentViewTimeTable/StudentViewTimeTable";
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -45,7 +44,7 @@ function StudentRoute() {
         <Route path="/mark" element={<StudResult />} />
         <Route path="/clubs" element={<StudentClubs />} />
         <Route path="/complain" element={<StudentComplain />} />
-        <Route path="/viewComplain" element={<StudentViewComplain />} />
+        <Route path="/timeTable" element={<StudentViewTimeTable />} />
         <Route path="/notice" element={<StudentNotice />} />
         <Route path="/payment" element={<StudentPayment/>} />
       </Route>

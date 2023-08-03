@@ -9,9 +9,10 @@ const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
 const complainModel = require("../models/complainModel");
 const noticeModel = require("../models/noticeModel");
-const moment = require("moment");
+const moment = require('moment');
 const { default: mongoose } = require("mongoose");
 const timeTableModel = require("../models/timeTableModel");
+const cloudinary = require("../helper/cloudinary");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -169,15 +170,17 @@ let facultyController = {
         .findOne({
           $and: [
             { date: req.body.attendanceData.date },
-            { studentId: req.body.attendanceData.studentId },
+            { studentId: req.body.attendanceData.studentId }
           ],
         })
         .lean();
 
       if (!previous) {
+
         let data = await attendanceModel.create(attendanceData);
         console.log("created", data);
       } else {
+
         let updatedList = await attendanceModel.updateOne(
           { _id: previous._id },
           {
@@ -204,9 +207,13 @@ let facultyController = {
     }
   },
 
+
+
+
   getStudMark: async (req, res) => {
     const className = req.faculty.className;
     try {
+
       const students = await studentModel.find({ className });
 
       res.json({
@@ -237,14 +244,12 @@ let facultyController = {
 
   saveStudentMark: async (req, res) => {
     try {
-      let faculName = req.faculty.name;
-      let faculid = req.faculty.id;
+      let faculName = req.faculty.name
+      let faculid = req.faculty.id
       const { studentId, subjectId, subjectName, marks, grade } = req.body;
 
       if (!mongoose.Types.ObjectId.isValid(studentId)) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid studentId" });
+        return res.status(400).json({ success: false, message: "Invalid studentId" });
       }
 
       let previousMark = await markModel.findOne({
@@ -256,6 +261,7 @@ let facultyController = {
       });
 
       if (!previousMark) {
+
         await markModel.create({
           student: studentId,
           subjectId,
@@ -265,12 +271,11 @@ let facultyController = {
           status: "Uploaded",
           subjectName: subjectName,
           facultyId: faculid,
-          facultyName: faculName,
+          facultyName: faculName
         });
-        res
-          .status(200)
-          .json({ success: true, message: "Mark data saved successfully" });
+        res.status(200).json({ success: true, message: "Mark data saved successfully" });
       } else {
+
         await markModel.updateOne(
           { _id: previousMark._id },
           {
@@ -282,12 +287,10 @@ let facultyController = {
             status: "Uploaded",
             subjectName: subjectName,
             facultyId: faculid,
-            facultyName: faculName,
+            facultyName: faculName
           }
         );
-        res
-          .status(200)
-          .json({ success: true, message: "Mark data updated successfully" });
+        res.status(200).json({ success: true, message: "Mark data updated successfully" });
       }
     } catch (error) {
       console.error(error);
@@ -341,17 +344,18 @@ let facultyController = {
   },
   getFacViewNotice: async (req, res) => {
     try {
-      const notice = await noticeModel.find().sort({ _id: -1 });
+      const notice = await noticeModel.find().sort({ _id: -1 })
 
-      res.json({ success: true, notice });
+      res.json({ success: true, notice })
     } catch (error) {
-      res.json({ success: false, error, message: "Server error" });
+      res.json({ success: false, error, message: "Server error" })
     }
   },
   postFacTimeTable: async (req, res) => {
     try {
       const facultyName = req.faculty.name;
       const facultyId = req.faculty.id;
+      const facClass = req.faculty.className
       const { title, content } = req.body;
       if (!title || !content) {
         return res.json({
@@ -359,36 +363,48 @@ let facultyController = {
           message: "Please fill in all the fields.",
         });
       }
+
+      const cloudinaryUploadResponse = await cloudinary.uploader.upload(content, {
+        folder: "timetables",
+      
+      });
+      console.log(cloudinaryUploadResponse);
      
-      const pdfData = Buffer.from(content, "base64");
+      const pdfUrl = cloudinaryUploadResponse.secure_url;
+     
       await timeTableModel.create({
         title,
-        content: pdfData,
+        content: pdfUrl,
         facultyName: facultyName,
         facultyId: facultyId,
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        className: facClass
       });
-      res.json({success:true, message:"Successfully created timetable"})
+
+      res.json({ success: true, message: "Successfully created timetable" })
     } catch (error) {
-      res.json({success:false, error, message:"Server down"})
+
+      res.json({ success: false, error, message: "Server down" })
     }
   },
-  viewTimeTable:async(req,res)=>{
+  viewTimeTable: async (req, res) => {
     try {
-      const timetable= await timeTableModel.find().sort({_id:-1})
-      res.json({success:true, timetable})
+      const timetable = await timeTableModel.find().sort({ _id: -1 })
+      res.json({ success: true, timetable })
     } catch (error) {
-      res.json({success:false, error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" })
     }
   },
-  deleteTImeTable:async(req,res)=>{
+  deleteTImeTable: async (req, res) => {
     try {
-      const {id}= req.params
-      await timeTableModel.findByIdAndDelete({_id:id})
-      res.json({success:true, message:"Deleted successfully"})
+      const { id } = req.params
+      await timeTableModel.findByIdAndDelete({ _id: id })
+      res.json({ success: true, message: "Deleted successfully" })
     } catch (error) {
-      res.json({success:false, message:"Something went wrong"})
+      res.json({ success: false, message: "Something went wrong" })
     }
-  }
+  },
+ 
+
 };
 module.exports = facultyController;
