@@ -366,12 +366,12 @@ let facultyController = {
 
       const cloudinaryUploadResponse = await cloudinary.uploader.upload(content, {
         folder: "timetables",
-      
+
       });
       console.log(cloudinaryUploadResponse);
-     
+
       const pdfUrl = cloudinaryUploadResponse.secure_url;
-     
+
       await timeTableModel.create({
         title,
         content: pdfUrl,
@@ -404,7 +404,7 @@ let facultyController = {
       res.json({ success: false, message: "Something went wrong" })
     }
   },
- 
+
 
 };
 module.exports = facultyController;

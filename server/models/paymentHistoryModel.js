@@ -2,34 +2,27 @@ const mongoose= require("mongoose")
 
 const paymentHistorySchema= new mongoose.Schema({
  
-      title:{
-        type:String,
-        required:true
-      },
-      amount:{
-        type:String,
-        required:true
+      paymentId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'payment',
       },
       paidDate:{
         type:Date,
         required:true
       },
-      paymentId:{
-        type:String,
-        required:true
-      },
-      student: {
+     
+      studentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'student',
       },
       status:{
         type:String,
-        default:"Not paid"
+        default:"Pending"
       }
       
 
 })
 
-const paymentHistoryModel= mongoose.model("payment",paymentHistorySchema)
+const paymentHistoryModel= mongoose.model("paymentHistory",paymentHistorySchema)
 
 module.exports= paymentHistoryModel;

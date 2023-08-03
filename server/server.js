@@ -12,7 +12,7 @@ const studentRoute = require('./routers/studentRoute.js');
 const adminAuthRoute= require('./routers/adminAuthRoute.js') 
 const facultyAuthRoute= require('./routers/facultyAuthRoute.js')
 const studentAuthRoute= require("./routers/studentAuthRoute.js")
-const bodyParser = require('body-parser');
+const dotenv = require("dotenv").config();
 
 app.use(express.json({limit:'50mb'}));
 app.use(cookieParser({ limit: '10mb' }));

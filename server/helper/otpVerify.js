@@ -4,20 +4,20 @@ const nodemailer=require('nodemailer')
 let sentOtp=(email,otp)=>{
     return new Promise((resolve,reject)=>{
       let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com", // SMTP server address (usually mail.your-domain.com)
-        port: 465, // Port for SMTP (usually 465)
+        host: "smtp.gmail.com", 
+        port: 465,
         secure: true,
         tls: { 
           rejectUnauthorized: false
-        }, // Usually true if connecting to port 465
+        }, 
         auth: {
-          user: "anandhus186@gmail.com", // Your email address
-          pass: "uroonmvdysyvrhoy", // Password (for gmail, your app password)
+          user: process.env.NODEMAILER_EMAIL, 
+          pass: process.env.APP_PASSWORD, 
         },
       });
   
            var mailOptions={
-            from: "anandhus186@gmail.com",
+            from:process.env.NODEMAILER_EMAIL,
             to: email,
             subject: "Schooler Email verification",
             html: `

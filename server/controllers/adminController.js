@@ -487,7 +487,7 @@ let adminController = {
         age: req.body.age,
       };
       let response = await studentModel.updateOne({ _id: id }, updateStudent);
-     
+
       res.json({ success: true, message: "Sutdent details updated" });
 
       console.log("updated succesfully");
@@ -498,11 +498,11 @@ let adminController = {
   postUploadNotice: async (req, res) => {
     try {
       const { title, content } = req.body;
-  
+
       if (!title || !content) {
         return res.json({ success: false, message: 'Please fill in all the fields.' });
       }
-      
+
       const pdfData = Buffer.from(content, 'base64');
       await noticeModel.create({
         title,
@@ -514,28 +514,30 @@ let adminController = {
       res.json({ success: false, error, message: 'Server down' });
     }
   },
-  postPaymentMsgToStud:async(req,res)=>{
+  postPaymentMsgToStud: async (req, res) => {
     try {
-     
-     const { title, amount, lastDate } = req.body.paymentData;
+
+      const { title, amount, lastDate } = req.body.paymentData;
       let currentDate = new Date().toLocaleDateString();
-      let payment= new paymentModel({
-        title,amount,currentDate,lastDate
+      let payment = new paymentModel({
+        title, amount, currentDate, lastDate
       })
-     await payment.save()
-      res.json({success:true,
-      message:"Payment Message send successfully"})
+      await payment.save()
+      res.json({
+        success: true,
+        message: "Payment Message send successfully"
+      })
     } catch (error) {
       console.log(error)
-      res.json({error, success:false, message:"Server error"})
+      res.json({ error, success: false, message: "Server error" })
     }
   },
-  getPaymentList:async(req,res)=>{
+  getPaymentList: async (req, res) => {
     try {
-      const payment= await paymentModel.find().sort({_id:-1})
-      res.json({payment,success:true})
+      const payment = await paymentModel.find().sort({ _id: -1 })
+      res.json({ payment, success: true })
     } catch (error) {
-      res.json({success:false, error, message:"Server error"})
+      res.json({ success: false, error, message: "Server error" })
     }
   },
   deletePaymentList: async (req, res) => {
@@ -548,9 +550,9 @@ let adminController = {
       console.log(error);
     }
   },
-  
 
-  
+
+
 };
 
 module.exports = adminController;
