@@ -13,6 +13,7 @@ import { deleteSubjects } from "../../../api/adminApi";
 
 function SubjectList() {
   const [subjectList, setSubjectList] = useState([]);
+  const [filteredSubList, setFilteredSubList]= useState([])
   const [refresh, setRefresh] = useState(false);
   const [formValue, setFormValue] = useState({
     subName: "",
@@ -37,6 +38,18 @@ function SubjectList() {
       console.error("Error:", err);
     }
   };
+
+  useEffect(() => {
+    setFilteredSubList(subjectList);
+  }, [subjectList]);
+  const handleSearch = (keyword) => {
+    const filteredList = subjectList.filter(
+      (subject) =>
+        subject.subName.toLowerCase().includes(keyword)
+    );
+    setFilteredSubList(filteredList);
+  };
+
 
   const deleteSubject = async (id) => {
     try {
@@ -80,7 +93,7 @@ function SubjectList() {
     try {
       const response = await axios.post("/admin/addSubject", formValue);
       if (response.data.success) {
-        console.log("Faculty data saved:", response.data.subject);
+        console.log("subject data saved:", response.data.subject);
         setRefresh(!refresh);
         setFormValue({
           subName: "",
@@ -116,6 +129,16 @@ function SubjectList() {
           Add subject
         </Button>
       </div>
+      {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search faculty name or class..."
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
       <Table align="middle">
         <thead>
           <tr>
@@ -129,7 +152,7 @@ function SubjectList() {
           </tr>
         </thead>
         <tbody>
-          {subjectList.map((subject, index) => (
+          {filteredSubList.map((subject, index) => (
             <tr key={subject._id}>
               <td>{index + 1}</td>
               <td>

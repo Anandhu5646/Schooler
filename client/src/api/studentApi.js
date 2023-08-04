@@ -229,3 +229,54 @@ export async function getTimeTable()
     throw error;
   }
 }
+export async function getPayment(id){
+  try {
+    const response= await axios.get("/student/payment",{params:{id}},{
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    } )
+    if(response.data.success){
+      
+      return response.data.updatedArr
+    }else{
+      Swal.fire({
+        icon:"error",
+        text:"Failed to fetch payment data"
+      })
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong',
+    });
+    throw error;
+  }
+}
+export async function saveStudPayment(title, amount, id){
+  try {
+    const response= await axios.post("/student/payment",{title, 
+    amount,id} ,{
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+    console.log('wwwwwwwwwwww')
+    if(response.data.success){
+      console.log(response.data.url,'eeeeeeeeeeeeeeeeee')
+      return response.data
+    }else{
+      Swal.fire({
+        icon:"error",
+        text:"Failed to pay, try again!"
+      })
+      
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong',
+    });
+    throw error;
+  }
+}

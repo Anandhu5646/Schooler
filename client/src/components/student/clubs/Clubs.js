@@ -13,6 +13,7 @@ function Clubs() {
   const [student, setStudent] = useState([]);
   const [club, setClub] = useState([]);
   const [status, setStatus] = useState([]);
+  const [filteredClub, setFilteredClub]= useState([])
 
 
   const viewClubs = async () => {
@@ -32,6 +33,17 @@ function Clubs() {
     }
     viewClubs();
   }, [refresh]);
+
+  useEffect(() => {
+    setFilteredClub(club);
+  }, [club]);
+  const handleSearch = (keyword) => {
+    const filteredList = club.filter(
+      (clubb) =>
+        clubb.clubName.toLowerCase().includes(keyword)
+    );
+   setFilteredClub(filteredList);
+  };
 
   const data = useCallback(() => {
     const clubfilt = clubList.map((club) => {
@@ -94,10 +106,21 @@ function Clubs() {
       <Container style={{ marginTop: "50px" }}>
         <div className="d-flex justify-content-between align-items-end mb-5">
           <h1>Club List</h1>
+          <hr></hr>
         </div>
+        {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search club name"
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
         <Row>
           {club &&
-            club.map((data, index) => (
+            filteredClub.map((data, index) => (
               <Col md={12} className="mb-4 column1 " key={data._id}>
                 <Card className="shadow-sm card-column" >
                   <Card.Body>

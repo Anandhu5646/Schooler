@@ -3,7 +3,7 @@ const { getStudProfile, postStudEditProfile, sentOtp,
     changePassword, getStudClubs,
     postClubRequest, getSendReqStatus, postStudComplaint,
     getStudViewNotice, getStudViewAttendance,
-    getStudViewMArk, viewStudTimetable, getStudPayments, postStudPayment } = require("../controllers/studentController");
+    getStudViewMArk, viewStudTimetable, getStudPayments, postStudPayment, getPaymentSuccess, getPaymentFail } = require("../controllers/studentController");
 const verifyStudent = require("../middleware/verifyStudent");
 const router = express.Router()
 const multer = require("multer")
@@ -27,6 +27,8 @@ router.get("/attendance", verifyStudent, getStudViewAttendance)
 router.get("/mark", verifyStudent, getStudViewMArk)
 router.get("/timeTable", verifyStudent, viewStudTimetable)
 router.get("/payment", verifyStudent, getStudPayments)
+router.get("/paymentSuccess", verifyStudent, getPaymentSuccess)
+router.get("/paymentFail",verifyStudent, getPaymentFail)
 
 router.post("/", verifyStudent, upload.single('pic'), postStudEditProfile)
 router.post("/sentOtp", verifyStudent, sentOtp)

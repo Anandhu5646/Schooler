@@ -7,25 +7,27 @@ import "react-toastify/dist/ReactToastify.css";
 import { Table, Button, Modal, Form, Row, Col, Container } from "react-bootstrap";
 import avatar from "../../../assets/avatar.jpg";
 import {
-  fetchStudentList,
-  addStudent,
-  deleteStudent,
-  updateStudent,
-  saveUpdateStudent,
+  fetchFacultyList,
+  addFaculty,
+  deleteFac,
+
+  updateFaculty,
+  saveUpdateFaculty,
 } from "../../../api/adminApi";
 import Swal from "sweetalert2";
 
-function StudentList() {
+function FacList() {
+
   const [refresh, setRefresh] = useState(false);
-  const [studentList, setStudentList] = useState([]);
+  const [facultyList, setFacultyList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [filteredStudentList, setFilteredStudentList]= useState([])
+  const [filteredFacultyList, setFilteredFacultyList] = useState([]);
 
-  const fetchStudentData = async () => {
+  const fetchFacultyData = async () => {
     try {
-      const students = await fetchStudentList();
-      setStudentList(students);
+      const faculties = await fetchFacultyList();
+      setFacultyList(faculties);
       setRefresh(true);
     } catch (err) {
       console.error("Error:", err);
@@ -33,19 +35,16 @@ function StudentList() {
   };
 
   useEffect(() => {
-   
-    setFilteredStudentList(studentList);
-  }, [studentList]);
+    setFilteredFacultyList(facultyList);
+  }, [facultyList]);
   const handleSearch = (keyword) => {
-    const filteredList = studentList.filter(
-      (student) =>
-        student.name.toLowerCase().includes(keyword) ||
-        student.className.toLowerCase().includes(keyword)
+    const filteredList = facultyList.filter(
+      (faculty) =>
+        faculty.name.toLowerCase().includes(keyword) ||
+        faculty.className.toLowerCase().includes(keyword)
     );
-    setFilteredStudentList(filteredList);
+    setFilteredFacultyList(filteredList);
   };
-
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -53,29 +52,28 @@ function StudentList() {
   const [formValue, setFormValue] = useState({
     name: "",
     age: "",
-    fatherName: "",
+    qualification: "",
     dob: "",
-    motherName: "",
+    teachingArea: "",
     email: "",
     password: "",
     mobile: "",
-    admYear: "",
+    joiningYear: "",
     gender: "",
     address: "",
     className: "",
-    rollNo: ""
   });
 
   const onChange = (e) => {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
   // ==================================
-  const handleAddStudent = async () => {
+  const handleAddFaculty = async () => {
     try {
-    
-      const response = await addStudent(formValue);
+
+      const response = await addFaculty(formValue);
       console.log("data saved successfully", response);
-      toast.success("student added successfully!", {
+      toast.success("Faculty added successfully!", {
         position: "top-center",
         autoClose: 300,
         hideProgressBar: false,
@@ -101,10 +99,10 @@ function StudentList() {
         className: "",
         rollNo: "",
       });
-      
+
     } catch (err) {
       console.error("Error:", err);
-      toast.error("Error adding student!", {
+      toast.error("Error adding faculty!", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -114,18 +112,14 @@ function StudentList() {
         progress: undefined,
       });
     }
-
-    
   };
-  useEffect(() => {
-    fetchStudentData();
-  }, [refresh]);
+
   // ============================================
-  const deleteStud = async (id) => {
+  const deleteFaculty = async (id) => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
-        text: "You are about to delete this student. This action cannot be undone.",
+        text: "You are about to delete this faculty. This action cannot be undone.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#212A3E",
@@ -135,35 +129,34 @@ function StudentList() {
       });
 
       if (result.isConfirmed) {
-        await deleteStudent(id);
-        const updatedStudentList = studentList.filter(
-          (student) => student._id !== id
+        await deleteFac(id);
+        const updatedFacultyList = facultyList.filter(
+          (faculty) => faculty._id !== id
         );
-        setStudentList(updatedStudentList);
-        Swal.fire("Deleted!", "The student has been deleted.", "success");
+        setFacultyList(updatedFacultyList);
+        Swal.fire("Deleted!", "The faculty has been deleted.", "success");
       }
     } catch (error) {
       console.error("Error:", error);
       Swal.fire(
         "Error",
-        "An error occurred while deleting the student.",
+        "An error occurred while deleting the faculty.",
         "error"
       );
-    }
+    } 
   };
   // =================== edit code ==================
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [mobile, setMobile] = React.useState('')
   const [dob, setDob] = React.useState('')
-  const [admYear, setAdmyear] = React.useState('')
-  const [motherName, setMotherName] = React.useState('')
+  const [joiningYear, setJoiningYear] = React.useState('')
   const [address, setAddress] = React.useState('')
   const [className, setClassName] = React.useState('')
   const [gender, setGender] = React.useState('')
-  const [fatherName, setFatherName] = React.useState('')
+  const [qualification, setQualification] = React.useState('')
   const [age, setAge] = React.useState('')
-  const [rollNo, setRollNo] = React.useState('')
+  const [teachingArea, setTeachingArea] = React.useState('')
   const [id, setid] = React.useState('')
   const [ErrMsg, setErrmsg] = React.useState('')
 
@@ -171,62 +164,94 @@ function StudentList() {
   const handleOpenEdit = async (id) => {
 
     setid(id)
-    let response = await updateStudent(id)
+    let response = await updateFaculty(id)
 
     setOpen(true);
     setName(response.name)
     setEmail(response.email)
     setMobile(response.mobile)
     setDob(response.dob)
-    setAdmyear(response.admYear)
+    setJoiningYear(response.joiningYear)
     setAddress(response.address)
-    setFatherName(response.fatherName)
-    setMotherName(response.motherName)
+    setTeachingArea(response.teachingArea)
+    setQualification(response.qualification)
     setGender(response.gender)
     setAge(response.age)
-    setRollNo(response.rollNo)
     setClassName(response.className)
-    console.log(response);
+    
 
   }
   const handleClose = () => {
     setOpen(false);
   };
-  const handlesaveEditStudent = () => {
-    if (id.trim() && name.trim() && email.trim() && mobile.trim() && address.trim() && fatherName.trim() &&
-      dob.trim() && admYear.trim() && motherName.trim() && gender.trim() && age.trim() && rollNo.trim() &&
-      className.trim()) {
-
-      saveUpdateStudent(id, name, email, mobile, address, fatherName,
-        dob, admYear, motherName, gender, age, className, rollNo)
-      setRefresh(!refresh)
-      setOpen(false);
+  const handlesaveEditFaculty = async () => {
+    if (
+      id.trim() &&
+      name.trim() &&
+      email.trim() &&
+      mobile.trim() &&
+      address.trim() &&
+      teachingArea.trim() &&
+      dob.trim() &&
+      qualification.trim() &&
+      joiningYear.trim() &&
+      gender.trim() &&
+      age.trim() &&
+      className.trim()
+    ) {
+      try {
+        await saveUpdateFaculty(
+          id,
+          name,
+          email,
+          mobile,
+          address,
+          joiningYear,
+          dob,
+          teachingArea,
+          gender,
+          age,
+          className,
+          qualification
+        );
+  
+        setRefresh(!refresh);
+        setOpen(false);
+        setErrmsg('');
+      } catch (error) {
+        console.error("Error:", error);
+        setErrmsg("An error occurred while saving the edited faculty.");
+      }
     } else {
-      setErrmsg('Fill All The Fields')
+      setErrmsg("Fill All The Fields");
     }
-  }
+  };
+  
+  useEffect(() => {
+    fetchFacultyData();
+  }, [refresh]);
   return (
     <div
       className=""
       style={{ width: "80%", marginLeft: "200px", marginTop: "50px" }}
     >
       <div className="d-flex justify-content-between align-items-end mb-5">
-        <h1>Student List</h1>
+        <h1>Faculty List</h1>
         <Link to="">
           <Button
             variant="primary"
             style={{ background: "#394867" }}
             onClick={toggleModal}
           >
-            Add student
+            Add faculty
           </Button>
         </Link>
       </div>
-      {/* ================== search bar ===================== */}
+{/* ================== search bar ===================== */}
       <div className="mb-3">
         <input
           type="text"
-          placeholder="Search Student name or class..."
+          placeholder="Search faculty name or class..."
           className="form-control"
           onChange={(e) => handleSearch(e.target.value.toLowerCase())}
         />
@@ -239,7 +264,7 @@ function StudentList() {
             <th>Image</th>
             <th>Name</th>
             <th>Class</th>
-            <th>Adm Year</th>
+            <th>Join Year</th>
             <th>Mobile</th>
             <th>DOB</th>
             <th>Age</th>
@@ -248,8 +273,8 @@ function StudentList() {
         </thead>
 
         <tbody>
-          {filteredStudentList.map((student, index) => (
-            <tr key={student._id}>
+          {filteredFacultyList.map((faculty, index) => (
+            <tr key={faculty._id}>
               <td>{index + 1}</td>
               <td>
                 <img
@@ -262,32 +287,31 @@ function StudentList() {
               <td>
                 <div className="d-flex align-items-center">
                   <div className="ms-3">
-                    <p className="fw-bold mb-1">{student.name}</p>
+                    <p className="fw-bold mb-1">{faculty.name}</p>
                   </div>
                 </div>
               </td>
               <td>
-                <p className="fw-normal mb-1">{student.className}</p>
+                <p className="fw-normal mb-1">{faculty.className}</p>
               </td>
               <td>
-                <p className="fw-normal mb-1">{student.admYear}</p>
+                <p className="fw-normal mb-1">{faculty.joiningYear}</p>
               </td>
               <td>
-                <p className="fw-normal mb-1">{student.mobile}</p>
+                <p className="fw-normal mb-1">{faculty.mobile}</p>
               </td>
-              <td>{student.dob}</td>
-              <td>{student.age}</td>
+              <td>{faculty.dob}</td>
+              <td>{faculty.age}</td>
               <td>
-
                 <Button variant="link" rounded size="sm"
-                  onClick={() => handleOpenEdit(student._id)}>
+                  onClick={() => handleOpenEdit(faculty._id)}>
                   Edit
                 </Button>
-
+                
                 <Button
                   type="button"
                   variant="link"
-                  onClick={() => deleteStud(student._id)}
+                  onClick={() => deleteFaculty(faculty._id)}
                   rounded
                   size="sm"
                 >
@@ -300,14 +324,14 @@ function StudentList() {
       </Table>
       <Modal show={showModal} onHide={toggleModal} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
-          <Modal.Title>Add Student</Modal.Title>
+          <Modal.Title>Add Faculty</Modal.Title>
         </Modal.Header>
         <Form>
           <Modal.Body>
             <Container>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Student's Name</Form.Label>
+                  <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
                     value={formValue.name}
                     name="name"
@@ -318,10 +342,10 @@ function StudentList() {
               </Row>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Father's Name</Form.Label>
+                  <Form.Label>Qualification</Form.Label>
                   <Form.Control
-                    value={formValue.fatherName}
-                    name="fatherName"
+                    value={formValue.qualification}
+                    name="qualification"
                     onChange={onChange}
                     required
                   />
@@ -329,10 +353,10 @@ function StudentList() {
               </Row>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Mother's Name</Form.Label>
+                  <Form.Label>Teaching Area</Form.Label>
                   <Form.Control
-                    value={formValue.motherName}
-                    name="motherName"
+                    value={formValue.teachingArea}
+                    name="teachingArea"
                     onChange={onChange}
                     required
                   />
@@ -402,10 +426,10 @@ function StudentList() {
                   />
                 </Col>
                 <Col>
-                  <Form.Label>Admission Year</Form.Label>
+                  <Form.Label>Join Year</Form.Label>
                   <Form.Control
-                    value={formValue.admYear}
-                    name="admYear"
+                    value={formValue.joiningYear}
+                    name="joiningYear"
                     onChange={onChange}
                     required
                   />
@@ -417,15 +441,6 @@ function StudentList() {
                   <Form.Control
                     value={formValue.address}
                     name="address"
-                    onChange={onChange}
-                    required
-                  />
-                </Col>
-                <Col>
-                  <Form.Label>Roll No.</Form.Label>
-                  <Form.Control
-                    value={formValue.rollNo}
-                    name="rollNo"
                     onChange={onChange}
                     required
                   />
@@ -472,7 +487,7 @@ function StudentList() {
               Close
             </Button>
             <Button
-              onClick={handleAddStudent}
+              onClick={handleAddFaculty}
               style={{ background: "#394867" }}
             >
               Save
@@ -486,7 +501,7 @@ function StudentList() {
 
       <Modal show={open} onHide={handleClose} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
-          <Modal.Title>Edit Student</Modal.Title>
+          <Modal.Title>Edit Faculty</Modal.Title>
           <p style={{ color: 'red' }}>{ErrMsg}</p>
         </Modal.Header>
         <Form>
@@ -494,7 +509,7 @@ function StudentList() {
             <Container>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Student's Name</Form.Label>
+                  <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
 
                     name="name"
@@ -506,22 +521,22 @@ function StudentList() {
               </Row>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Father's Name</Form.Label>
+                  <Form.Label>Qualification</Form.Label>
                   <Form.Control
-                    value={fatherName}
-                    name="fatherName"
-                    onChange={(e) => setFatherName(e.target.value)}
+                    value={qualification}
+                    name="qualification"
+                    onChange={(e) => setQualification(e.target.value)}
                     required
                   />
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
-                  <Form.Label>Mother's Name</Form.Label>
+                  <Form.Label>Teaching Area</Form.Label>
                   <Form.Control
-                    value={motherName}
-                    name="motherName"
-                    onChange={(e) => setMotherName(e.target.value)}
+                    value={teachingArea}
+                    name="teachingArea"
+                    onChange={(e) => setTeachingArea(e.target.value)}
                     required
                   />
                 </Col>
@@ -581,11 +596,11 @@ function StudentList() {
                   />
                 </Col>
                 <Col>
-                  <Form.Label>Admission Year</Form.Label>
+                  <Form.Label>Join Year</Form.Label>
                   <Form.Control
-                    value={admYear}
-                    name="admYear"
-                    onChange={(e) => setAdmyear(e.target.value)}
+                    value={joiningYear}
+                    name="joiningYear"
+                    onChange={(e) => setJoiningYear(e.target.value)}
                     required
                   />
                 </Col>
@@ -600,15 +615,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
-                  <Form.Label>Roll No.</Form.Label>
-                  <Form.Control
-                    value={rollNo}
-                    name="rollNo"
-                    onChange={(e) => setRollNo(e.target.value)}
-                    required
-                  />
-                </Col>
+            
               </Row>
               <Row className="mb-3">
                 <Col>
@@ -651,7 +658,7 @@ function StudentList() {
               Close
             </Button>
             <Button
-              onClick={handlesaveEditStudent}
+              onClick={handlesaveEditFaculty}
               type="submit"
               style={{ background: "#394867" }}
             >
@@ -666,4 +673,4 @@ function StudentList() {
   );
 }
 
-export default StudentList;
+export default FacList;

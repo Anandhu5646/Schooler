@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from '../../../components/admin/sidebar/Sidebar'
-import FacultyList from '../../../components/admin/facultyList/FacultyList'
-import ToastProvider from '../../../components/admin/facultyList/FacultyList'
+import ToastProvider from '../../../components/admin/facultyList/FacList'
+import FacList from '../../../components/admin/facultyList/FacList'
 
 function AdminFaculty() {
   return (
@@ -9,7 +9,7 @@ function AdminFaculty() {
   
       <Sidebar/>
       <ToastProvider>
-      <FacultyList />
+      <FacList />
     </ToastProvider>
     </div>
   )

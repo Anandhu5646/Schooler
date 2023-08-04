@@ -29,6 +29,7 @@ function MarkAttendanceTable() {
   const [markValue, setMarkValue] = useState("");
   const [gradeValue, setGradeValue] = useState("");
   const [subjectName, setSubjectName] = useState("");
+  const [filteredMark, setFilteredMark]= useState([])
 
   const fetchStudents = async () => {
     try {
@@ -38,7 +39,16 @@ function MarkAttendanceTable() {
       console.error("Error fetching student list:", error);
     }
   };
-  
+  useEffect(()=>{
+    setFilteredMark(studentsList)
+  },[studentsList])
+  const handleSearch = (keyword) => {
+    const filteredList = studentsList.filter(
+      (mark) =>
+        mark.name.toLowerCase().includes(keyword) 
+    );
+    setFilteredMark(filteredList);
+  };
   const handleUploadMark = (student) => {
     setSelectedStudent(student);
     setShowModal(true);
@@ -93,6 +103,16 @@ function MarkAttendanceTable() {
         <h2>Mark Results</h2>
       </div>
       <hr />
+      {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search student name"
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -106,7 +126,7 @@ function MarkAttendanceTable() {
           </TableHead>
           <TableBody>
             {studentsList && studentsList.length > 0 ? (
-              studentsList.map((student, index) => (
+              filteredMark.map((student, index) => (
                 <TableRow key={student._id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{student.name}</TableCell>

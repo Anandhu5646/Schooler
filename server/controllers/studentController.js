@@ -8,10 +8,12 @@ const complainModel = require('../models/complainModel');
 const noticeModel = require('../models/noticeModel');
 const attendanceModel = require('../models/attendanceModel');
 const markModel = require('../models/markModel');
-const { default: mongoose } = require('mongoose');
 const timeTableModel = require('../models/timeTableModel');
 const paymentModel = require('../models/paymentModel');
 const paymentHistoryModel = require('../models/paymentHistoryModel');
+require('dotenv')
+const stripe = require('stripe')(process.env.STRIP_KEY)
+
 
 let studentController = {
 
@@ -198,26 +200,60 @@ let studentController = {
       res.json({ success: false, message: "Server error" })
     }
   },
-  getStudPayments: async (req, res) => {
+   getStudPayments :async (req, res) => {
     try {
-      const payment = await paymentModel.find().sort({ _id: -1 })
-      res.json({ success: true, payment })
+      const payment = await paymentModel.find().sort({ _id: -1 });
+      const studentid = req.student.id;
+      const history = await paymentHistoryModel.find();
+ 
+      
+  let arr = []
+  if (history) {
+      for (let i = 0; i < payment.length; i++) {
+          let s = ''
+          for (let j = 0; j < history.length; j++) {
+
+              if (payment[i]._id.equals(history[j].paymentId) && history[j].studentId ==studentid) {
+
+                  s = history[j].status
+
+              }
+
+          }
+          let obj = {
+              _id: payment[i]._id,
+              status: s,
+              title: payment[i].title,
+              amount: payment[i].amount
+          }
+          arr.push(obj)
+
+      }
+  }
+
+  let updatedArr = [...new Set(arr)]
+  console.log(updatedArr,'uuuuuuuuuu')
+
+  res.json({success:true,updatedArr})
+    
     } catch (error) {
-      res.json({ success: false, message: "Serve error" })
+      res.json({ success: false, message: "Server error" });
     }
   },
   postStudPayment: async (req, res) => {
-    const studentid = req.student.id
-    const currentDate = new Date().toLocaleDateString()
-
+    const studentid = req.student.id;
+    const currentDate = new Date().toLocaleDateString();
+  
     try {
-      const { title, amount, id } = req.body
+      const { title, amount, id } = req.body;
+
       let pay = await paymentHistoryModel.create({
         paymentId: id,
         paidDate: currentDate,
         studentId: studentid,
-      })
-      let amounts = parseInt(amount)
+      });
+    
+      let amounts = parseInt(amount);
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
@@ -232,12 +268,60 @@ let studentController = {
           },
         ],
         mode: 'payment',
-        success_url: `${process.env.URL_SUCCESS}?id=${data._id}`,
-        cancel_url: `${process.env.URL_CANCEL}?id=${data._id}`,
+        success_url: `${"http://localhost:1800/student/paymentSuccess"}?id=${pay._id}`,
+        cancel_url: `${"http://localhost:1800/student/paymentFail"}?id=${pay._id}`,
       });
-
+      res.json({ success: true, url: session.url, id: pay._id });
     } catch (error) {
-
+      res.json({ success: false, error, message: "Server error" });
+    }
+  },
+  
+  getPaymentSuccess: async (req, res) => {
+    try {
+      const studentid = req.student.id;
+      const paymentId = req.query.id; 
+  
+      
+      let complete = await paymentHistoryModel.updateOne(
+        { _id: paymentId },
+        { status: true }
+      );
+  
+     
+      let pending = await paymentHistoryModel.deleteMany({
+        status: 'pending',
+        studentId: studentid, 
+      });
+  
+      console.log(complete, 'success.........');
+      console.log(pending, 'pending');
+      res.redirect("http://localhost:3000/student/payment");
+    } catch (error) {
+      res.redirect("http://localhost:3000/student/payment");
+    }
+  },
+  getPaymentFail: async (req, res) => {
+    try {
+      const studentid = req.student.id;
+      const paymentId = req.query.id; 
+  
+   
+      let complete = await paymentHistoryModel.updateOne(
+        { _id: paymentId },
+        { status: false }
+      );
+  
+      let pending = await paymentHistoryModel.deleteMany({
+        status: 'pending',
+        studentId: studentid,
+      });
+  
+      console.log(complete, 'failed');
+      console.log(pending, 'pending');
+      res.redirect("http://localhost:3000/student/payment");
+    } catch (error) {
+      res.redirect("http://localhost:3000/student/payment");
     }
   }
 

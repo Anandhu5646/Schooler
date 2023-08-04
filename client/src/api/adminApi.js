@@ -324,77 +324,91 @@ export async function deleteSubjects(id) {
     console.log(error);
   }
 }
-export async function fecthFacultyDetails(id) {
-  const response = await axios.get(`/admin/viewFaculties/${id}`, {
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true,
-  });
-  if (response.data.success) {
-    return response.data.faculty;
-  } else {
+
+
+
+export async function updateFaculty(id) {
+  try {
+    let response = await axios.get(
+      "/admin/updateFaculty",
+      { params: { id } },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    if (response.data.success) {
+      return response.data.faculty;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error occured while getting faculty details",
+      });
+    }
+  } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Oops..!!",
-      text: "An error occurred while fetching faculty",
+      text: "Something went wrong",
     });
+    throw error;
   }
 }
-export async function updateFaculty(
+export async function saveUpdateFaculty(
   id,
   name,
   email,
   mobile,
+  address,
+  age,
   dob,
   joiningYear,
-  teachingArea,
-  qualification,
-  address,
   gender,
-  age,
+  qualification,
+  teachingArea,
   className
 ) {
   try {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("mobile", mobile);
-    formData.append("dob", dob);
-    formData.append("joiningYear", joiningYear);
-    formData.append("teachingArea", teachingArea);
-    formData.append("qualification", qualification);
-    formData.append("address", address);
-    formData.append("gender", gender);
-    formData.append("age", age);
-    formData.append("className", className);
-
-    const response = await axios.post(`/admin/saveFac/${id}`, formData, {
-      withCredentials: true,
-    });
-
+    let response = await axios.post(
+      "/admin/updateFaculty",
+      {
+        id,
+        name,
+        email,
+        mobile,
+        address,
+        dob,
+        joiningYear,
+        gender,
+        qualification,
+        teachingArea,
+        className,
+        age,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },withCredentials:true
+      }
+    );
     if (response.data.success) {
+      console.log(response.data,'-------------------------')
       return response.data;
     } else {
-      toast.error("Failed to update faculty. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error while updating faculty details",
       });
     }
   } catch (error) {
-    console.error("Error updating faculty:", error);
-    toast.error("Error updating faculty. Please try again later.", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
+    Swal.fire({
+      icon: "error",
+      title: "Oops..!!",
+      text: "Something went wrong",
     });
+    throw error;
   }
 }
 
@@ -551,17 +565,17 @@ export async function saveUpdateStudent(
   }
 }
 
-export async function savePayment(paymentData){
+export async function savePayment(paymentData) {
   try {
-    
-    const response= await axios.post("/admin/addPayment",{paymentData},  {
+
+    const response = await axios.post("/admin/addPayment", { paymentData }, {
       headers: {
         "Content-Type": "application/json",
-      },withCredentials:true
+      }, withCredentials: true
     })
-    if(response.data.success){
+    if (response.data.success) {
       return response.data
-    }else{
+    } else {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -577,19 +591,19 @@ export async function savePayment(paymentData){
     throw error;
   }
 }
-export async function getPayment(){
+export async function getPayment() {
   try {
-    const response= await axios.get("/admin/payment",{
+    const response = await axios.get("/admin/payment", {
       headers: {
         "Content-Type": "application/json",
-      },withCredentials:true
+      }, withCredentials: true
     })
 
-    if(response.data.success){
+    if (response.data.success) {
       return response.data.payment
     }
   } catch (error) {
-    
+
   }
 }
 export async function deletePayment(id) {

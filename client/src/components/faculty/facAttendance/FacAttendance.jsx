@@ -41,13 +41,14 @@ function formatDateToDDMMYYYY(dateString) {
   const day = String(dateObj.getDate()).padStart(2, '0');
   const month = String(dateObj.getMonth() + 1).padStart(2, '0');
   const year = dateObj.getFullYear();
-  return `${day}/${month}/${year}`;
+  return `${month}/${day}/${year}`;
 }
 const FacAttendance = () => {
  
   const [students, setStudents] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [select, setselect] = React.useState(null);
+  const [filteredStudent, setFilteredStudent]= useState([])
   const open = Boolean(select);
  
 
@@ -70,8 +71,17 @@ const FacAttendance = () => {
       console.error(error);
     }
   };
-
-
+useEffect(()=>{
+  setFilteredStudent(students)
+},[students])
+const handleSearch = (keyword) => {
+  const filteredList = students.filter(
+    (student) =>
+      student.studentName.toLowerCase().includes(keyword)
+      
+  );
+  setFilteredStudent(filteredList);
+};
   // ==========================================
   const handleSaveAttendance = async (status) => {
     try {
@@ -112,6 +122,17 @@ const FacAttendance = () => {
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
     <Container>
       <h1>Mark Attendance</h1>
+      <hr></hr>
+      {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search faculty name or class..."
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
       <TableContainer component={Paper} className="facultyResultTable">
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableBody>
@@ -123,7 +144,7 @@ const FacAttendance = () => {
               <StyledTableCell style={{color:"white"}}>Actions</StyledTableCell>
             </TableRow>
             {students.length > 0 ? (
-              students.map((row, i) => (
+              filteredStudent.map((row, i) => (
                 <StyledTableRow key={i}>
                 <StyledTableCell>{i+1}</StyledTableCell>
                 <StyledTableCell>{formatDateToDDMMYYYY(row.date)}</StyledTableCell>

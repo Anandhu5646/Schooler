@@ -13,6 +13,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const ViewNotice = () => {
   const [notices, setNotices] = useState([]);
   const [error, setError] = useState(null);
+  const [filteredNotice, setFilteredNotice]= useState([])
 
   const fetchNotices = async () => {
     try {
@@ -27,7 +28,16 @@ const ViewNotice = () => {
   useEffect(() => {
     fetchNotices();
   }, []);
+useEffect(()=>{
+  setFilteredNotice(notices)
+},[notices])
+const handleSearch= (keyword)=>{
+  const filteredList= notices.filter((notice)=>{
+    notice.title.toLowerCase().includes(keyword)
 
+  })
+  setFilteredNotice(filteredList)
+}
   const handleDownloadPDF = (pdfUrl, title) => {
     const link = document.createElement("a");
     link.href = pdfUrl;
@@ -38,9 +48,20 @@ const ViewNotice = () => {
   return (
     <div className="container mt-4 col-12">
     <h1 >View Notices</h1>
+    <hr></hr>
+    {/* ================== search bar ===================== */}
+    <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search notice title"
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
     {error && <div className="alert alert-danger">{error}</div>}
     <Row xs={1} md={2} lg={3} xl={4} className="g-4 card-out mt-3">
-      {notices.map((notice) => (
+      {filteredNotice.map((notice) => (
         <Col key={notice._id}>
           <Card className="custom-card">
             <Card.Header>{notice.title}</Card.Header>

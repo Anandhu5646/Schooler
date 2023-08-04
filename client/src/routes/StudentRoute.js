@@ -12,6 +12,7 @@ import StudentComplain from "../pages/student/studentComplain/StudentComplain";
 import StudentNotice from "../pages/student/studentNotice/StudentNotice";
 import StudentPayment from "../pages/student/studentPayment/StudentPayment";
 import StudentViewTimeTable from "../pages/student/studentViewTimeTable/StudentViewTimeTable";
+import PaymentSuccess from "../components/student/PaymentSuccess";
 
 function StudentRoute() {
   const { student, refresh } = useSelector((state) => state);
@@ -47,7 +48,9 @@ function StudentRoute() {
         <Route path="/timeTable" element={<StudentViewTimeTable />} />
         <Route path="/notice" element={<StudentNotice />} />
         <Route path="/payment" element={<StudentPayment/>} />
+        <Route path="/paymentSuccess" element={<PaymentSuccess/>} />
       </Route>
+     
     </Routes>
   );
 }

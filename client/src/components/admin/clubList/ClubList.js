@@ -18,6 +18,7 @@ import { IconButton } from "@mui/material";
 import {MdDelete} from "react-icons/md";
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
+  const [filteredClubList, setFilteredClubList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [faculty, setFaculty] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -45,6 +46,11 @@ const ClubList = () => {
     fetchClubData();
     fetchFacultyData();
   }, [refresh]);
+
+  useEffect(() => {
+    setFilteredClubList(clubList);
+  }, [clubList]);
+
   const handleAddClub = async () => {
     try {
       if (!selectedFaculty) {
@@ -77,6 +83,7 @@ const ClubList = () => {
     try {
       const response = await getStudentClubFac();
       setFaculty(response);
+      setRefresh(false)
     } catch (err) {
       console.error("Error fetching faculty data:", err);
     }
@@ -123,6 +130,7 @@ const ClubList = () => {
       Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
     }
   };
+
   return (
     <div className="container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
@@ -131,14 +139,32 @@ const ClubList = () => {
           Add Club
         </Button>
       </div>
+       {/* ===================search bar========================= */}
+       <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search club name or description..."
+          className="form-control"
+          onChange={(e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filteredList = clubList.filter(
+              (club) =>
+                club.name.toLowerCase().includes(keyword) ||
+                club.description.toLowerCase().includes(keyword)
+            );
+            setFilteredClubList(filteredList);
+          }}
+        />
+      </div>
+      {/* ========================================================= */}
       <Row>
-        {clubList.map((club) => (
+        {filteredClubList.map((club) => (
           <Col md={12} className="mb-4" key={club._id}>
             <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
               <Card.Body>
                 <Card.Title>{club.name}</Card.Title>
-                <Card.Text>Club Description :{club.description}</Card.Text>
-                <Card.Text>Club Co-ordinator :{club.facultyName}</Card.Text>
+                <Card.Text>Club Description : {club.description}</Card.Text>
+                <Card.Text>Club Co-ordinator : {club.facultyName}</Card.Text>
                 <div className="p-3 d-flex justify-content-end">
                  
                   <IconButton
@@ -155,7 +181,7 @@ const ClubList = () => {
           </Col>
         ))}
       </Row>
-
+     
       <Modal show={showModal} onHide={toggleModal}>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Club</Modal.Title>

@@ -16,13 +16,24 @@ function FacClubReq() {
   const [requests, setRequests] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [status, setStatus] = useState("");
+  // const [filteredReq, setFilteredReq]= useState([])
 
   const fetchClubReq = async () => {
     const response = await getStudClubReq();
     setRequests(response);
     setRefresh(true);
   };
- 
+//  useEffect(()=>{
+//   setFilteredReq(requests)
+//  },[requests])
+//  const handleSearch = (keyword) => {
+//   const filteredList = requests.filter(
+//     (request) =>
+//       request.name.toLowerCase().includes(keyword) 
+//   );
+//   setFilteredReq(filteredList);
+// };
+
   // ==================================================
 
   const Accept = "Now You are a Member";

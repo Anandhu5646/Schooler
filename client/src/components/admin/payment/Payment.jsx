@@ -18,7 +18,7 @@ const Payment = () => {
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [error, setError] = useState("");
-
+  const [filteredPayment, SetfilteredPayment]= useState([])
   const [formValue, setFormValue] = useState({
     title: "",
     amount: "",
@@ -46,7 +46,16 @@ const Payment = () => {
     setPaymentList(response)
 
  }
- 
+ useEffect(() => {
+  SetfilteredPayment(paymentList);
+}, [paymentList]);
+const handleSearch = (keyword) => {
+  const filteredList = paymentList.filter(
+    (payment) =>
+      payment.title.toLowerCase().includes(keyword)
+  );
+  SetfilteredPayment(filteredList);
+};
   // ==================================================
   const handleAddPayment = async (event) => {
     event.preventDefault();
@@ -118,9 +127,19 @@ const Payment = () => {
             Add Payment
           </Button>
         </div>
+        {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search faculty name or class..."
+          className="form-control"
+          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+{/* ===================================================== */}
         <Row>
           {paymentList.length > 0 ? (
-            paymentList.map((payment) => (
+            filteredPayment.map((payment) => (
               <Col md={12} className="mb-4" key={payment._id}>
                 <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
                   <Card.Body className="p-3 d-flex justify-content-between">

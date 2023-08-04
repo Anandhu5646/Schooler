@@ -71,7 +71,7 @@ let adminController = {
         mobile,
         address,
         className,
-        employeeId,
+        
       } = req.body;
       let hashPassword = bcrypt.hashSync(password, salt);
       let faculty = new facultyModel({
@@ -87,7 +87,7 @@ let adminController = {
         qualification,
         address,
         className,
-        employeeId,
+       
       });
       await faculty.save();
       res
@@ -385,23 +385,7 @@ let adminController = {
       console.log(error);
     }
   },
-  getFacByid: async (req, res) => {
-    try {
-      const facultyId = req.params.id;
 
-      const faculty = await facultyModel.findById(facultyId, { password: 0 });
-      if (!faculty) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Faculty not found" });
-      }
-
-      res.status(200).json({ success: true, faculty });
-    } catch (error) {
-      console.error("Error fetching faculty details:", error);
-      res.status(500).json({ success: false, message: "Server error" });
-    }
-  },
   getClubFaculties: async (req, res) => {
     try {
       const faculty = await facultyModel.find();
@@ -469,6 +453,31 @@ let adminController = {
       res.json({ success: false, error, message: "Server error" });
     }
   },
+  getUpdateFaculty:async(req,res)=>{
+    try {
+      let id = req.query.id;
+      if (id == undefined) {
+        res.json({
+          name: "",
+          email: "",
+          mobile: "",
+          dob: "",
+          joiningYear: "",
+          qualification: "",
+          teachingArea: "",
+          address: "",
+          className: "",
+          gender: "",
+          age: "",
+        });
+        return;
+      }
+      let faculty = await facultyModel.findOne({ _id: id });
+      res.json({ success: true, faculty });
+    } catch (error) {
+      res.json({ success: false, error, message: "Server error" });
+    }
+  },
   postAdminUpdateStudent: async (req, res) => {
     try {
       const id = req.body.id;
@@ -486,11 +495,34 @@ let adminController = {
         className: req.body.className,
         age: req.body.age,
       };
-      let response = await studentModel.updateOne({ _id: id }, updateStudent);
+      await studentModel.updateOne({ _id: id }, updateStudent);
 
       res.json({ success: true, message: "Sutdent details updated" });
 
       console.log("updated succesfully");
+    } catch (error) {
+      console.log("server error");
+    }
+  },
+  postAdminUpdateFaculty:async(req,res)=>{
+    try {
+      const id = req.body.id;
+      console.log(req.body,'eeeeeeeee')
+      const updateFaculty = {
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        dob: req.body.dob,
+        joiningYear: req.body.joiningYear,
+        address: req.body.address,
+        teachingArea: req.body.teachingArea,
+        gender: req.body.gender,
+        qualification: req.body.qualification,
+        className: req.body.className,
+        age: req.body.age,
+      };
+     await facultyModel.updateOne({ _id: id }, updateFaculty );
+      res.json({ success: true, message: "Faculty details updated" });
     } catch (error) {
       console.log("server error");
     }

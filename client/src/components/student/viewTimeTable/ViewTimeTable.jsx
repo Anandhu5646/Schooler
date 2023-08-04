@@ -6,8 +6,6 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Col, Row } from "react-bootstrap";
 import { getTimeTable } from "../../../api/studentApi";
-import { MdDelete } from "react-icons/md";
-import { IconButton } from "@mui/material";
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;

@@ -50,6 +50,7 @@ function AdminRoute() {
           <Route path="/logout" element={<Navigate to="/" />} />
         </>
       </Route>
+      
     </Routes>
   );
 }

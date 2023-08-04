@@ -48,6 +48,7 @@ function FacultyRoute() {
           <Route path="/notice" element={<FacNotice />} />
         </Route>
       )}
+      
     </Routes>
   );
 }
