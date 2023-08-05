@@ -4,11 +4,11 @@ const clubModel = require("../models/clubModel");
 const complainModel = require("../models/complainModel");
 const facultyModel = require("../models/facultyModel");
 const noticeModel = require("../models/noticeModel");
+const paymentHistoryModel = require("../models/paymentHistoryModel");
 const paymentModel = require("../models/paymentModel");
 const studentModel = require("../models/studentModel");
 const subjectModel = require("../models/subjectModel");
 const bcrypt = require("bcryptjs");
-
 
 let salt = bcrypt.genSaltSync(10);
 
@@ -71,7 +71,6 @@ let adminController = {
         mobile,
         address,
         className,
-        
       } = req.body;
       let hashPassword = bcrypt.hashSync(password, salt);
       let faculty = new facultyModel({
@@ -87,7 +86,6 @@ let adminController = {
         qualification,
         address,
         className,
-       
       });
       await faculty.save();
       res
@@ -175,8 +173,26 @@ let adminController = {
   },
   getAdminStudents: async (req, res) => {
     try {
-      let students = await studentModel.find();
-      res.json({ success: true, err: false, students });
+      let page = req.query.currentPage || 1;
+      let limit = page * 5;
+      let skip = (page - 1) * 5;
+
+      let total = await studentModel.countDocuments();
+      total = Math.ceil(total / 5);
+
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search
+          .replace(/[^a-zA-Z]/g, "")
+          .replace(/[^a-zA-Z]/g, "");
+      }
+      let students = await studentModel
+        .find({ name: new RegExp(key, "i") })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 });
+
+      res.json({ success: true, err: false, students, total });
     } catch (error) {
       console.log(error);
       res.json({ err: true, error, message: "something went wrong" });
@@ -184,8 +200,26 @@ let adminController = {
   },
   getAdminFaculties: async (req, res) => {
     try {
-      const faculties = await facultyModel.find();
-      res.json({ success: true, err: false, faculties });
+      let page = req.query.currentPage || 1;
+      let limit = page * 5;
+      let skip = (page - 1) * 5;
+      let total = await facultyModel.countDocuments();
+      total = Math.ceil(total / 5);
+
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search
+          .replace(/[^a-zA-Z]/g, "")
+          .replace(/[^a-zA-Z]/g, "");
+      }
+
+      const faculties = await facultyModel
+        .find({ name: new RegExp(key, "i") })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 });
+
+      res.json({ success: true, err: false, faculties, total });
     } catch (error) {
       console.log(error);
       res
@@ -227,8 +261,25 @@ let adminController = {
   },
   getAdminClubs: async (req, res) => {
     try {
-      let clubs = await clubModel.find();
-      res.json({ success: true, err: false, clubs });
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search
+          .replace(/[a-zA-Z]/g, "")
+          .replace(/[a-zA-Z]/g, "");
+      }
+
+      let page = req.query.currentPage || 1;
+      let limit = page * 3;
+      let skip = (page - 1) * 3;
+      let total = await clubModel.countDocuments();
+      total = Math.ceil(total / 3);
+
+      let clubs = await clubModel
+        .find({ name: new RegExp(key, "i") })
+        .limit(limit)
+        .skip(skip)
+        .sort({ _id: -1 });
+      res.json({ success: true, err: false, clubs, total });
     } catch (error) {
       console.log(error);
       res.json({ err: true, error, message: "something went wrong" });
@@ -453,7 +504,7 @@ let adminController = {
       res.json({ success: false, error, message: "Server error" });
     }
   },
-  getUpdateFaculty:async(req,res)=>{
+  getUpdateFaculty: async (req, res) => {
     try {
       let id = req.query.id;
       if (id == undefined) {
@@ -504,10 +555,10 @@ let adminController = {
       console.log("server error");
     }
   },
-  postAdminUpdateFaculty:async(req,res)=>{
+  postAdminUpdateFaculty: async (req, res) => {
     try {
       const id = req.body.id;
-      console.log(req.body,'eeeeeeeee')
+      console.log(req.body, "eeeeeeeee");
       const updateFaculty = {
         name: req.body.name,
         email: req.body.email,
@@ -521,7 +572,7 @@ let adminController = {
         className: req.body.className,
         age: req.body.age,
       };
-     await facultyModel.updateOne({ _id: id }, updateFaculty );
+      await facultyModel.updateOne({ _id: id }, updateFaculty);
       res.json({ success: true, message: "Faculty details updated" });
     } catch (error) {
       console.log("server error");
@@ -532,44 +583,58 @@ let adminController = {
       const { title, content } = req.body;
 
       if (!title || !content) {
-        return res.json({ success: false, message: 'Please fill in all the fields.' });
+        return res.json({
+          success: false,
+          message: "Please fill in all the fields.",
+        });
       }
 
-      const pdfData = Buffer.from(content, 'base64');
+      const pdfData = Buffer.from(content, "base64");
       await noticeModel.create({
         title,
         content: pdfData,
       });
-      console.log('uploaded success')
+      console.log("uploaded success");
       res.json({ success: true });
     } catch (error) {
-      res.json({ success: false, error, message: 'Server down' });
+      res.json({ success: false, error, message: "Server down" });
     }
   },
   postPaymentMsgToStud: async (req, res) => {
     try {
-
       const { title, amount, lastDate } = req.body.paymentData;
       let currentDate = new Date().toLocaleDateString();
       let payment = new paymentModel({
-        title, amount, currentDate, lastDate
-      })
-      await payment.save()
+        title,
+        amount,
+        currentDate,
+        lastDate,
+      });
+      await payment.save();
       res.json({
         success: true,
-        message: "Payment Message send successfully"
-      })
+        message: "Payment Message send successfully",
+      });
     } catch (error) {
-      console.log(error)
-      res.json({ error, success: false, message: "Server error" })
+      console.log(error);
+      res.json({ error, success: false, message: "Server error" });
     }
   },
   getPaymentList: async (req, res) => {
     try {
-      const payment = await paymentModel.find().sort({ _id: -1 })
-      res.json({ payment, success: true })
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search
+          .replace(/[^a-zA-Z]/g, "")
+          .replace(/[^a-zA-Z]/g, "");
+      }
+
+      const payment = await paymentModel
+        .find({ title: new RegExp(key, "i") })
+        .sort({ _id: -1 });
+      res.json({ payment, success: true });
     } catch (error) {
-      res.json({ success: false, error, message: "Server error" })
+      res.json({ success: false, error, message: "Server error" });
     }
   },
   deletePaymentList: async (req, res) => {
@@ -582,9 +647,18 @@ let adminController = {
       console.log(error);
     }
   },
-
-
-
+  getPaymentHistory: async (req, res) => {
+    try {
+      const history = await paymentHistoryModel
+        .find({ status: true })
+        .populate("studentId")
+        .populate("paymentId")
+        .sort({ _id: -1 });
+      res.json({ success: true, history });
+    } catch (error) {
+      res.json({ success: false, error, message: "Server error" });
+    }
+  },
 };
 
 module.exports = adminController;

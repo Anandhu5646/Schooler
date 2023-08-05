@@ -10,21 +10,45 @@ import {
 } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { MdDelete } from "react-icons/md";
-import { deletePayment, getPayment, savePayment } from "../../../api/adminApi";
+import {
+  deletePayment,
+  getPayHistory,
+  getPayment,
+  savePayment,
+} from "../../../api/adminApi";
 import { IconButton } from "@mui/material";
+
+function formatDateToDDMMYYYY(dateString) {
+  const dateObj = new Date(dateString);
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  return `${month}/${day}/${year}`;
+}
 
 const Payment = () => {
   const [paymentList, setPaymentList] = useState([]);
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [error, setError] = useState("");
-  const [filteredPayment, SetfilteredPayment]= useState([])
+  const [search, setSearch] = React.useState('')
+  const [open, setOpen] = useState(false);
+  const [paymentHistory, setPaymentHistory] = useState([]);
   const [formValue, setFormValue] = useState({
     title: "",
     amount: "",
     lastDate: new Date().toISOString().split("T")[0],
   });
+  const openHistory =async () => {
+    setOpen(true);
+    const response = await getPayHistory();
+    
+    setPaymentHistory(response);
 
+  };
+  const closeHistory = () => {
+    setOpen(false);
+  };
   const toggleOpenModal = () => {
     setShow(true);
   };
@@ -40,22 +64,11 @@ const Payment = () => {
       [name]: value,
     }));
   };
-// =============================== fetch payment list====================
- const fetchPayment= async()=>{
-    const response= await getPayment()
-    setPaymentList(response)
-
- }
- useEffect(() => {
-  SetfilteredPayment(paymentList);
-}, [paymentList]);
-const handleSearch = (keyword) => {
-  const filteredList = paymentList.filter(
-    (payment) =>
-      payment.title.toLowerCase().includes(keyword)
-  );
-  SetfilteredPayment(filteredList);
-};
+  // =============================== fetch payment list====================
+  const fetchPayment = async () => {
+    const response = await getPayment(search);
+    setPaymentList(response);
+  };
   // ==================================================
   const handleAddPayment = async (event) => {
     event.preventDefault();
@@ -68,7 +81,7 @@ const handleSearch = (keyword) => {
         ...formValue,
       };
       const response = await savePayment(paymentData);
-    
+
       setError("");
       setRefresh(true);
       Swal.fire(
@@ -76,7 +89,7 @@ const handleSearch = (keyword) => {
         "The payment details have been saved to the database.",
         "success"
       );
-      
+
       setFormValue({ title: "", amount: "" });
       toggleCloseModal();
     } catch (error) {
@@ -91,67 +104,83 @@ const handleSearch = (keyword) => {
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to delete this payment. This action cannot be undone.',
-        icon: 'warning',
+        title: "Are you sure?",
+        text: "You are about to delete this payment. This action cannot be undone.",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#212A3E',
-        cancelButtonColor: 'red',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel',
+        confirmButtonColor: "#212A3E",
+        cancelButtonColor: "red",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
       });
-  
+
       if (result.isConfirmed) {
-        
         await deletePayment(id);
-       
-        const updatedPaymentList = paymentList.filter((payment) => payment._id !== id);
+
+        const updatedPaymentList = paymentList.filter(
+          (payment) => payment._id !== id
+        );
         setPaymentList(updatedPaymentList);
-        setRefresh(true)
-        Swal.fire('Deleted!', 'The payment list has been deleted.', 'success');
+        setRefresh(true);
+        Swal.fire("Deleted!", "The payment list has been deleted.", "success");
       }
     } catch (error) {
-      console.error('Error:', error);
-      Swal.fire('Error', 'An error occurred while deleting the club.', 'error');
+      console.error("Error:", error);
+      Swal.fire("Error", "An error occurred while deleting the club.", "error");
     }
   };
-  useEffect(()=>{
-    fetchPayment()
-  },[refresh])
+
+  // ========================= payment history =======================
+  
+  useEffect(() => {
+    fetchPayment();
+    
+  }, [refresh, search]);
+
   return (
     <div>
       <Container style={{ marginTop: "50px" }}>
         <div className="d-flex justify-content-between align-items-end mb-5">
           <h1>Payment List</h1>
-          <Button style={{ background: "#394867" }} onClick={toggleOpenModal}>
-            Add Payment
-          </Button>
+          <div>
+            <Button style={{ background: "#394867" }} onClick={toggleOpenModal}>
+              Add Payment
+            </Button>
+            <Button
+              style={{ background: "#394867", marginLeft: "5px" }}
+              onClick={openHistory}
+            >
+              Payment history
+            </Button>
+          </div>
         </div>
         {/* ================== search bar ===================== */}
-      <div className="mb-3">
-        <input
-          type="text"
-          placeholder="Search faculty name or class..."
-          className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
-        />
-      </div>
-{/* ===================================================== */}
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Search payment title"
+            className="form-control"
+            onChange={(e) => setSearch(e.target.value.toLowerCase())}
+          />
+        </div>
+        {/* ===================================================== */}
         <Row>
-          {paymentList.length > 0 ? (
-            filteredPayment.map((payment) => (
+          {paymentList?.length > 0 ? (
+            paymentList.map((payment) => (
               <Col md={12} className="mb-4" key={payment._id}>
                 <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
                   <Card.Body className="p-3 d-flex justify-content-between">
-                  <div>
-                    <Card.Title>{payment.title}</Card.Title>
-                    <Card.Text>Amount: ₹{payment.amount}</Card.Text>
-
-                  </div>
-                    <div >
-                      <IconButton type="button" variant="danger"
-                       onClick={() => handleDelete(payment._id)}
-                       style={{color:"red"}}>
+                    <div>
+                      <Card.Title>{payment.title}</Card.Title>
+                      <Card.Text>Amount: ₹{payment.amount}</Card.Text>
+                    </div>
+                    <div>
+                      <IconButton
+                        type="button"
+                        variant="danger"
+                        onClick={() => handleDelete(payment._id)}
+                        style={{ color: "red" }}
+                      >
                         <MdDelete />
                       </IconButton>
                     </div>
@@ -217,6 +246,46 @@ const handleSearch = (keyword) => {
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+      {/* ======================= history ====================== */}
+      <Modal show={open} onHide={closeHistory} size="lg">
+        <Modal.Header closeButton style={{ marginTop: "50px" }}>
+          <Modal.Title>Payment History</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {paymentHistory?.length > 0 ? (
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Class</th>
+                  <th>Title</th>
+                  <th>Amount</th>
+                  <th>Paid Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paymentHistory.map((payment, index) => (
+                  <tr key={index}>
+                    <td>{payment.studentId?.name}</td>
+                    <td>{payment.studentId?.className}</td>
+                    <td>{payment.paymentId?.title}</td>
+                    <td>{payment.paymentId?.amount}</td>
+                    <td>{formatDateToDDMMYYYY(payment.paidDate)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div>No Payment History Available</div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeHistory}>
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

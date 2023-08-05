@@ -7,15 +7,16 @@ export async function authAdmin() {
   return response;
 }
 
-export async function fetchStudentList() {
+export async function fetchStudentList(search,currentPage) {
   try {
-    const response = await axios.get("/admin/viewStudents", {
+    const response = await axios.get("/admin/viewStudents",{params:{search,currentPage}}, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
 
     if (response.data.success) {
-      return response.data.students;
+console.log(response.data,"++++++++++++++++++")
+      return response.data
     } else {
       Swal.fire({
         icon: "error",
@@ -72,15 +73,14 @@ export async function editStudents(id, updatedData) {
   }
 }
 
-export async function fetchFacultyList() {
+export async function fetchFacultyList(search, currentPage) {
   try {
-    const response = await axios.get("/admin/viewFaculties", {
+    const response = await axios.get("/admin/viewFaculties",{params:{search,currentPage}}, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
-    console.log(response.data);
     if (response.data.success) {
-      return response.data.faculties;
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -124,14 +124,14 @@ export async function addFaculty(facultyData) {
   }
 }
 
-export async function fetchClubList() {
+export async function fetchClubList(search, currentPage) {
   try {
-    const response = await axios.get("/admin/viewClubs", {
+    const response = await axios.get("/admin/viewClubs", {params:{search,currentPage}},{
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
     if (response.data.success) {
-      return response.data.clubs;
+      return response.data
     } else {
       Swal.fire({
         icon: "error",
@@ -591,9 +591,9 @@ export async function savePayment(paymentData) {
     throw error;
   }
 }
-export async function getPayment() {
+export async function getPayment(search) {
   try {
-    const response = await axios.get("/admin/payment", {
+    const response = await axios.get("/admin/payment",{params:{search}}, {
       headers: {
         "Content-Type": "application/json",
       }, withCredentials: true
@@ -627,5 +627,28 @@ export async function deletePayment(id) {
     }
   } catch (error) {
     console.error(error);
+  }
+}
+export async function getPayHistory(){
+  try {
+    
+    const response= await axios.get("/admin/paymentHistory", {
+      headers:{"Content-Type":"application/json",withCredentials:true}
+    })
+    if(response.data.success){
+      console.log(response.data.history,'eeeeeeeeeeeeeeeeeeee');
+      return response.data.history
+    }else{
+      Swal.fire({
+        icon:"error",
+        text:"Failed to fetch payment history"
+      })
+    }
+  } catch (error) {
+    Swal.fire({
+      icon:"error",
+      text:"Failed to fetch payment history"
+    })
+    throw error
   }
 }

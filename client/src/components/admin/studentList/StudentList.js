@@ -1,10 +1,16 @@
-
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Table, Button, Modal, Form, Row, Col, Container } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  Container,
+} from "react-bootstrap";
 import avatar from "../../../assets/avatar.jpg";
 import {
   fetchStudentList,
@@ -14,42 +20,37 @@ import {
   saveUpdateStudent,
 } from "../../../api/adminApi";
 import Swal from "sweetalert2";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 function StudentList() {
   const [refresh, setRefresh] = useState(false);
   const [studentList, setStudentList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [filteredStudentList, setFilteredStudentList]= useState([])
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totals, setTotals] = useState(0);
+
+
 
   const fetchStudentData = async () => {
     try {
-      const students = await fetchStudentList();
-      setStudentList(students);
+      const students = await fetchStudentList(search, currentPage);
+      setStudentList(students.students);
       setRefresh(true);
+      setTotals(students.total);
     } catch (err) {
       console.error("Error:", err);
     }
   };
-
-  useEffect(() => {
-   
-    setFilteredStudentList(studentList);
-  }, [studentList]);
-  const handleSearch = (keyword) => {
-    const filteredList = studentList.filter(
-      (student) =>
-        student.name.toLowerCase().includes(keyword) ||
-        student.className.toLowerCase().includes(keyword)
-    );
-    setFilteredStudentList(filteredList);
+  const changePage = (event, page) => {
+    setCurrentPage(page);
   };
-
-
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-  // ================================
+  // ==============================================================
   const [formValue, setFormValue] = useState({
     name: "",
     age: "",
@@ -63,16 +64,15 @@ function StudentList() {
     gender: "",
     address: "",
     className: "",
-    rollNo: ""
+    rollNo: "",
   });
 
   const onChange = (e) => {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
-  // ==================================
+  // ==================================================================
   const handleAddStudent = async () => {
     try {
-    
       const response = await addStudent(formValue);
       console.log("data saved successfully", response);
       toast.success("student added successfully!", {
@@ -101,7 +101,6 @@ function StudentList() {
         className: "",
         rollNo: "",
       });
-      
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error adding student!", {
@@ -114,12 +113,10 @@ function StudentList() {
         progress: undefined,
       });
     }
-
-    
   };
   useEffect(() => {
     fetchStudentData();
-  }, [refresh]);
+  }, [refresh, search, currentPage]);
   // ============================================
   const deleteStud = async (id) => {
     try {
@@ -152,59 +149,80 @@ function StudentList() {
     }
   };
   // =================== edit code ==================
-  const [name, setName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [mobile, setMobile] = React.useState('')
-  const [dob, setDob] = React.useState('')
-  const [admYear, setAdmyear] = React.useState('')
-  const [motherName, setMotherName] = React.useState('')
-  const [address, setAddress] = React.useState('')
-  const [className, setClassName] = React.useState('')
-  const [gender, setGender] = React.useState('')
-  const [fatherName, setFatherName] = React.useState('')
-  const [age, setAge] = React.useState('')
-  const [rollNo, setRollNo] = React.useState('')
-  const [id, setid] = React.useState('')
-  const [ErrMsg, setErrmsg] = React.useState('')
-
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [mobile, setMobile] = React.useState("");
+  const [dob, setDob] = React.useState("");
+  const [admYear, setAdmyear] = React.useState("");
+  const [motherName, setMotherName] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [className, setClassName] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [fatherName, setFatherName] = React.useState("");
+  const [age, setAge] = React.useState("");
+  const [rollNo, setRollNo] = React.useState("");
+  const [id, setid] = React.useState("");
+  const [ErrMsg, setErrmsg] = React.useState("");
 
   const handleOpenEdit = async (id) => {
-
-    setid(id)
-    let response = await updateStudent(id)
+    setid(id);
+    let response = await updateStudent(id);
 
     setOpen(true);
-    setName(response.name)
-    setEmail(response.email)
-    setMobile(response.mobile)
-    setDob(response.dob)
-    setAdmyear(response.admYear)
-    setAddress(response.address)
-    setFatherName(response.fatherName)
-    setMotherName(response.motherName)
-    setGender(response.gender)
-    setAge(response.age)
-    setRollNo(response.rollNo)
-    setClassName(response.className)
+    setName(response.name);
+    setEmail(response.email);
+    setMobile(response.mobile);
+    setDob(response.dob);
+    setAdmyear(response.admYear);
+    setAddress(response.address);
+    setFatherName(response.fatherName);
+    setMotherName(response.motherName);
+    setGender(response.gender);
+    setAge(response.age);
+    setRollNo(response.rollNo);
+    setClassName(response.className);
     console.log(response);
-
-  }
+  };
   const handleClose = () => {
     setOpen(false);
   };
   const handlesaveEditStudent = () => {
-    if (id.trim() && name.trim() && email.trim() && mobile.trim() && address.trim() && fatherName.trim() &&
-      dob.trim() && admYear.trim() && motherName.trim() && gender.trim() && age.trim() && rollNo.trim() &&
-      className.trim()) {
-
-      saveUpdateStudent(id, name, email, mobile, address, fatherName,
-        dob, admYear, motherName, gender, age, className, rollNo)
-      setRefresh(!refresh)
+    if (
+      id.trim() &&
+      name.trim() &&
+      email.trim() &&
+      mobile.trim() &&
+      address.trim() &&
+      fatherName.trim() &&
+      dob.trim() &&
+      admYear.trim() &&
+      motherName.trim() &&
+      gender.trim() &&
+      age.trim() &&
+      rollNo.trim() &&
+      className.trim()
+    ) {
+      saveUpdateStudent(
+        id,
+        name,
+        email,
+        mobile,
+        address,
+        fatherName,
+        dob,
+        admYear,
+        motherName,
+        gender,
+        age,
+        className,
+        rollNo
+      );
+      setRefresh(!refresh);
       setOpen(false);
     } else {
-      setErrmsg('Fill All The Fields')
+      setErrmsg("Fill All The Fields");
     }
-  }
+  };
   return (
     <div
       className=""
@@ -226,12 +244,12 @@ function StudentList() {
       <div className="mb-3">
         <input
           type="text"
-          placeholder="Search Student name or class..."
+          placeholder="Search Student name"
           className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
-{/* ===================================================== */}
+      {/* ===================================================== */}
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -248,7 +266,7 @@ function StudentList() {
         </thead>
 
         <tbody>
-          {filteredStudentList.map((student, index) => (
+          {studentList.map((student, index) => (
             <tr key={student._id}>
               <td>{index + 1}</td>
               <td>
@@ -278,18 +296,19 @@ function StudentList() {
               <td>{student.dob}</td>
               <td>{student.age}</td>
               <td>
-
-                <Button variant="link" rounded size="sm"
-                  onClick={() => handleOpenEdit(student._id)}>
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => handleOpenEdit(student._id)}
+                >
                   Edit
                 </Button>
 
                 <Button
                   type="button"
                   variant="link"
-                  onClick={() => deleteStud(student._id)}
-                  rounded
                   size="sm"
+                  onClick={() => deleteStud(student._id)}
                 >
                   X
                 </Button>
@@ -298,6 +317,16 @@ function StudentList() {
           ))}
         </tbody>
       </Table>
+      <Stack spacing={2}>
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination
+            count={totals}
+            shape="rounded"
+            onChange={changePage}
+            page={currentPage}
+          />
+        </div>
+      </Stack>
       <Modal show={showModal} onHide={toggleModal} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Student</Modal.Title>
@@ -468,7 +497,8 @@ function StudentList() {
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={toggleModal}>
+            <Button variant="secondary"
+             onClick={toggleModal}>
               Close
             </Button>
             <Button
@@ -481,13 +511,12 @@ function StudentList() {
         </Form>
       </Modal>
 
-
       {/* ======================== edit modal ======================= */}
 
       <Modal show={open} onHide={handleClose} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Edit Student</Modal.Title>
-          <p style={{ color: 'red' }}>{ErrMsg}</p>
+          <p style={{ color: "red" }}>{ErrMsg}</p>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -496,7 +525,6 @@ function StudentList() {
                 <Col>
                   <Form.Label>Student's Name</Form.Label>
                   <Form.Control
-
                     name="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -568,7 +596,6 @@ function StudentList() {
                     required
                   />
                 </Col>
-
               </Row>
               <Row className="mb-3">
                 <Col>

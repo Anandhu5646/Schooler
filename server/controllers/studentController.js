@@ -200,42 +200,42 @@ let studentController = {
       res.json({ success: false, message: "Server error" })
     }
   },
-   getStudPayments :async (req, res) => {
+  getStudPayments: async (req, res) => {
     try {
       const payment = await paymentModel.find().sort({ _id: -1 });
       const studentid = req.student.id;
       const history = await paymentHistoryModel.find();
- 
-      
-  let arr = []
-  if (history) {
-      for (let i = 0; i < payment.length; i++) {
+
+
+      let arr = []
+      if (history) {
+        for (let i = 0; i < payment.length; i++) {
           let s = ''
           for (let j = 0; j < history.length; j++) {
 
-              if (payment[i]._id.equals(history[j].paymentId) && history[j].studentId ==studentid) {
+            if (payment[i]._id.equals(history[j].paymentId) && history[j].studentId == studentid) {
 
-                  s = history[j].status
+              s = history[j].status
 
-              }
+            }
 
           }
           let obj = {
-              _id: payment[i]._id,
-              status: s,
-              title: payment[i].title,
-              amount: payment[i].amount
+            _id: payment[i]._id,
+            status: s,
+            title: payment[i].title,
+            amount: payment[i].amount
           }
           arr.push(obj)
 
+        }
       }
-  }
 
-  let updatedArr = [...new Set(arr)]
-  console.log(updatedArr,'uuuuuuuuuu')
+      let updatedArr = [...new Set(arr)]
+      console.log(updatedArr, 'uuuuuuuuuu')
 
-  res.json({success:true,updatedArr})
-    
+      res.json({ success: true, updatedArr })
+
     } catch (error) {
       res.json({ success: false, message: "Server error" });
     }
@@ -243,7 +243,7 @@ let studentController = {
   postStudPayment: async (req, res) => {
     const studentid = req.student.id;
     const currentDate = new Date().toLocaleDateString();
-  
+
     try {
       const { title, amount, id } = req.body;
 
@@ -252,7 +252,7 @@ let studentController = {
         paidDate: currentDate,
         studentId: studentid,
       });
-    
+
       let amounts = parseInt(amount);
       const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -268,60 +268,57 @@ let studentController = {
           },
         ],
         mode: 'payment',
-        success_url: `${"http://localhost:1800/student/paymentSuccess"}?id=${pay._id}`,
-        cancel_url: `${"http://localhost:1800/student/paymentFail"}?id=${pay._id}`,
+        success_url: `${process.env.SUCCESS_URL}?id=${pay._id}`,
+        cancel_url: `${process.env.FAIL_URL}?id=${pay._id}`,
       });
       res.json({ success: true, url: session.url, id: pay._id });
     } catch (error) {
       res.json({ success: false, error, message: "Server error" });
     }
   },
-  
+
   getPaymentSuccess: async (req, res) => {
     try {
       const studentid = req.student.id;
-      const paymentId = req.query.id; 
-  
-      
+      const paymentId = req.query.id;
+
+
       let complete = await paymentHistoryModel.updateOne(
         { _id: paymentId },
         { status: true }
       );
-  
-     
+
+
       let pending = await paymentHistoryModel.deleteMany({
         status: 'pending',
-        studentId: studentid, 
+        studentId: studentid,
       });
-  
+
       console.log(complete, 'success.........');
       console.log(pending, 'pending');
-      res.redirect("http://localhost:3000/student/payment");
+      res.redirect(process.env.PAYMENT_URL);
     } catch (error) {
-      res.redirect("http://localhost:3000/student/payment");
+      res.redirect(process.env.PAYMENT_URL);
     }
   },
   getPaymentFail: async (req, res) => {
     try {
       const studentid = req.student.id;
-      const paymentId = req.query.id; 
-  
-   
+      const paymentId = req.query.id;
+
       let complete = await paymentHistoryModel.updateOne(
         { _id: paymentId },
         { status: false }
       );
-  
+
       let pending = await paymentHistoryModel.deleteMany({
         status: 'pending',
         studentId: studentid,
       });
-  
-      console.log(complete, 'failed');
-      console.log(pending, 'pending');
-      res.redirect("http://localhost:3000/student/payment");
+
+      res.redirect(process.env.PAYMENT_URL);
     } catch (error) {
-      res.redirect("http://localhost:3000/student/payment");
+      res.redirect(process.env.PAYMENT_URL);
     }
   }
 

@@ -1,50 +1,51 @@
-
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Table, Button, Modal, Form, Row, Col, Container } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  Container,
+} from "react-bootstrap";
 import avatar from "../../../assets/avatar.jpg";
 import {
   fetchFacultyList,
   addFaculty,
   deleteFac,
-
   updateFaculty,
   saveUpdateFaculty,
 } from "../../../api/adminApi";
 import Swal from "sweetalert2";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 function FacList() {
-
   const [refresh, setRefresh] = useState(false);
   const [facultyList, setFacultyList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const [filteredFacultyList, setFilteredFacultyList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchFacultyData = async () => {
     try {
-      const faculties = await fetchFacultyList();
-      setFacultyList(faculties);
+      const faculties = await fetchFacultyList(search,currentPage);
+      setFacultyList(faculties.faculties);
+      setTotal(faculties.total);
       setRefresh(true);
     } catch (err) {
       console.error("Error:", err);
     }
   };
-
-  useEffect(() => {
-    setFilteredFacultyList(facultyList);
-  }, [facultyList]);
-  const handleSearch = (keyword) => {
-    const filteredList = facultyList.filter(
-      (faculty) =>
-        faculty.name.toLowerCase().includes(keyword) ||
-        faculty.className.toLowerCase().includes(keyword)
-    );
-    setFilteredFacultyList(filteredList);
+  const changePage = (event, page) => {
+    setCurrentPage(page);
   };
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -70,9 +71,8 @@ function FacList() {
   // ==================================
   const handleAddFaculty = async () => {
     try {
-
       const response = await addFaculty(formValue);
-      console.log("data saved successfully", response);
+      // console.log("data saved successfully", response);
       toast.success("Faculty added successfully!", {
         position: "top-center",
         autoClose: 300,
@@ -99,7 +99,6 @@ function FacList() {
         className: "",
         rollNo: "",
       });
-
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error adding faculty!", {
@@ -143,44 +142,40 @@ function FacList() {
         "An error occurred while deleting the faculty.",
         "error"
       );
-    } 
+    }
   };
   // =================== edit code ==================
-  const [name, setName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [mobile, setMobile] = React.useState('')
-  const [dob, setDob] = React.useState('')
-  const [joiningYear, setJoiningYear] = React.useState('')
-  const [address, setAddress] = React.useState('')
-  const [className, setClassName] = React.useState('')
-  const [gender, setGender] = React.useState('')
-  const [qualification, setQualification] = React.useState('')
-  const [age, setAge] = React.useState('')
-  const [teachingArea, setTeachingArea] = React.useState('')
-  const [id, setid] = React.useState('')
-  const [ErrMsg, setErrmsg] = React.useState('')
-
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [mobile, setMobile] = React.useState("");
+  const [dob, setDob] = React.useState("");
+  const [joiningYear, setJoiningYear] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [className, setClassName] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [qualification, setQualification] = React.useState("");
+  const [age, setAge] = React.useState("");
+  const [teachingArea, setTeachingArea] = React.useState("");
+  const [id, setid] = React.useState("");
+  const [ErrMsg, setErrmsg] = React.useState("");
 
   const handleOpenEdit = async (id) => {
-
-    setid(id)
-    let response = await updateFaculty(id)
+    setid(id);
+    let response = await updateFaculty(id);
 
     setOpen(true);
-    setName(response.name)
-    setEmail(response.email)
-    setMobile(response.mobile)
-    setDob(response.dob)
-    setJoiningYear(response.joiningYear)
-    setAddress(response.address)
-    setTeachingArea(response.teachingArea)
-    setQualification(response.qualification)
-    setGender(response.gender)
-    setAge(response.age)
-    setClassName(response.className)
-    
-
-  }
+    setName(response.name);
+    setEmail(response.email);
+    setMobile(response.mobile);
+    setDob(response.dob);
+    setJoiningYear(response.joiningYear);
+    setAddress(response.address);
+    setTeachingArea(response.teachingArea);
+    setQualification(response.qualification);
+    setGender(response.gender);
+    setAge(response.age);
+    setClassName(response.className);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -214,10 +209,10 @@ function FacList() {
           className,
           qualification
         );
-  
+
         setRefresh(!refresh);
         setOpen(false);
-        setErrmsg('');
+        setErrmsg("");
       } catch (error) {
         console.error("Error:", error);
         setErrmsg("An error occurred while saving the edited faculty.");
@@ -226,10 +221,10 @@ function FacList() {
       setErrmsg("Fill All The Fields");
     }
   };
-  
+
   useEffect(() => {
     fetchFacultyData();
-  }, [refresh]);
+  }, [refresh, search, currentPage]);
   return (
     <div
       className=""
@@ -247,16 +242,16 @@ function FacList() {
           </Button>
         </Link>
       </div>
-{/* ================== search bar ===================== */}
+      {/* ================== search bar ===================== */}
       <div className="mb-3">
         <input
           type="text"
-          placeholder="Search faculty name or class..."
+          placeholder="Search faculty name..."
           className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
-{/* ===================================================== */}
+      {/* ===================================================== */}
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -273,55 +268,75 @@ function FacList() {
         </thead>
 
         <tbody>
-          {filteredFacultyList.map((faculty, index) => (
-            <tr key={faculty._id}>
-              <td>{index + 1}</td>
-              <td>
-                <img
-                  src={avatar}
-                  alt=""
-                  style={{ width: "45px", height: "45px" }}
-                  className="rounded-circle"
-                />
-              </td>
-              <td>
-                <div className="d-flex align-items-center">
-                  <div className="ms-3">
-                    <p className="fw-bold mb-1">{faculty.name}</p>
+          {facultyList.length > 0 ? (
+            facultyList.map((faculty, index) => (
+              <tr key={faculty._id}>
+                <td>{index + 1}</td>
+                <td>
+                  <img
+                    src={avatar}
+                    alt=""
+                    style={{ width: "45px", height: "45px" }}
+                    className="rounded-circle"
+                  />
+                </td>
+                <td>
+                  <div className="d-flex align-items-center">
+                    <div className="ms-3">
+                      <p className="fw-bold mb-1">{faculty.name}</p>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">{faculty.className}</p>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">{faculty.joiningYear}</p>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">{faculty.mobile}</p>
-              </td>
-              <td>{faculty.dob}</td>
-              <td>{faculty.age}</td>
-              <td>
-                <Button variant="link" rounded size="sm"
-                  onClick={() => handleOpenEdit(faculty._id)}>
-                  Edit
-                </Button>
-                
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={() => deleteFaculty(faculty._id)}
-                  rounded
-                  size="sm"
-                >
-                  X
-                </Button>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{faculty.className}</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{faculty.joiningYear}</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{faculty.mobile}</p>
+                </td>
+                <td>{faculty.dob}</td>
+                <td>{faculty.age}</td>
+                <td>
+                  <Button
+                    variant="link"
+                    
+                    size="sm"
+                    onClick={() => handleOpenEdit(faculty._id)}
+                  >
+                    Edit
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => deleteFaculty(faculty._id)}
+                   
+                    size="sm"
+                  >
+                    X
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <div>No Faculty Data</div>
+          )}
         </tbody>
       </Table>
+      
+      <Stack spacing={2}>
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination
+            count={total}
+            shape="rounded"
+            onChange={changePage}
+            page={currentPage}
+          />
+        </div>
+      </Stack>
+
       <Modal show={showModal} onHide={toggleModal} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Faculty</Modal.Title>
@@ -496,13 +511,12 @@ function FacList() {
         </Form>
       </Modal>
 
-
       {/* ======================== edit modal ======================= */}
 
       <Modal show={open} onHide={handleClose} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Edit Faculty</Modal.Title>
-          <p style={{ color: 'red' }}>{ErrMsg}</p>
+          <p style={{ color: "red" }}>{ErrMsg}</p>
         </Modal.Header>
         <Form>
           <Modal.Body>
@@ -511,7 +525,6 @@ function FacList() {
                 <Col>
                   <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
-
                     name="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -583,7 +596,6 @@ function FacList() {
                     required
                   />
                 </Col>
-
               </Row>
               <Row className="mb-3">
                 <Col>
@@ -615,7 +627,6 @@ function FacList() {
                     required
                   />
                 </Col>
-            
               </Row>
               <Row className="mb-3">
                 <Col>

@@ -5,6 +5,8 @@ import {
   Table,
   Form,
   FormControl,
+  Stack,
+  Pagination,
 } from "react-bootstrap";
 import avatar from "../../../assets/avatar.jpg";
 import axios from "axios";
@@ -181,7 +183,10 @@ function SubjectList() {
           ))}
         </tbody>
       </Table>
-
+    <div>
+   
+    </div>
+ 
       {/* ============================ Modal  ========================================= */}
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
@@ -228,6 +233,10 @@ function SubjectList() {
           </Button>
         </Modal.Footer>
       </Modal>
+       {/* Pagination Component */}
+       <Stack spacing={2}>
+        <Pagination count={10} variant="outlined" shape="rounded" />
+      </Stack>
     </div>
   );
 }

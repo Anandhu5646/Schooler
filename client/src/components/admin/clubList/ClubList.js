@@ -16,13 +16,20 @@ import {
 import Swal from "sweetalert2";
 import { IconButton } from "@mui/material";
 import {MdDelete} from "react-icons/md";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
+
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
-  const [filteredClubList, setFilteredClubList] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [faculty, setFaculty] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [selectedFaculty, setSelectedFaculty] = useState(null);
+  const [search, setSearch]= useState('')
+  const [currentPage, setCurrentPage]= useState(1)
+  const [total, setTotal]= useState(0)
+
 
   const [formValue, setFormValue] = useState({
     name: "",
@@ -31,8 +38,9 @@ const ClubList = () => {
 
   const fetchClubData = async () => {
     try {
-      const clubs = await fetchClubList();
-      setClubList(clubs);
+      const clubs = await fetchClubList(search, currentPage);
+      setClubList(clubs.clubs);
+      setTotal(clubs.total)
     } catch (err) {
       console.error("Error:", err);
     }
@@ -41,15 +49,6 @@ const ClubList = () => {
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
-  useEffect(() => {
-    fetchClubData();
-    fetchFacultyData();
-  }, [refresh]);
-
-  useEffect(() => {
-    setFilteredClubList(clubList);
-  }, [clubList]);
 
   const handleAddClub = async () => {
     try {
@@ -89,7 +88,9 @@ const ClubList = () => {
     }
   };
 
-
+const handleSearch=(event, page)=>{
+  setCurrentPage(page)
+}
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValue((prevFormValue) => ({
@@ -97,6 +98,11 @@ const ClubList = () => {
       [name]: value,
     }));
   };
+  useEffect(() => {
+    fetchClubData();
+    fetchFacultyData();
+  }, [refresh, search, currentPage]);
+
 
   const handleFacultyChange = (e) => {
     const selectedFacultyId = e.target.value;
@@ -143,22 +149,14 @@ const ClubList = () => {
        <div className="mb-3">
         <input
           type="text"
-          placeholder="Search club name or description..."
+          placeholder="Search club name..."
           className="form-control"
-          onChange={(e) => {
-            const keyword = e.target.value.toLowerCase();
-            const filteredList = clubList.filter(
-              (club) =>
-                club.name.toLowerCase().includes(keyword) ||
-                club.description.toLowerCase().includes(keyword)
-            );
-            setFilteredClubList(filteredList);
-          }}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
       {/* ========================================================= */}
       <Row>
-        {filteredClubList.map((club) => (
+        {clubList.length>0 ? ( clubList.map((club) => (
           <Col md={12} className="mb-4" key={club._id}>
             <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
               <Card.Body>
@@ -179,9 +177,19 @@ const ClubList = () => {
               </Card.Body>
             </Card>
           </Col>
-        ))}
+        ))):(
+          <div>No Club Data</div>
+        )}
       </Row>
-     
+      <Stack spacing={2}>
+        <div className="d-flex justify-content-center mt-3">
+
+      <Pagination count={total}
+      page={currentPage}
+      onChange={handleSearch} shape="rounded" />
+      
+        </div>
+    </Stack>
       <Modal show={showModal} onHide={toggleModal}>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Club</Modal.Title>
