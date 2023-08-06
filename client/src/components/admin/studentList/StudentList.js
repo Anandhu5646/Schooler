@@ -22,6 +22,7 @@ import {
 import Swal from "sweetalert2";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import nodata from '../../../assets/nodata.gif'
 
 function StudentList() {
   const [refresh, setRefresh] = useState(false);
@@ -266,7 +267,7 @@ function StudentList() {
         </thead>
 
         <tbody>
-          {studentList.map((student, index) => (
+          {studentList.length>0 ? ( studentList.map((student, index) => (
             <tr key={student._id}>
               <td>{index + 1}</td>
               <td>
@@ -314,19 +315,32 @@ function StudentList() {
                 </Button>
               </td>
             </tr>
-          ))}
+          ))) : (
+            <div><h6>No Student Data</h6></div>
+          )}
         </tbody>
       </Table>
-      <Stack spacing={2}>
-        <div className="d-flex justify-content-center mt-3">
-          <Pagination
-            count={totals}
-            shape="rounded"
-            onChange={changePage}
-            page={currentPage}
-          />
+      {studentList.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+     {studentList?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={totals}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
         </div>
-      </Stack>
+      ) : (
+        ""
+      )}
       <Modal show={showModal} onHide={toggleModal} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Student</Modal.Title>

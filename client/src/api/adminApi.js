@@ -7,16 +7,20 @@ export async function authAdmin() {
   return response;
 }
 
-export async function fetchStudentList(search,currentPage) {
+export async function fetchStudentList(search, currentPage) {
   try {
-    const response = await axios.get("/admin/viewStudents",{params:{search,currentPage}}, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      "/admin/viewStudents",
+      { params: { search, currentPage } },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
 
     if (response.data.success) {
-console.log(response.data,"++++++++++++++++++")
-      return response.data
+      console.log(response.data, "++++++++++++++++++");
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -75,10 +79,14 @@ export async function editStudents(id, updatedData) {
 
 export async function fetchFacultyList(search, currentPage) {
   try {
-    const response = await axios.get("/admin/viewFaculties",{params:{search,currentPage}}, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      "/admin/viewFaculties",
+      { params: { search, currentPage } },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
     if (response.data.success) {
       return response.data;
     } else {
@@ -126,12 +134,16 @@ export async function addFaculty(facultyData) {
 
 export async function fetchClubList(search, currentPage) {
   try {
-    const response = await axios.get("/admin/viewClubs", {params:{search,currentPage}},{
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      "/admin/viewClubs",
+      { params: { search, currentPage } },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
     if (response.data.success) {
-      return response.data
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -231,10 +243,10 @@ export async function addClass(classData) {
 }
 export async function deleteFac(id) {
   try {
-    const response = await axios.delete(
-      `/admin/deleteFaculty/${id}`,
-      { headers: { "Content-Type": "application/json" }, withCredentials: true }
-    );
+    const response = await axios.delete(`/admin/deleteFaculty/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
     if (response.data.success) {
       Swal.fire({
         icon: "success",
@@ -325,8 +337,6 @@ export async function deleteSubjects(id) {
   }
 }
 
-
-
 export async function updateFaculty(id) {
   try {
     let response = await axios.get(
@@ -389,11 +399,12 @@ export async function saveUpdateFaculty(
       {
         headers: {
           "Content-Type": "application/json",
-        },withCredentials:true
+        },
+        withCredentials: true,
       }
     );
     if (response.data.success) {
-      console.log(response.data,'-------------------------')
+      console.log(response.data, "-------------------------");
       return response.data;
     } else {
       Swal.fire({
@@ -428,11 +439,11 @@ export const getStudentClubFac = async () => {
   }
 };
 
-export async function getComplaints() {
+export async function getComplaints(search,currentPage) {
   try {
-    const response = await axios.get("/admin/complain");
+    const response = await axios.get("/admin/complain" ,{params:{search, currentPage}});
     if (response.data.success) {
-      return response.data.complaints;
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -567,14 +578,18 @@ export async function saveUpdateStudent(
 
 export async function savePayment(paymentData) {
   try {
-
-    const response = await axios.post("/admin/addPayment", { paymentData }, {
-      headers: {
-        "Content-Type": "application/json",
-      }, withCredentials: true
-    })
+    const response = await axios.post(
+      "/admin/addPayment",
+      { paymentData },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     if (response.data.success) {
-      return response.data
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -591,27 +606,29 @@ export async function savePayment(paymentData) {
     throw error;
   }
 }
-export async function getPayment(search) {
+export async function getPayment(search,currentPage) {
   try {
-    const response = await axios.get("/admin/payment",{params:{search}}, {
-      headers: {
-        "Content-Type": "application/json",
-      }, withCredentials: true
-    })
-
+    const response = await axios.get(
+      "/admin/payment",
+      { params: { search,currentPage } },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     if (response.data.success) {
-      return response.data.payment
+      return response.data;
     }
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 export async function deletePayment(id) {
   try {
-    const response = await axios.post(
-      `/admin/deletePayment/${id}`,
-      { headers: { "Content-Type": "application/json" }, withCredentials: true }
-    );
+    const response = await axios.post(`/admin/deletePayment/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
     if (response.data.success) {
       Swal.fire({
         icon: "success",
@@ -629,26 +646,74 @@ export async function deletePayment(id) {
     console.error(error);
   }
 }
-export async function getPayHistory(){
+export async function getPayHistory() {
   try {
-    
-    const response= await axios.get("/admin/paymentHistory", {
-      headers:{"Content-Type":"application/json",withCredentials:true}
-    })
-    if(response.data.success){
-      console.log(response.data.history,'eeeeeeeeeeeeeeeeeeee');
-      return response.data.history
-    }else{
+    const response = await axios.get("/admin/paymentHistory", {
+      headers: { "Content-Type": "application/json", withCredentials: true },
+    });
+    if (response.data.success) {
+      console.log(response.data.history, "eeeeeeeeeeeeeeeeeeee");
+      return response.data.history;
+    } else {
       Swal.fire({
-        icon:"error",
-        text:"Failed to fetch payment history"
-      })
+        icon: "error",
+        text: "Failed to fetch payment history",
+      });
     }
   } catch (error) {
     Swal.fire({
-      icon:"error",
-      text:"Failed to fetch payment history"
-    })
-    throw error
+      icon: "error",
+      text: "Failed to fetch payment history",
+    });
+    throw error;
+  }
+}
+export async function fetchNoticeList(search, currentPage) {
+  try {
+    const response = await axios.get(
+      "/admin/notice",
+      { params: { search, currentPage } },
+      {
+        headers: { "Content-Type": "application/json", withCredentials: true },
+      }
+    );
+    if (response.data.success) {
+      return response.data;
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Failed to fetch notices",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      text: "Failed to fetch notices",
+    });
+    throw error;
+  }
+}
+export async function  deleNotice(id) {
+  try {
+    const response = await axios.post(
+      `/admin/deleteNotice/${id}`,
+      {
+        headers: { "Content-Type": "application/json", withCredentials: true },
+      }
+    );
+    if (response.data.success) {
+      return response.data;
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Failed to fetch notices",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      text: "Failed to fetch notices",
+    });
+    throw error;
   }
 }

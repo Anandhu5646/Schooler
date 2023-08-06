@@ -67,15 +67,15 @@ export async function facultySubmitPass(newPassword){
 }
 
 
-export async function fetchStudentsByclass() {
+export async function fetchStudentsByclass(search,currentPage) {
   try {
-    const response = await axios.get("/faculty/viewAttendance", {
+    const response = await axios.get("/faculty/viewAttendance", {params:{search,currentPage}},{
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
 
     if (response.data.success) {
-      return response.data.studentArr;
+      return response.data;
     } else {
       Swal.fire({
         icon: "error",
@@ -119,15 +119,15 @@ export async function saveAttendanceData(attendanceData) {
   }
 }
 
-export async function getStudentByClass(){
+export async function getStudentByClass(search,currentPage){
   try {
-    const response = await axios.get("/faculty/viewMarkStatus", {
+    const response = await axios.get("/faculty/viewMarkStatus",{params:{search,currentPage}}, {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
 
     if (response.data.success) {
-      return response.data.students;
+      return response.data;
       
     } else {
       Swal.fire({
@@ -194,14 +194,14 @@ export async function saveMarkData(studentId, subjectId,subjectName, marks, grad
   } 
 }
 
-export async function getStudClubReq(){
+export async function getStudClubReq(search,currentPage){
   try {
-    const response= await axios.get("/faculty/viewClubReq",{
+    const response= await axios.get("/faculty/viewClubReq",{params:{search,currentPage}},{
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     })
     if(response.data.success){
-      return response.data.request
+      return response.data
     }
   } catch (error) {
     Swal.fire({

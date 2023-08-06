@@ -18,7 +18,7 @@ import { IconButton } from "@mui/material";
 import {MdDelete} from "react-icons/md";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-
+import nodata from '../../../assets/nodata.gif'
 
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
@@ -88,7 +88,7 @@ const ClubList = () => {
     }
   };
 
-const handleSearch=(event, page)=>{
+const changePage=(event, page)=>{
   setCurrentPage(page)
 }
   const handleChange = (e) => {
@@ -178,18 +178,27 @@ const handleSearch=(event, page)=>{
             </Card>
           </Col>
         ))):(
-          <div>No Club Data</div>
+          <div className="d-flex justify-content-center">
+            <img  src={nodata}></img>
+          </div>
         )}
       </Row>
-      <Stack spacing={2}>
-        <div className="d-flex justify-content-center mt-3">
-
-      <Pagination count={total}
-      page={currentPage}
-      onChange={handleSearch} shape="rounded" />
-      
+      {clubList?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
         </div>
-    </Stack>
+      ) : (
+        ""
+      )}
       <Modal show={showModal} onHide={toggleModal}>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Club</Modal.Title>

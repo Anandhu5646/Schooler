@@ -159,7 +159,11 @@ let studentController = {
   },
   getStudViewNotice: async (req, res) => {
     try {
-      const notice = await noticeModel.find().sort({ _id: -1 })
+      let key=''
+      if(req.query.search){
+        key=req.query.search.replace(/[^a-zA-Z]/g,"")
+      }
+      const notice = await noticeModel.find({title:new RegExp(key, "i")}).sort({ _id: -1 })
 
       res.json({ success: true, notice })
     } catch (error) {
@@ -190,11 +194,9 @@ let studentController = {
   },
   viewStudTimetable: async (req, res) => {
     const studClass = req.student.className
-    console.log(studClass, 'stdClass')
+   
     try {
       const timetable = await timeTableModel.find({ className: studClass })
-
-      console.log(timetable, 'timetable...............')
       res.json({ success: true, timetable })
     } catch (error) {
       res.json({ success: false, message: "Server error" })

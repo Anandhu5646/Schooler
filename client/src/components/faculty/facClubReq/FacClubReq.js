@@ -5,6 +5,9 @@ import styled from "styled-components";
 import { FacClubReqUpdated, getStudClubReq } from "../../../api/facultyApi";
 import { MdDone, MdDelete, MdCancel } from "react-icons/md";
 import Swal from "sweetalert2";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 const StyledTableRow = styled.tr`
   &:nth-of-type(even) {
@@ -16,23 +19,16 @@ function FacClubReq() {
   const [requests, setRequests] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [status, setStatus] = useState("");
-  // const [filteredReq, setFilteredReq]= useState([])
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchClubReq = async () => {
-    const response = await getStudClubReq();
-    setRequests(response);
+    const response = await getStudClubReq(search,currentPage);
+    setRequests(response.request);
+    setTotal(response.total);
     setRefresh(true);
   };
-//  useEffect(()=>{
-//   setFilteredReq(requests)
-//  },[requests])
-//  const handleSearch = (keyword) => {
-//   const filteredList = requests.filter(
-//     (request) =>
-//       request.name.toLowerCase().includes(keyword) 
-//   );
-//   setFilteredReq(filteredList);
-// };
 
   // ==================================================
 
@@ -63,17 +59,30 @@ function FacClubReq() {
       default:
         return "inherit";
     }
-  
+  };
+  const changePage = (event, page) => {
+    setCurrentPage(page);
   };
   useEffect(() => {
     fetchClubReq();
-  }, [refresh, status]);
+  }, [refresh, status, search, currentPage]);
   return (
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
       <div className="d-flex justify-content-between mb-3">
         <h2>Club Join Requests</h2>
       </div>
       <hr></hr>
+      {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search student name..."
+          className="form-control"
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+      {/* ===================================================== */}
+
       <Table responsive striped bordered hover>
         <thead>
           <tr>
@@ -131,7 +140,11 @@ function FacClubReq() {
                 <td>{club.studentName}</td>
                 <td>{club.className}</td>
                 <td>{club.clubName}</td>
-                <td style={{ backgroundColor: getStatusBackgroundColor(club.status) }}>
+                <td
+                  style={{
+                    backgroundColor: getStatusBackgroundColor(club.status),
+                  }}
+                >
                   {club.status === "Now You are a Member"
                     ? "Request Accepted"
                     : club.status === "Request Send"
@@ -194,6 +207,27 @@ function FacClubReq() {
           )}
         </tbody>
       </Table>
+      {requests.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {requests?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

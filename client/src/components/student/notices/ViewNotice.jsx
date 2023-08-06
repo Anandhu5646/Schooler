@@ -6,18 +6,18 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "./ViewNotice.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Col, Row } from "react-bootstrap";
-
+import { FiDownload } from "react-icons/fi";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ViewNotice = () => {
   const [notices, setNotices] = useState([]);
   const [error, setError] = useState(null);
-  const [filteredNotice, setFilteredNotice]= useState([])
+  const [search, setSearch]= useState("")
 
-  const fetchNotices = async () => {
+  const fetchNotices = async (search) => {
     try {
-      const response = await axios.get("/student/notice");
+      const response = await axios.get("/student/notice", {params:{search}});
       setNotices(response.data.notice);
     } catch (error) {
       console.error("Error fetching notices:", error);
@@ -26,24 +26,9 @@ const ViewNotice = () => {
   };
 
   useEffect(() => {
-    fetchNotices();
-  }, []);
-useEffect(()=>{
-  setFilteredNotice(notices)
-},[notices])
-const handleSearch= (keyword)=>{
-  const filteredList= notices.filter((notice)=>{
-    notice.title.toLowerCase().includes(keyword)
+    fetchNotices(search);
+  }, [search]);
 
-  })
-  setFilteredNotice(filteredList)
-}
-  const handleDownloadPDF = (pdfUrl, title) => {
-    const link = document.createElement("a");
-    link.href = pdfUrl;
-    link.download = `${title}.pdf`;
-    link.click();
-  };
 
   return (
     <div className="container mt-4 col-12">
@@ -55,35 +40,25 @@ const handleSearch= (keyword)=>{
           type="text"
           placeholder="Search notice title"
           className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
 {/* ===================================================== */}
     {error && <div className="alert alert-danger">{error}</div>}
     <Row xs={1} md={2} lg={3} xl={4} className="g-4 card-out mt-3">
-      {filteredNotice.map((notice) => (
+      {notices.map((notice) => (
         <Col key={notice._id}>
           <Card className="custom-card">
             <Card.Header>{notice.title}</Card.Header>
             <Card.Body>
-              <Document
-                file={`data:application/pdf;base64,${notice.content}`}
-                options={{ workerSrc: "/pdf.worker.js" }}
-              >
-                <Page pageNumber={1} />
-              </Document>
+             <div>Download to view </div>
             </Card.Body>
             <Card.Footer>
-              <Button
-                variant="primary"
-                onClick={() =>
-                  handleDownloadPDF(
-                    `data:application/pdf;base64,${notice.content}`,
-                    notice.title
-                  )
-                }
-              >
-                <i className="fas fa-download"></i> 
+              <Button>
+                 <a href={notice.content} download={`${notice.title}.pdf`}
+                 style={{color:'white' }}>
+                   <FiDownload/>
+                  </a>
               </Button>
             </Card.Footer>
           </Card>

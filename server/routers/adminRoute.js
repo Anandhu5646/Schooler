@@ -31,6 +31,8 @@ const {
   getUpdateFaculty,
   postAdminUpdateFaculty,
   getPaymentHistory,
+  viewNotices,
+  deleteNotices,
 } = require("../controllers/adminController");
 const verifyAdmin = require("../middleware/verifyAdmin");
 
@@ -47,6 +49,7 @@ router.get("/updateStudent", verifyAdmin, getUpdateStudent);
 router.get("/updateFaculty", verifyAdmin, getUpdateFaculty);
 router.get("/payment", verifyAdmin, getPaymentList);
 router.get("/paymentHistory", verifyAdmin, getPaymentHistory);
+router.get("/notice", verifyAdmin, viewNotices);
 
 router.post("/addStudent", verifyAdmin, postAdminAddStudent);
 router.post("/addFaculty", verifyAdmin, postAdminAddFaculty);
@@ -60,6 +63,7 @@ router.post("/deleteStudent", verifyAdmin, deleteStudent);
 router.post("/deleteComplain/:id", verifyAdmin, deleteComplain);
 router.post("/deleteSubject", verifyAdmin, deleteSubject);
 router.post("/deleteClub/:id", verifyAdmin, deleteClubs);
+router.post("/deleteNotice/:id", verifyAdmin, deleteNotices);
 router.post("/updateStudent", verifyAdmin, postAdminUpdateStudent);
 router.post("/updateFaculty", verifyAdmin, postAdminUpdateFaculty);
 router.post("/saveNotice", verifyAdmin, postUploadNotice);

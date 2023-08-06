@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { getPayment, saveStudPayment } from "../../../api/studentApi";
 import Swal from "sweetalert2";
-
+import './StudPayment.css'
 
 const StudPayment = () => {
   const [paymentList, setPaymentList] = useState([]);
@@ -43,8 +43,8 @@ const StudPayment = () => {
       <Row>
         {paymentList?.length > 0 ? (
           paymentList.map((payment) => (
-            <Col md={4} className="mb-4" key={payment._id}>
-              <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
+            <Col md={4} className="mb-4 "  key={payment._id}>
+              <Card className="shadow-sm card-outt" style={{ background: "#F1F6F9" }}>
                 <Card.Img
                   variant="top"
                   src="https://www.lyra.com/in/wp-content/uploads/sites/8/2019/05/2-4.png"

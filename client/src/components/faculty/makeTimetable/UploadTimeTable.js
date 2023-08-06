@@ -5,17 +5,10 @@ import { Row, Col, Card, Button, Modal, Form } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { deleteTimeTables } from "../../../api/facultyApi";
-import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import nodata from "../../../assets/nodata.gif";
 
-// function PDFViewer({ pdfUrl }) {
-//   return (
-//     <iframe
-//       src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
-//       style={{ width: "100%", height: "500px", border: "none" }}
-//     />
-//   );
-// }
+
 function UploadTImeTable() {
   const [timetables, setTimetables] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -23,13 +16,13 @@ function UploadTImeTable() {
   const [content, setContent] = useState(null);
   const [errMsg, setErrMsg] = useState("");
   const [refresh, setRefresh] = useState(false)
+  const [search, setSearch] = useState("");
   const fetchTimeTable = async () => {
 
-    const response = await axios.get("/faculty/timeTable")
+    const response = await axios.get("/faculty/timeTable" ,{params:{search}})
     if (response.data.success) {
       setTimetables(response.data.timetable)
-      console.log(response.data)
-
+    
     } else {
       Swal.fire({
         icon: "error",
@@ -103,8 +96,8 @@ function UploadTImeTable() {
   };
   // ===============================================================
   useEffect(() => {
-    fetchTimeTable()
-  }, [refresh])
+    fetchTimeTable(search)
+  }, [refresh,search])
 
 
   const handleDeleteTimetable = async (id) => {
@@ -143,9 +136,20 @@ function UploadTImeTable() {
         <Button style={{ background: "#394867" }} onClick={toggleOpenModal}>
           Add Timetable
         </Button>
+        <hr />
       </div>
+      {/* ================== search bar ===================== */}
+      <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search faculty name..."
+          className="form-control"
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+      {/* ===================================================== */}
       <Row>
-        {timetables.length > 0 ? (
+        {timetables?.length > 0 ? (
           timetables.map((timetable) => (
             <Col md={12} className="mb-4" key={timetable._id}>
               <Card className="shadow-sm" style={{ background: "#F1F6F9" }}>
@@ -182,7 +186,11 @@ function UploadTImeTable() {
           </Col>
         )}
       </Row>
-
+      {timetables?.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
       {/*============== Modal for uploading a new timetable =================*/}
 
       <Modal show={showModal} onHide={toggleCloseModal}>
@@ -207,7 +215,6 @@ function UploadTImeTable() {
               <Form.Label>Upload Timetable</Form.Label>
               <Form.Control
                 type="file"
-                // accept=".pdf"
                 onChange={(e) => setContent(e.target.files[0])}
                 required
               />

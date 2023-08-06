@@ -18,7 +18,9 @@ import {
 import "./FacMark.css";
 import { MdUpload } from "react-icons/md";
 import Swal from "sweetalert2";
- 
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 function MarkAttendanceTable() {
   const [studentsList, setStudentsList] = useState([]);
@@ -29,31 +31,28 @@ function MarkAttendanceTable() {
   const [markValue, setMarkValue] = useState("");
   const [gradeValue, setGradeValue] = useState("");
   const [subjectName, setSubjectName] = useState("");
-  const [filteredMark, setFilteredMark]= useState([])
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchStudents = async () => {
     try {
-      const response = await getStudentByClass();
-      setStudentsList(response);
+      const response = await getStudentByClass(search,currentPage);
+      setStudentsList(response.students);
+      setTotal(response.total) 
     } catch (error) {
       console.error("Error fetching student list:", error);
+      
     }
   };
-  useEffect(()=>{
-    setFilteredMark(studentsList)
-  },[studentsList])
-  const handleSearch = (keyword) => {
-    const filteredList = studentsList.filter(
-      (mark) =>
-        mark.name.toLowerCase().includes(keyword) 
-    );
-    setFilteredMark(filteredList);
-  };
+ 
   const handleUploadMark = (student) => {
     setSelectedStudent(student);
     setShowModal(true);
   };
-
+  const changePage = (event, page) => {
+    setCurrentPage(page);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -69,7 +68,7 @@ function MarkAttendanceTable() {
   useEffect(() => {
     fetchStudents()
     fetchSubjects();
-  }, []);
+  }, [search,currentPage]);
   useEffect(() => {
     const selectedSubjectDetails = subjects.find(
       (subject) => subject._id === selectedSubject
@@ -100,7 +99,7 @@ function MarkAttendanceTable() {
   return (
     <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
       <div className="d-flex justify-content-between">
-        <h2>Mark Results</h2>
+        <h1>Mark Results</h1>
       </div>
       <hr />
       {/* ================== search bar ===================== */}
@@ -109,7 +108,7 @@ function MarkAttendanceTable() {
           type="text"
           placeholder="Search student name"
           className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
         />
       </div>
 {/* ===================================================== */}
@@ -126,7 +125,7 @@ function MarkAttendanceTable() {
           </TableHead>
           <TableBody>
             {studentsList && studentsList.length > 0 ? (
-              filteredMark.map((student, index) => (
+             studentsList.map((student, index) => (
                 <TableRow key={student._id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{student.name}</TableCell>
@@ -155,7 +154,27 @@ function MarkAttendanceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-
+      {studentsList.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {studentsList?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
       {/*============== Modal ======================*/}
 
       <Modal

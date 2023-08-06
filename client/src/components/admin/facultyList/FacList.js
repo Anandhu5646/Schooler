@@ -20,8 +20,9 @@ import {
   saveUpdateFaculty,
 } from "../../../api/adminApi";
 import Swal from "sweetalert2";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 function FacList() {
   const [refresh, setRefresh] = useState(false);
@@ -34,7 +35,7 @@ function FacList() {
 
   const fetchFacultyData = async () => {
     try {
-      const faculties = await fetchFacultyList(search,currentPage);
+      const faculties = await fetchFacultyList(search, currentPage);
       setFacultyList(faculties.faculties);
       setTotal(faculties.total);
       setRefresh(true);
@@ -301,7 +302,6 @@ function FacList() {
                 <td>
                   <Button
                     variant="link"
-                    
                     size="sm"
                     onClick={() => handleOpenEdit(faculty._id)}
                   >
@@ -312,7 +312,6 @@ function FacList() {
                     type="button"
                     variant="link"
                     onClick={() => deleteFaculty(faculty._id)}
-                   
                     size="sm"
                   >
                     X
@@ -321,21 +320,33 @@ function FacList() {
               </tr>
             ))
           ) : (
-            <div>No Faculty Data</div>
+            <div className="d-flex justify-content-center align-items-center">
+             <h6>No Faculty Data</h6>
+            </div>
           )}
         </tbody>
       </Table>
-      
-      <Stack spacing={2}>
-        <div className="d-flex justify-content-center mt-3">
-          <Pagination
-            count={total}
-            shape="rounded"
-            onChange={changePage}
-            page={currentPage}
-          />
+      {facultyList.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {facultyList?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
         </div>
-      </Stack>
+      ) : (
+        ""
+      )}
 
       <Modal show={showModal} onHide={toggleModal} centered>
         <Modal.Header closeButton style={{ marginTop: "50px" }}>

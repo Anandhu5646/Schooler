@@ -1,7 +1,7 @@
-const Pagination=async(pages,modules,count)=>{
+const Pagination=async(pages,modules,c)=>{
     
-    if (count==undefined) {
-        count=5
+    if (c==undefined) {
+        c=5
     }
         let page=pages
         let limit=page*c

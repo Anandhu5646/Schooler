@@ -43,7 +43,7 @@ function StudProfile() {
     try {
       const studentData = await fetchStudent();
       setStudent(studentData);
-      setClassName(studentData.className)
+      setClassName(studentData.className);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -322,91 +322,164 @@ function StudProfile() {
       <section className="">
         {student && (
           <MDBContainer className="py-5 h-100 outside-container">
-      <MDBRow className="justify-content-center align-items-center h-100">
-        <MDBCol lg="6" className="mb-4 mb-lg-0">
-          <MDBCard className="mb-3 fac-profile-container custom-card" style={{ color: "black", background: "#fff", boxShadow: "0 0 10px rgba(36, 31, 31, 0.8)", borderRadius: "10px" }}>
-            <MDBRow className="g-0">
-              <MDBCol md="4" className="gradient-custom text-center text-white" style={{ borderTopLeftRadius: ".5rem", borderBottomLeftRadius: ".5rem", color: "#fff",  background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)' }}>
-                <MDBCardImage
-                  src={student.pic.length > 0 ? `http://localhost:1800/images/${student.pic[0].filename}` : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"}
-                  alt="Avatar"
-                  className="rounded-circle my-5"
-                  style={{ width: "120px", height: "120px", border: "4px solid #fff" }}
-                  fluid
-                />
-                <MDBTypography tag="h5" className="fw-bold mb-4">{student.name}</MDBTypography>
-              </MDBCol>
-              <MDBCol md="8">
-                <MDBCardBody className="p-4">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <MDBTypography tag="h6" className="fw-bold">Information</MDBTypography>
-                    <Button onClick={HandleClickOpen} variant="secondary"><MDBIcon /><MdEditSquare /></Button>
-                  </div>
-                  <hr className="mt-0 mb-4" />
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Email</MDBTypography>
-                      <MDBCardText className="text-muted">{student.email}</MDBCardText>
+            <MDBRow className="justify-content-center align-items-center h-100">
+              <MDBCol lg="6" className="mb-4 mb-lg-0">
+                <MDBCard
+                  className="mb-3 fac-profile-container custom-card"
+                  style={{
+                    color: "black",
+                    background: "#fff",
+                    
+                    borderRadius: "10px",
+                  }}
+                >
+                  <MDBRow className="g-0">
+                    <MDBCol
+                      md="4"
+                      className="gradient-custom text-center text-white"
+                      style={{
+                        borderTopLeftRadius: ".5rem",
+                        borderBottomLeftRadius: ".5rem",
+                        color: "#fff",
+                        background:
+                          "linear-gradient(144deg, rgb(41 41 41), rgb(48 106 168 / 89%))",
+                      }}
+                    >
+                      <MDBCardImage
+                        src={
+                          student.pic && student.pic.length > 0
+                            ? `http://localhost:1800/images/${student.pic[0].filename}`
+                            : `https://iconscout.com/lottie/profile-avatar-boy-7145747`
+                        }
+                        alt=""
+                        className="rounded-circle my-5"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          border: "4px solid #fff",
+                        }}
+                        fluid
+                      />
+                      <MDBTypography tag="h5" className="fw-bold mb-4">
+                        {student.name}
+                      </MDBTypography>
                     </MDBCol>
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Phone</MDBTypography>
-                      <MDBCardText className="text-muted">{student.mobile}</MDBCardText>
+                    <MDBCol md="8">
+                      <MDBCardBody className="p-4">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <MDBTypography tag="h6" className="fw-bold">
+                            Information
+                          </MDBTypography>
+                          <Button onClick={HandleClickOpen} variant="secondary">
+                            <MDBIcon />
+                            <MdEditSquare />
+                          </Button>
+                        </div>
+                        <hr className="mt-0 mb-4" />
+                        <MDBRow className="pt-1">
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Email
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.email}
+                            </MDBCardText>
+                          </MDBCol>
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Phone
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.mobile}
+                            </MDBCardText>
+                          </MDBCol>
+                        </MDBRow>
+                        <MDBRow className="pt-1">
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Mother Name
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.motherName}
+                            </MDBCardText>
+                          </MDBCol>
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Father Name
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.fatherName}
+                            </MDBCardText>
+                          </MDBCol>
+                        </MDBRow>
+                        <MDBRow className="pt-1">
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Date of Birth
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.dob}
+                            </MDBCardText>
+                          </MDBCol>
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Age
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.age}
+                            </MDBCardText>
+                          </MDBCol>
+                        </MDBRow>
+                        <MDBRow className="pt-1">
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Class
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.className}
+                            </MDBCardText>
+                          </MDBCol>
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Admission Year
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.admYear}
+                            </MDBCardText>
+                          </MDBCol>
+                        </MDBRow>
+                        <MDBRow className="pt-1">
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Address
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.address}
+                            </MDBCardText>
+                          </MDBCol>
+                          <MDBCol size="6" className="mb-3">
+                            <MDBTypography tag="h6" className="fw-bold">
+                              Roll No
+                            </MDBTypography>
+                            <MDBCardText className="text-muted">
+                              {student.rollNo}
+                            </MDBCardText>
+                          </MDBCol>
+                        </MDBRow>
+                        <Button
+                          variant="text"
+                          className="mt-4"
+                          onClick={handleOpenModals}
+                        >
+                          Change Password?
+                        </Button>
+                      </MDBCardBody>
                     </MDBCol>
                   </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Mother Name</MDBTypography>
-                      <MDBCardText className="text-muted">{student.motherName}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Father Name</MDBTypography>
-                      <MDBCardText className="text-muted">{student.fatherName}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Date of Birth</MDBTypography>
-                      <MDBCardText className="text-muted">{student.dob}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Age</MDBTypography>
-                      <MDBCardText className="text-muted">{student.age}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Class</MDBTypography>
-                      <MDBCardText className="text-muted">{student.className}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Admission Year</MDBTypography>
-                      <MDBCardText className="text-muted">{student.admYear}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="pt-1">
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Address</MDBTypography>
-                      <MDBCardText className="text-muted">{student.address}</MDBCardText>
-                    </MDBCol>
-                    <MDBCol size="6" className="mb-3">
-                      <MDBTypography tag="h6" className="fw-bold">Roll No</MDBTypography>
-                      <MDBCardText className="text-muted">{student.rollNo}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <Button
-                    variant="text"
-                    className="mt-4"
-                    onClick={handleOpenModals}
-                  >
-                    Change Password?
-                  </Button>
-                </MDBCardBody>
+                </MDBCard>
               </MDBCol>
             </MDBRow>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
+          </MDBContainer>
         )}
       </section>
       <Dialog open={open} onClose={handleClose}>
@@ -550,7 +623,6 @@ function StudProfile() {
           <TextField
             margin="dense"
             id="address"
-            label="Change Profile Photo"
             type="file"
             fullWidth
             variant="standard"

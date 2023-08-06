@@ -17,6 +17,9 @@ import {
   savePayment,
 } from "../../../api/adminApi";
 import { IconButton } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 function formatDateToDDMMYYYY(dateString) {
   const dateObj = new Date(dateString);
@@ -31,7 +34,9 @@ const Payment = () => {
   const [show, setShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [error, setError] = useState("");
-  const [search, setSearch] = React.useState('')
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [open, setOpen] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState([]);
   const [formValue, setFormValue] = useState({
@@ -67,9 +72,16 @@ const Payment = () => {
   // =============================== fetch payment list====================
   const fetchPayment = async () => {
     const response = await getPayment(search);
-    setPaymentList(response);
+    setPaymentList(response.payment);
+    setTotal(response.total)
   };
+
   // ==================================================
+  const changePage = (event, page) => {
+    setCurrentPage(page);
+  };
+
+
   const handleAddPayment = async (event) => {
     event.preventDefault();
     try {
@@ -135,7 +147,7 @@ const Payment = () => {
   useEffect(() => {
     fetchPayment();
     
-  }, [refresh, search]);
+  }, [refresh, search,currentPage]);
 
   return (
     <div>
@@ -192,6 +204,29 @@ const Payment = () => {
             <div>No Payments Found</div>
           )}
         </Row>
+
+        {paymentList.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {paymentList?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
+
       </Container>
 
       {/*================== Add Payment Modal ===================*/}

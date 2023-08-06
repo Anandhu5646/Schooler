@@ -9,10 +9,11 @@ const markModel = require("../models/markModel");
 const clubRequestModel = require("../models/clubRequestModel");
 const complainModel = require("../models/complainModel");
 const noticeModel = require("../models/noticeModel");
-const moment = require('moment');
+const moment = require("moment");
 const { default: mongoose } = require("mongoose");
 const timeTableModel = require("../models/timeTableModel");
 const cloudinary = require("../helper/cloudinary");
+const { Pagination } = require("../helper/pagination");
 
 let facultyController = {
   getFacProfile: async (req, res) => {
@@ -95,6 +96,16 @@ let facultyController = {
     const clasName = req.faculty.className;
     let currentDate = new Date().toLocaleDateString();
     try {
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search.replace(/[^a-zA-Z]/g, "");
+      }
+      let page = req.query.currentPage || 1;
+      let limit = page * 5;
+      let skip = (page - 1) * 5;
+      let total = await studentModel.countDocuments({ className: clasName });
+      total = Math.ceil(total / 5);
+
       let previous = await attendanceModel
         .find({
           $and: [
@@ -105,10 +116,19 @@ let facultyController = {
         })
         .lean();
       if (previous.length == 0) {
-        let student = await studentModel.find({ className: clasName }).lean();
+        let studentQuery = { className: clasName };
+        if (key !== "") {
+          studentQuery.name = new RegExp(key, "i");
+        }
+        let student = await studentModel
+          .find(studentQuery)
+          .limit(limit)
+          .skip(skip)
+          .sort({ _id: -1 })
+          .lean();
         let studentArr = [];
         if (student.length == 0) {
-          res.json({ success: true, studentArr });
+          res.json({ success: true, studentArr, total });
         } else {
           for (let i = 0; i < student.length; i++) {
             let students = {
@@ -123,13 +143,18 @@ let facultyController = {
             studentArr.push(students);
           }
 
-          res.json({ success: true, studentArr });
+          res.json({ success: true, studentArr, total });
         }
       } else {
-        let student = await studentModel.find({ className: clasName }).lean();
+        let student = await studentModel
+          .find(studentQuery)
+          .limit(limit)
+          .skip(skip)
+          .sort({ _id: -1 })
+          .lean();
         let studentArr = [];
         if (student.length == 0) {
-          res.json({ success: true, studentArr });
+          res.json({ success: true, studentArr, total });
         } else {
           for (let i = 0; i < student.length; i++) {
             let status = "Not uploaded";
@@ -153,7 +178,7 @@ let facultyController = {
           }
         }
 
-        res.json({ success: true, studentArr });
+        res.json({ success: true, studentArr, total });
       }
     } catch (error) {
       console.error(error);
@@ -170,17 +195,15 @@ let facultyController = {
         .findOne({
           $and: [
             { date: req.body.attendanceData.date },
-            { studentId: req.body.attendanceData.studentId }
+            { studentId: req.body.attendanceData.studentId },
           ],
         })
         .lean();
 
       if (!previous) {
-
         let data = await attendanceModel.create(attendanceData);
         console.log("created", data);
       } else {
-
         let updatedList = await attendanceModel.updateOne(
           { _id: previous._id },
           {
@@ -207,18 +230,33 @@ let facultyController = {
     }
   },
 
-
-
-
   getStudMark: async (req, res) => {
     const className = req.faculty.className;
     try {
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search.replace(/[^a-zA-Z]/g, "");
+      }
+      let studentQuery = { className: className };
+      if (key !== "") {
+        studentQuery.name = new RegExp(key, "i");
+      }
+      let page = req.query.currentPage || 1;
+      let limit = page * 5;
+      let skip = (page - 1) * 5;
+      let total = await studentModel.countDocuments({ className: className });
+      total = Math.ceil(total / 5);
 
-      const students = await studentModel.find({ className });
+      const students = await studentModel
+        .find(studentQuery)
+        .limit(limit)
+        .skip(skip)
+        .sort({ _id: -1 });
 
       res.json({
         success: true,
         students,
+        total,
         message: "student data fetched successfully",
       });
     } catch (error) {
@@ -244,12 +282,14 @@ let facultyController = {
 
   saveStudentMark: async (req, res) => {
     try {
-      let faculName = req.faculty.name
-      let faculid = req.faculty.id
+      let faculName = req.faculty.name;
+      let faculid = req.faculty.id;
       const { studentId, subjectId, subjectName, marks, grade } = req.body;
 
       if (!mongoose.Types.ObjectId.isValid(studentId)) {
-        return res.status(400).json({ success: false, message: "Invalid studentId" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid studentId" });
       }
 
       let previousMark = await markModel.findOne({
@@ -261,7 +301,6 @@ let facultyController = {
       });
 
       if (!previousMark) {
-
         await markModel.create({
           student: studentId,
           subjectId,
@@ -271,11 +310,12 @@ let facultyController = {
           status: "Uploaded",
           subjectName: subjectName,
           facultyId: faculid,
-          facultyName: faculName
+          facultyName: faculName,
         });
-        res.status(200).json({ success: true, message: "Mark data saved successfully" });
+        res
+          .status(200)
+          .json({ success: true, message: "Mark data saved successfully" });
       } else {
-
         await markModel.updateOne(
           { _id: previousMark._id },
           {
@@ -287,10 +327,12 @@ let facultyController = {
             status: "Uploaded",
             subjectName: subjectName,
             facultyId: faculid,
-            facultyName: faculName
+            facultyName: faculName,
           }
         );
-        res.status(200).json({ success: true, message: "Mark data updated successfully" });
+        res
+          .status(200)
+          .json({ success: true, message: "Mark data updated successfully" });
       }
     } catch (error) {
       console.error(error);
@@ -300,11 +342,24 @@ let facultyController = {
 
   getClubReq: async (req, res) => {
     try {
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search.replace(/[^a-zA-Z]/g, "");
+      }
       const id = req.faculty.id;
+      let studentQuery = { facultyId: id };
+      if (key !== "") {
+        studentQuery.studentName = new RegExp(key, "i");
+      }
+      let { total, limit, skip } = await clubRequestModel.countDocuments({
+        facultyId: id,
+      });
       const request = await clubRequestModel
-        .find({ facultyId: id })
+        .find(studentQuery)
+        .limit(limit)
+        .skip(skip)
         .sort({ _id: -1 });
-      res.json({ success: true, request });
+      res.json({ success: true, request, total });
     } catch (error) {
       console.log(error);
       res.json({ success: false, error, message: "Server Error" });
@@ -344,18 +399,31 @@ let facultyController = {
   },
   getFacViewNotice: async (req, res) => {
     try {
-      const notice = await noticeModel.find().sort({ _id: -1 })
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search.replace(/[^a-zA-Z]/g, "");
+      }
+      let page = req.query.currentPage || 1;
+      let limit = page * 8;
+      let skip = (page - 1) * 8;
+      let total = await noticeModel.countDocuments();
+      total = Math.ceil(total / 8);
+      const notice = await noticeModel
+        .find({ title: new RegExp(key, "i") })
+        .limit(limit)
+        .skip(skip)
+        .sort({ _id: -1 });
 
-      res.json({ success: true, notice })
+      res.json({ success: true, notice, total });
     } catch (error) {
-      res.json({ success: false, error, message: "Server error" })
+      res.json({ success: false, error, message: "Server error" });
     }
   },
   postFacTimeTable: async (req, res) => {
     try {
       const facultyName = req.faculty.name;
       const facultyId = req.faculty.id;
-      const facClass = req.faculty.className
+      const facClass = req.faculty.className;
       const { title, content } = req.body;
       if (!title || !content) {
         return res.json({
@@ -364,10 +432,12 @@ let facultyController = {
         });
       }
 
-      const cloudinaryUploadResponse = await cloudinary.uploader.upload(content, {
-        folder: "timetables",
-
-      });
+      const cloudinaryUploadResponse = await cloudinary.uploader.upload(
+        content,
+        {
+          folder: "timetables",
+        }
+      );
       console.log(cloudinaryUploadResponse);
 
       const pdfUrl = cloudinaryUploadResponse.secure_url;
@@ -378,33 +448,35 @@ let facultyController = {
         facultyName: facultyName,
         facultyId: facultyId,
         date: new Date().toLocaleDateString(),
-        className: facClass
+        className: facClass,
       });
 
-      res.json({ success: true, message: "Successfully created timetable" })
+      res.json({ success: true, message: "Successfully created timetable" });
     } catch (error) {
-
-      res.json({ success: false, error, message: "Server down" })
+      res.json({ success: false, error, message: "Server down" });
     }
   },
   viewTimeTable: async (req, res) => {
     try {
-      const timetable = await timeTableModel.find().sort({ _id: -1 })
-      res.json({ success: true, timetable })
+      let key = "";
+      if (req.query.search) {
+        key = req.query.search.replace(/[^a-zA-Z]/g, "");
+      }
+      const timetable = await timeTableModel.find({ title: new RegExp(key, "i") }).sort({ _id: -1 });
+      res.json({ success: true, timetable });
     } catch (error) {
-      res.json({ success: false, error, message: "Server error" })
+      res.json({ success: false, error, message: "Server error" });
     }
   },
   deleteTImeTable: async (req, res) => {
     try {
-      const { id } = req.params
-      await timeTableModel.findByIdAndDelete({ _id: id })
-      res.json({ success: true, message: "Deleted successfully" })
+     
+      const { id } = req.params;
+      await timeTableModel.findByIdAndDelete({ _id: id });
+      res.json({ success: true, message: "Deleted successfully" });
     } catch (error) {
-      res.json({ success: false, message: "Something went wrong" })
+      res.json({ success: false, message: "Something went wrong" });
     }
   },
-
-
 };
 module.exports = facultyController;
