@@ -60,14 +60,14 @@ export async function studentSubmitPass(newPassword){
   }
 }
 
-export async function getClub(){
+export async function getClub(search,currentPage){
   try {
-    const response= await axios.get('/student/clubs', {
+    const response= await axios.get('/student/clubs', {params:{search,currentPage}},{
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     })
     if(response.data.success){
-      console.log(response.data,'clubs')
+      console.log(response.data,'qwerqwerqwerewr')
       return response.data
     }
   } catch (error) {
@@ -229,15 +229,15 @@ export async function getTimeTable()
     throw error;
   }
 }
-export async function getPayment(id){
+export async function getPayment(id,search,currentPage){
   try {
-    const response= await axios.get("/student/payment",{params:{id}},{
+    const response= await axios.get("/student/payment",{params:{id,search,currentPage}},{
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     } )
     if(response.data.success){
       
-      return response.data.updatedArr
+      return response.data
     }else{
       Swal.fire({
         icon:"error",

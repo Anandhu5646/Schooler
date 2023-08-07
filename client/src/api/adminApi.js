@@ -114,14 +114,7 @@ export async function addFaculty(facultyData) {
     });
     if (response.data.success) {
       return response.data.faculty;
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops..!!",
-        text: response.data.error,
-      });
-      throw new Error(response.data.error);
-    }
+    } 
   } catch (error) {
     Swal.fire({
       icon: "error",

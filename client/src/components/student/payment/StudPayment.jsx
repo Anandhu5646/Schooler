@@ -3,18 +3,28 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { getPayment, saveStudPayment } from "../../../api/studentApi";
 import Swal from "sweetalert2";
 import './StudPayment.css'
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 const StudPayment = () => {
   const [paymentList, setPaymentList] = useState([]);
   const [history,setHistory]=React.useState('')
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchPayments = async () => {
     try {
-      const response = await getPayment(history)
-      setPaymentList(response);
+      const response = await getPayment(history,search,currentPage)
+      setPaymentList(response.updatedArr);
+      setTotal(response.total)
     } catch (error) {
       console.error("Error fetching payments:", error);
     }
+  };
+  const changePage = (event, page) => {
+    setCurrentPage(page);
   };
 
   const handlePayment = async (title, amount, id) => {
@@ -34,12 +44,22 @@ const StudPayment = () => {
 
   useEffect(() => {
     fetchPayments();
-  }, [history]);
+  }, [history, search, currentPage]);
 
   return (
     <Container style={{ marginTop: "50px" }}>
       <h1>Payments</h1>
       <hr />
+       {/* ================== search bar ===================== */}
+       <div className="mb-3">
+        <input
+          type="text"
+          placeholder="Search title of payment..."
+          className="form-control"
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        />
+      </div>
+      {/* ===================================================== */}
       <Row>
         {paymentList?.length > 0 ? (
           paymentList.map((payment) => (
@@ -74,6 +94,27 @@ const StudPayment = () => {
           <div>No Payments Found</div>
         )}
       </Row>
+      {paymentList.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {paymentList?.length > 0 ? (
+        <div> 
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
     </Container>
   );
 };

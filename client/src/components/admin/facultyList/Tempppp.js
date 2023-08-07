@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Table,
-  Button,
-  Modal,
-  Form,
-  Row,
-  Col,
-  Container,
-} from "react-bootstrap";
+import { Table, Button, Modal, Row, Col, Container } from "react-bootstrap";
 import avatar from "../../../assets/avatar.jpg";
 import {
   fetchFacultyList,
@@ -23,8 +15,10 @@ import Swal from "sweetalert2";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
+import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import * as Yup from "yup";
 
-function FacList() {
+function Tempppp() {
   const [refresh, setRefresh] = useState(false);
   const [facultyList, setFacultyList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -69,11 +63,29 @@ function FacList() {
   const onChange = (e) => {
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    qualification: Yup.string().required("Qualification is required"),
+    teachingArea: Yup.string().required("Teaching area is required"),
+    dob: Yup.date().required("Date of Birth is required"),
+    age: Yup.number().required("Age is required"),
+    className: Yup.string().required("Class name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
+    mobile: Yup.string().required("Mobile number is required"),
+    joiningYear: Yup.string().required("Joining year is required"),
+    gender: Yup.string().required("Gender is required"),
+    address: Yup.string().required("Address is required"),
+  });
+
   // ==================================
   const handleAddFaculty = async () => {
     try {
       const response = await addFaculty(formValue);
-    
+
       toast.success("Faculty added successfully!", {
         position: "top-center",
         autoClose: 300,
@@ -107,12 +119,51 @@ function FacList() {
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true, 
+        pauseOnHover: true,
         draggable: true,
         progress: undefined,
       });
     }
   };
+  const handleReset = useCallback(() => {
+    formik.resetForm();
+  }, [formik]);
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      age: "",
+      qualification: "",
+      dob: "",
+      teachingArea: "",
+      email: "",
+      password: "",
+      mobile: "",
+      joiningYear: "",
+      gender: "",
+      address: "",
+      className: "",
+    },
+    validationSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        await addFaculty(values);
+        toast.success("Faculty added successfully!", {
+          // ... Toast options
+        });
+        setRefresh(!refresh);
+        toggleModal();
+        resetForm();
+      } catch (err) {
+        console.error("Error:", err);
+        toast.error("Error adding faculty!", {
+          // ... Toast options
+        });
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
 
   // ============================================
   const deleteFaculty = async (id) => {
@@ -321,16 +372,19 @@ function FacList() {
             ))
           ) : (
             <div className="d-flex justify-content-center align-items-center">
-             <h6>No Faculty Data</h6>
+              <h6>No Faculty Data</h6>
             </div>
           )}
         </tbody>
       </Table>
       {facultyList.length === 0 && (
-          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
-            <img src={nodata} alt="No Data" />
-          </div>
-        )}
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "300px" }}
+        >
+          <img src={nodata} alt="No Data" />
+        </div>
+      )}
       {facultyList?.length > 0 ? (
         <div>
           <Stack spacing={2}>
@@ -352,124 +406,181 @@ function FacList() {
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Faculty</Modal.Title>
         </Modal.Header>
-        <Form>
+        <Form onSubmit={formik.handleSubmit} onReset={handleReset}>
           <Modal.Body>
             <Container>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
-                    value={formValue.name}
                     name="name"
-                    onChange={onChange}
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.name && formik.errors.name && (
+                    <div className="error-message">{formik.errors.name}</div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Qualification</Form.Label>
                   <Form.Control
-                    value={formValue.qualification}
                     name="qualification"
-                    onChange={onChange}
+                    value={formik.values.qualification}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.qualification &&
+                    formik.errors.qualification && (
+                      <div className="error-message">
+                        {formik.errors.qualification}
+                      </div>
+                    )}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Teaching Area</Form.Label>
                   <Form.Control
-                    value={formValue.teachingArea}
                     name="teachingArea"
-                    onChange={onChange}
+                    value={formik.values.teachingArea}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.teachingArea &&
+                    formik.errors.teachingArea && (
+                      <div className="error-message">
+                        {formik.errors.teachingArea}
+                      </div>
+                    )}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Date of Birth</Form.Label>
                   <Form.Control
-                    value={formValue.dob}
                     name="dob"
                     type="date"
-                    onChange={onChange}
+                    value={formik.values.dob}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.dob && formik.errors.dob && (
+                    <div className="error-message">{formik.errors.dob}</div>
+                  )}
                 </Col>
                 <Col>
                   <Form.Label>Age</Form.Label>
                   <Form.Control
-                    value={formValue.age}
                     name="age"
                     type="number"
-                    onChange={onChange}
+                    value={formik.values.age}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.age && formik.errors.age && (
+                    <div className="error-message">{formik.errors.age}</div>
+                  )}
                 </Col>
                 <Col>
                   <Form.Label>Class</Form.Label>
                   <Form.Control
-                    value={formValue.className}
                     name="className"
-                    onChange={onChange}
+                    value={formik.values.className}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.className && formik.errors.className && (
+                    <div className="error-message">
+                      {formik.errors.className}
+                    </div>
+                  )}
                 </Col>
               </Row>
+
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Email</Form.Label>
                   <Form.Control
-                    value={formValue.email}
                     name="email"
                     type="email"
-                    onChange={onChange}
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.email && formik.errors.email && (
+                    <div className="error-message">{formik.errors.email}</div>
+                  )}
                 </Col>
                 <Col>
                   <Form.Label>Password</Form.Label>
                   <Form.Control
-                    value={formValue.password}
                     name="password"
                     type="password"
-                    onChange={onChange}
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.password && formik.errors.password && (
+                    <div className="error-message">
+                      {formik.errors.password}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Mobile</Form.Label>
                   <Form.Control
-                    value={formValue.mobile}
                     name="mobile"
-                    onChange={onChange}
+                    value={formik.values.mobile}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.mobile && formik.errors.mobile && (
+                    <div className="error-message">{formik.errors.mobile}</div>
+                  )}
                 </Col>
                 <Col>
                   <Form.Label>Join Year</Form.Label>
                   <Form.Control
-                    value={formValue.joiningYear}
                     name="joiningYear"
-                    onChange={onChange}
+                    value={formik.values.joiningYear}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.joiningYear && formik.errors.joiningYear && (
+                    <div className="error-message">
+                      {formik.errors.joiningYear}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col>
                   <Form.Label>Address</Form.Label>
                   <Form.Control
-                    value={formValue.address}
                     name="address"
-                    onChange={onChange}
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     required
                   />
+                  {formik.touched.address && formik.errors.address && (
+                    <div className="error-message">{formik.errors.address}</div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -481,8 +592,9 @@ function FacList() {
                       label="Male"
                       name="gender"
                       value="male"
-                      checked={formValue.gender === "male"}
-                      onChange={onChange}
+                      checked={formik.values.gender === "male"}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       required
                     />
                     <Form.Check
@@ -490,8 +602,9 @@ function FacList() {
                       label="Female"
                       name="gender"
                       value="female"
-                      checked={formValue.gender === "female"}
-                      onChange={onChange}
+                      checked={formik.values.gender === "female"}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       required
                     />
                     <Form.Check
@@ -499,11 +612,15 @@ function FacList() {
                       label="Other"
                       name="gender"
                       value="other"
-                      checked={formValue.gender === "other"}
-                      onChange={onChange}
+                      checked={formik.values.gender === "other"}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       required
                     />
                   </div>
+                  {formik.touched.gender && formik.errors.gender && (
+                    <div className="error-message">{formik.errors.gender}</div>
+                  )}
                 </Col>
               </Row>
             </Container>
@@ -513,8 +630,9 @@ function FacList() {
               Close
             </Button>
             <Button
-              onClick={handleAddFaculty}
+              type="submit"
               style={{ background: "#394867" }}
+              disabled={formik.isSubmitting}
             >
               Save
             </Button>
@@ -695,4 +813,4 @@ function FacList() {
   );
 }
 
-export default FacList;
+export default Tempppp;

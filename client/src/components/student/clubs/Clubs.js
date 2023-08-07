@@ -6,6 +6,9 @@ import {
   studClubStatus,
 } from "../../../api/studentApi";
 import './Clubs.css'
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 function Clubs() {
   const [clubList, setClubList] = useState([]);
@@ -13,13 +16,16 @@ function Clubs() {
   const [student, setStudent] = useState([]);
   const [club, setClub] = useState([]);
   const [status, setStatus] = useState([]);
-  const [filteredClub, setFilteredClub]= useState([])
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
 
   const viewClubs = async () => {
-    const response = await getClub();
+    const response = await getClub(search,currentPage);
     setClubList(response.clubs);
     setStudent(response.student);
+    setTotal(response.total)
     const stat = await studClubStatus();
     setStatus(stat);
     localStorage.setItem("status", JSON.stringify(stat));
@@ -32,17 +38,10 @@ function Clubs() {
       setStatus(JSON.parse(storedStatus));
     }
     viewClubs();
-  }, [refresh]);
+  }, [refresh,search,currentPage]);
 
-  useEffect(() => {
-    setFilteredClub(club);
-  }, [club]);
-  const handleSearch = (keyword) => {
-    const filteredList = club.filter(
-      (clubb) =>
-        clubb.clubName.toLowerCase().includes(keyword)
-    );
-   setFilteredClub(filteredList);
+  const changePage = (event, page) => {
+    setCurrentPage(page);
   };
 
   const data = useCallback(() => {
@@ -114,13 +113,13 @@ function Clubs() {
           type="text"
           placeholder="Search club name"
           className="form-control"
-          onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          onChange={(e) =>setSearch(e.target.value.toLowerCase())}
         />
       </div>
 {/* ===================================================== */}
-        <Row>
+        <Row> 
           {club &&
-            filteredClub.map((data, index) => (
+            club.map((data, index) => (
               <Col md={12} className="mb-4 column1 " key={data._id}>
                 <Card className="shadow-sm card-column" >
                   <Card.Body>
@@ -166,6 +165,27 @@ function Clubs() {
             ))}
         </Row>
       </Container>
+      {club.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {club?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

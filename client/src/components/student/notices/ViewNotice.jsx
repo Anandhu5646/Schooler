@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button } from "react-bootstrap";
-import { Document, Page, pdfjs } from "react-pdf";
+import {  pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "./ViewNotice.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Col, Row } from "react-bootstrap";
 import { FiDownload } from "react-icons/fi";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import nodata from "../../../assets/nodata.gif";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -14,20 +17,25 @@ const ViewNotice = () => {
   const [notices, setNotices] = useState([]);
   const [error, setError] = useState(null);
   const [search, setSearch]= useState("")
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchNotices = async (search) => {
     try {
-      const response = await axios.get("/student/notice", {params:{search}});
+      const response = await axios.get("/student/notice", {params:{search,currentPage}});
       setNotices(response.data.notice);
+      setTotal(response.data.total)
     } catch (error) {
       console.error("Error fetching notices:", error);
       setError("Error fetching notices. Please try again later.");
     }
   };
-
+  const changePage = (event, page) => {
+    setCurrentPage(page);
+  };
   useEffect(() => {
-    fetchNotices(search);
-  }, [search]);
+    fetchNotices(search,currentPage);
+  }, [search,currentPage]);
 
 
   return (
@@ -65,6 +73,28 @@ const ViewNotice = () => {
         </Col>
       ))}
     </Row>
+    {notices.length === 0 && (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
+            <img src={nodata} alt="No Data" />
+          </div>
+        )}
+      {notices?.length > 0 ? (
+        <div>
+          <Stack spacing={2}>
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                count={total}
+                page={currentPage}
+                onChange={changePage}
+                shape="rounded"
+              />
+            </div>
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
+
   </div>
   );
 };
