@@ -1,6 +1,8 @@
 @media (max-width: 768px) {
-    .form-field{
-     margin-left: 60px;
+    .complain-outer{
+     margin-left:-75px;
+     width: 100%;
+    
     
    }
  .submit-btn{
@@ -8,4 +10,8 @@
  }
    
  }
+
+ .complain-outer{
+margin-top: 50px;
+}
  

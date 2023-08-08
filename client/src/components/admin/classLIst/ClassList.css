@@ -1,34 +1,28 @@
+.class-outer-container{
+    width: 60%;
+    margin-left: 300px;
+}
+ 
 @media (max-width:768px){
-    .notice-outer-container{
-        margin-left: 70px !important;
+    .class-outer-container{
+       width: 80%;
+        margin-left: 65px;
     }
-    .notice-add{
-        padding-left: -30px !important;
+    .class-add-btn{
         font-size: 10px;
-       margin-bottom: 10px;
-        
-    }
-    .add-modalsss{
-        width: 85%;
-        margin-left: 58px !important;
-       
+        margin-bottom: 9px;
     }
 }
-.notice-outer-container{
-    width: 80%;
-    margin-left: 200px;
-}
-
 
 @media screen and (max-width: 600px) {
-    .notice-add
+    .class-add-btn
      {
       font-size: 0; 
       padding: 10px;
       margin-bottom: 10px;
     }
   
-    .notice-add::before
+    .class-add-btn::before
     {
       font-family: "Font Awesome 5 Free";
       font-weight: 900;
@@ -37,7 +31,7 @@
       padding-left: 5px;
      
     }
-    .notice-add::before {
+    .class-add-btn::before {
       content: "+";
       
     }

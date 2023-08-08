@@ -6,6 +6,9 @@ import { deleteSubjects } from "../../../api/adminApi";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
+import "./Subject.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SubjectList() {
   const [subjectList, setSubjectList] = useState([]);
@@ -66,8 +69,10 @@ function SubjectList() {
           (subject) => subject._id !== id
         );
         setSubjectList(updatedSubjectList);
+        toast.success("The subject has been deleted.", {
+          autoClose: 2000,
+        });
         setRefresh(false);
-        Swal.fire("Deleted!", "The subject has been deleted.", "success");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -110,13 +115,15 @@ function SubjectList() {
   };
 
   return (
-    <div
-      className=""
-      style={{ width: "80%", marginLeft: "200px", marginTop: "50px" }}
-    >
+    <div className="subject-outer-container">
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Subject List</h1>
-        <Button style={{ background: "#394867" }} onClick={handleShow}>
+        <Button
+        title="Add Subject"
+          className="sub-add-btn"
+          style={{ background: "#394867" }}
+          onClick={handleShow}
+        >
           Add subject
         </Button>
       </div>
@@ -130,61 +137,68 @@ function SubjectList() {
         />
       </div>
       {/* ===================================================== */}
-      <Table align="middle">
-        <thead>
-          <tr>
-            <th scope="col">No.</th>
-            <th scope="col">Subject Name</th>
-            <th scope="col">Subject Code</th>
-            <th scope="col">Subject Credit</th>
-            <th scope="col" className="d-flex ms-4">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {subjectList?.length > 0 ? (
-            subjectList.map((subject, index) => (
-              <tr key={subject._id}>
-                <td>{index + 1}</td>
-                <td>
-                  <div className="d-flex align-items-center">
-                    <div className="ms-3">
-                      <p className="fw-bold mb-1">{subject.subName}</p>
+      <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+        <Table align="middle">
+        {subjectList?.length > 0 ? 
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Subject Name</th>
+              <th scope="col">Subject Code</th>
+              <th scope="col">Subject Credit</th>
+              <th scope="col" className="d-flex ms-4">
+                Action
+              </th>
+            </tr>
+          </thead>:""}
+          <tbody>
+            {subjectList?.length > 0 ? (
+              subjectList.map((subject, index) => (
+                <tr key={subject._id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <div className="ms-3">
+                        <p className="fw-bold mb-1">{subject.subName}</p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <p className="fw-normal mb-1">{subject.subCode}</p>
-                </td>
-                <td>
-                  <p className="fw-normal mb-1" style={{ marginLeft: "24px" }}>
-                    {subject.subCredit}
-                  </p>
-                </td>
-                <td>
-                  <Button
-                    variant="link"
-                    size="sm"
-                    onClick={() => deleteSubject(subject._id)}
-                    style={{ marginLeft: "24px" }}
-                  >
-                    X
-                  </Button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <div>
-              <h6>No Subject Data</h6>
-            </div>
-          )}
-        </tbody>
-      </Table>
+                  </td>
+                  <td>
+                    <p className="fw-normal mb-1">{subject.subCode}</p>
+                  </td>
+                  <td>
+                    <p
+                      className="fw-normal mb-1"
+                      style={{ marginLeft: "24px" }}
+                    >
+                      {subject.subCredit}
+                    </p>
+                  </td>
+                  <td>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      onClick={() => deleteSubject(subject._id)}
+                      style={{ marginLeft: "24px" }}
+                    >
+                      X
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <div>
+                <h6>No Subject Data</h6>
+              </div>
+            )}
+          </tbody>
+        </Table>
+      </div>
+
       {subjectList.length === 0 && (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ minHeight: "300px", marginTop: "-50px" }}
+          style={{ minHeight: "300px", marginTop: "-40px" }}
         >
           <img src={nodata} alt="No Data" />
         </div>
@@ -211,6 +225,7 @@ function SubjectList() {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        className="add-sub-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title style={{ marginTop: "50px" }}>Add Subject</Modal.Title>
@@ -251,11 +266,12 @@ function SubjectList() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAddSubject}>
+          <Button variant="primary" style={{background:"rgb(57, 72, 103)"}} onClick={handleAddSubject}>
             Save
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }

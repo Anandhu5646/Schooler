@@ -11,15 +11,30 @@
     padding: 0;
 }
 
+@media (max-width:600px){
+.contents-2{
+  margin-left: 5px;
+}
+.contents-3{
+  margin-left: 5px;
+}
+.contents-4{
+  margin-left: 5px;
+}
+.landing-img {
+  object-fit: contain;
+}
 
+}
 .right {
-    padding: 0;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: -15px;
+}
   
   .contents-1 {
     position: absolute;

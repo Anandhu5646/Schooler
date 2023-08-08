@@ -13,3 +13,13 @@
     background-color: rgb(0, 0, 0);
   
 }
+.attendance-outer{
+    width: 80%;
+    margin-left: 200px;
+    margin-top: 50px;
+}
+@media (max-width:768px){
+    .attendance-outer{
+        margin-left: 0px;
+    }
+}

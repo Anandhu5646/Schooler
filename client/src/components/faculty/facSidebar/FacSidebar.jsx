@@ -172,7 +172,7 @@ function FacSidebar() {
   };
     
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box style={{overflow:"hidden"}} sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         style={{ background: "#212A3E", color: "white" }}
@@ -194,7 +194,7 @@ function FacSidebar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color={"white"} noWrap component="div">
-            SCHOOL MANAGEMENT SYSTEM - FACULTY PANEL
+           FACULTY PANEL
           </Typography>
         </Toolbar>
       </AppBar>
@@ -203,7 +203,7 @@ function FacSidebar() {
           className="d-flex justify-content-between w-100 ps-4"
           style={{ background: "#212A3E", color: "#fff" }}
         >
-          <h5>Schooler</h5>
+          <h5>SCHOOLER</h5>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon style={{ color: "white" }} color="white" />

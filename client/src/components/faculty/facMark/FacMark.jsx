@@ -97,7 +97,7 @@ function MarkAttendanceTable() {
   
 
   return (
-    <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
+    <div className="mark-outer" >
       <div className="d-flex justify-content-between">
         <h1>Mark Results</h1>
       </div>
@@ -115,13 +115,14 @@ function MarkAttendanceTable() {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
+          {studentsList && studentsList.length > 0 ?
             <TableRow style={{ background: "black" }}>
               <TableCell style={{ color: "white" }}>Sl No</TableCell>
               <TableCell style={{ color: "white" }}>Student Name</TableCell>
               <TableCell style={{ color: "white" }}>Roll No</TableCell>
               <TableCell style={{ color: "white" }}>Class</TableCell>
               <TableCell style={{ color: "white" ,paddingLeft:"45px"}}>Upload</TableCell>
-            </TableRow>
+            </TableRow> : ""}
           </TableHead>
           <TableBody>
             {studentsList && studentsList.length > 0 ? (
@@ -145,15 +146,10 @@ function MarkAttendanceTable() {
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No students found
-                </TableCell>
-              </TableRow>
+              <div><h6>No Result data</h6></div>
             )}
           </TableBody>
         </Table>
-      </TableContainer>
       {studentsList.length === 0 && (
           <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
             <img src={nodata} alt="No Data" />
@@ -175,9 +171,10 @@ function MarkAttendanceTable() {
       ) : (
         ""
       )}
+      </TableContainer>
       {/*============== Modal ======================*/}
 
-      <Modal
+      <Modal className="mark-modal"
         style={{ zIndex: 10000, marginTop: "100px" }}
         show={showModal}
         onHide={handleCloseModal}

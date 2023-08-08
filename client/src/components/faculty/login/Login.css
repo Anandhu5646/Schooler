@@ -3,3 +3,12 @@ body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
    
   }
+  @media(max-width:768px){
+    .faculty-outer{
+      margin-left: 22px;
+     
+    }
+    .card-row{
+     box-shadow: 0 4px 6px rgba(54, 16, 169, 0.824), 0 6px 8px rgba(3, 5, 126, 0.562);
+    }
+  }

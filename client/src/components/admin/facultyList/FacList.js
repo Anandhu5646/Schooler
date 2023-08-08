@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './FacList.css'
 import {
   Table,
   Button,
@@ -134,7 +135,9 @@ function FacList() {
           (faculty) => faculty._id !== id
         );
         setFacultyList(updatedFacultyList);
-        Swal.fire("Deleted!", "The faculty has been deleted.", "success");
+        toast.success("The student has been deleted.", {
+          autoClose: 2000, 
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -228,20 +231,22 @@ function FacList() {
   }, [refresh, search, currentPage]);
   return (
     <div
-      className=""
-      style={{ width: "80%", marginLeft: "200px", marginTop: "50px" }}
+      className="outer-container"
+    
     >
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Faculty List</h1>
-        <Link to="">
+    
           <Button
+          className="add-btn"
             variant="primary"
             style={{ background: "#394867" }}
             onClick={toggleModal}
+            title="Add Faculty"
           >
             Add faculty
           </Button>
-        </Link>
+  
       </div>
       {/* ================== search bar ===================== */}
       <div className="mb-3">
@@ -254,6 +259,7 @@ function FacList() {
       </div>
       {/* ===================================================== */}
       <Table striped bordered hover responsive>
+      {facultyList.length > 1 ? (
         <thead>
           <tr>
             <th>No.</th>
@@ -266,7 +272,7 @@ function FacList() {
             <th>Age</th>
             <th className=" ms-5">Action</th>
           </tr>
-        </thead>
+        </thead>):("")}
 
         <tbody>
           {facultyList.length > 0 ? (
@@ -348,15 +354,15 @@ function FacList() {
         ""
       )}
 
-      <Modal show={showModal} onHide={toggleModal} centered>
+      <Modal show={showModal} onHide={toggleModal} centered className="modal-outer">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Faculty</Modal.Title>
         </Modal.Header>
         <Form>
           <Modal.Body>
-            <Container>
+            <Container className="input-field">
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
                     value={formValue.name}
@@ -367,7 +373,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Qualification</Form.Label>
                   <Form.Control
                     value={formValue.qualification}
@@ -378,7 +384,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Teaching Area</Form.Label>
                   <Form.Control
                     value={formValue.teachingArea}
@@ -389,7 +395,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Date of Birth</Form.Label>
                   <Form.Control
                     value={formValue.dob}
@@ -399,7 +405,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
                   <Form.Control
                     value={formValue.age}
@@ -409,7 +415,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
                   <Form.Control
                     value={formValue.className}
@@ -420,7 +426,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={formValue.email}
@@ -430,7 +436,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     value={formValue.password}
@@ -442,7 +448,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Mobile</Form.Label>
                   <Form.Control
                     value={formValue.mobile}
@@ -451,7 +457,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Join Year</Form.Label>
                   <Form.Control
                     value={formValue.joiningYear}
@@ -462,7 +468,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} >
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     value={formValue.address}
@@ -473,7 +479,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Gender</Form.Label>
                   <div className="mb-3">
                     <Form.Check
@@ -524,16 +530,16 @@ function FacList() {
 
       {/* ======================== edit modal ======================= */}
 
-      <Modal show={open} onHide={handleClose} centered>
+      <Modal show={open} onHide={handleClose} centered className="modal-outer">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Edit Faculty</Modal.Title>
           <p style={{ color: "red" }}>{ErrMsg}</p>
         </Modal.Header>
         <Form>
           <Modal.Body>
-            <Container>
+            <Container className="input-field">
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} >
                   <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
                     name="name"
@@ -544,7 +550,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Qualification</Form.Label>
                   <Form.Control
                     value={qualification}
@@ -555,7 +561,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Teaching Area</Form.Label>
                   <Form.Control
                     value={teachingArea}
@@ -566,7 +572,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Date of Birth</Form.Label>
                   <Form.Control
                     value={dob}
@@ -576,7 +582,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
                   <Form.Control
                     value={age}
@@ -586,7 +592,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
                   <Form.Control
                     value={className}
@@ -597,7 +603,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={email}
@@ -609,7 +615,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Mobile</Form.Label>
                   <Form.Control
                     value={mobile}
@@ -618,7 +624,7 @@ function FacList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Join Year</Form.Label>
                   <Form.Control
                     value={joiningYear}
@@ -629,7 +635,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     value={address}
@@ -640,7 +646,7 @@ function FacList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Gender</Form.Label>
                   <div className="mb-3">
                     <Form.Check

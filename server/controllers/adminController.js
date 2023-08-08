@@ -430,6 +430,22 @@ let adminController = {
       console.log(error);
     }
   },
+  adminDeleteClass:async(req,res)=>{
+    try {
+      const { id } = req.params;
+      await classModel.findByIdAndDelete({ _id: id });
+      return res.json({
+        error: false,
+        success: true,
+        message: "deleted successfully",
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: true, success: false, message: "Something went wrong" });
+      console.log(error);
+    }
+  },
   postEditAdminFaculty: async (req, res) => {
     try {
       let id = req.params.id;

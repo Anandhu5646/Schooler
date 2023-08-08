@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
-
+import './ClubReq.css'
 const StyledTableRow = styled.tr`
   &:nth-of-type(even) {
     background-color: #f2f2f2;
@@ -67,7 +67,7 @@ function FacClubReq() {
     fetchClubReq();
   }, [refresh, status, search, currentPage]);
   return (
-    <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
+    <div className="req-outer" >
       <div className="d-flex justify-content-between mb-3">
         <h2>Club Join Requests</h2>
       </div>
@@ -84,6 +84,7 @@ function FacClubReq() {
       {/* ===================================================== */}
 
       <Table responsive striped bordered hover>
+      {requests.length > 0 ? 
         <thead>
           <tr>
             <th
@@ -132,7 +133,7 @@ function FacClubReq() {
               Actions
             </th>
           </tr>
-        </thead>
+        </thead> : ""}
         <tbody>
           {requests.length > 0 ? (
             requests.map((club, index) => (

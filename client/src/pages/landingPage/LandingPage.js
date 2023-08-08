@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import landing from '../../assets/landing1.jpg';
-import studentlogo from '../../assets/studentlogo.png';
-import adminlogo from '../../assets/adminlogo.png';
-import teacherlogo from '../../assets/teacherlogo.png';
-import SchoolLogo from '../../components/schoolLogo/SchoolLogo';
-import './LandingPage.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import landing from "../../assets/landing1.jpg";
+import studentlogo from "../../assets/studentlogo.png";
+import adminlogo from "../../assets/adminlogo.png";
+import teacherlogo from "../../assets/teacherlogo.png";
+import SchoolLogo from "../../components/schoolLogo/SchoolLogo";
+import "./LandingPage.css";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -16,17 +15,17 @@ function LandingPage() {
 
   const handleAdminClick = () => {
     setLoading(true);
-    navigate('/admin/login');
+    navigate("/admin/login");
   };
 
   const handleFacultyClick = () => {
     setLoading(true);
-    navigate('/faculty/login');
+    navigate("/faculty/login");
   };
 
   const handleStudentClick = () => {
     setLoading(false);
-    navigate('/student/login');
+    navigate("/student/login");
   };
 
   const handleImageLoad = () => {
@@ -34,12 +33,11 @@ function LandingPage() {
   };
 
   useEffect(() => {
-   
     const timeout = setTimeout(() => {
       handleImageLoad();
     }, 4000);
     return () => clearTimeout(timeout);
-  }, []); 
+  }, []);
 
   return (
     <>
@@ -53,14 +51,24 @@ function LandingPage() {
           <div class="bar6"></div>
         </div>
       )}
-      <div className={`landing-page ${loading ? 'loading' : ''}`}>
+      <div className={`landing-page ${loading ? "loading" : ""}`}>
         <Row className="w-100">
           <Col md={3} className="left d-none d-md-block">
             <SchoolLogo />
           </Col>
           <Col md={9} className="rightCol">
             <div className="right">
-              <img src={landing} alt="landing" className="landing-img vh-100" onLoad={handleImageLoad} />
+              <img
+                src={landing}
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "100%",
+                }}
+                alt="landing"
+                className="landing-img vh-100"
+                onLoad={handleImageLoad}
+              />
 
               <div className="contents-1">
                 <h1>Welcome To Smart School System</h1>
@@ -90,4 +98,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage
+export default LandingPage;

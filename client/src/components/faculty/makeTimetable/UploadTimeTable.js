@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { deleteTimeTables } from "../../../api/facultyApi";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import nodata from "../../../assets/nodata.gif";
-
+import './TimeTable.css'
 
 function UploadTImeTable() {
   const [timetables, setTimetables] = useState([]);
@@ -130,14 +130,19 @@ function UploadTImeTable() {
 
 
   return (
-    <div className="container" style={{ marginTop: "50px" }}>
+    <div className="timetable-outer" >
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Timetable List</h1>
-        <Button style={{ background: "#394867" }} onClick={toggleOpenModal}>
+        <div>
+
+        <Button className="time-add" style={{ background: "#394867" }} title="Add Timetable" onClick={toggleOpenModal}>
           Add Timetable
         </Button>
-        <hr />
+       
+        </div>
       </div>
+      <hr />
+
       {/* ================== search bar ===================== */}
       <div className="mb-3">
         <input
@@ -193,7 +198,7 @@ function UploadTImeTable() {
         )}
       {/*============== Modal for uploading a new timetable =================*/}
 
-      <Modal show={showModal} onHide={toggleCloseModal}>
+      <Modal show={showModal} onHide={toggleCloseModal} className="time-modal">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Upload Timetable</Modal.Title>
         </Modal.Header>
@@ -230,9 +235,6 @@ function UploadTImeTable() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={toggleCloseModal}>
-            Close
-          </Button>
         </Modal.Footer>
       </Modal>
     </div>

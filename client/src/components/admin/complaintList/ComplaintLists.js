@@ -7,6 +7,9 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
 import Swal from "sweetalert2";
+import "./Complaints.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ComplaintLists = () => {
   const [complainList, setComplainList] = useState([]);
@@ -50,7 +53,9 @@ const ComplaintLists = () => {
           (complain) => complain._id !== id
         );
         setComplainList(updatedComplainList);
-        Swal.fire("Deleted!", "The club has been deleted.", "success");
+        toast.success("The student has been deleted.", {
+          autoClose: 2000,
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -59,6 +64,8 @@ const ComplaintLists = () => {
   };
 
   return (
+    <div className="complain-outer-container">
+
     <Container style={{ marginTop: "50px" }}>
       <div className=" mb-5">
         <h1>Check Complains</h1>
@@ -130,7 +137,10 @@ const ComplaintLists = () => {
         ""
       )}
     </Container>
+    <ToastContainer />
+    </div>
   );
 };
 
 export default ComplaintLists;
+    

@@ -19,6 +19,8 @@ import {MdDelete} from "react-icons/md";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import nodata from '../../../assets/nodata.gif'
+import './ClubList.css'
+
 
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
@@ -129,7 +131,9 @@ const changePage=(event, page)=>{
        
         const updatedClubList = clubList.filter((club) => club._id !== id);
         setClubList(updatedClubList);
-        Swal.fire('Deleted!', 'The club has been deleted.', 'success');
+        toast.success("The student has been deleted.", {
+          autoClose: 2000, 
+        });
       }
     } catch (error) {
       console.error('Error:', error);
@@ -138,12 +142,15 @@ const changePage=(event, page)=>{
   };
 
   return (
-    <div className="container" style={{ marginTop: "50px" }}>
+    <div className="club-container" >
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Club List</h1>
-        <Button style={{ background: "#394867" }} onClick={toggleModal}>
+   
+        <Button className="club-add-btn"
+        title="Add Club" style={{ background: "#394867" }} onClick={toggleModal} >
           Add Club
         </Button>
+
       </div>
        {/* ===================search bar========================= */}
        <div className="mb-3">
@@ -199,9 +206,14 @@ const changePage=(event, page)=>{
       ) : (
         ""
       )}
-      <Modal show={showModal} onHide={toggleModal}>
-        <Modal.Header closeButton style={{ marginTop: "50px" }}>
-          <Modal.Title>Add Club</Modal.Title>
+
+      {/* ======================== add club ======================== */}
+
+
+
+      <Modal show={showModal} onHide={toggleModal} className="club-add-modal">
+        <Modal.Header closeButton style={{ marginTop: "50px" }} >
+          <Modal.Title  >Add Club</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -226,15 +238,16 @@ const changePage=(event, page)=>{
             <Form.Group className="mb-3">
         <Form.Label>Faculty</Form.Label>
         <Form.Select
+       
           aria-label="Default select example"
           name="facultyName"
           onChange={handleFacultyChange}
           value={selectedFaculty ? selectedFaculty._id : ""}
         >
-          <option hidden>Select Club Co-ordinator</option>
+          <option   hidden>Select Club Co-ordinator</option>
           {faculty?.length > 0 ? (
             faculty.map((value) => (
-              <option key={value._id} value={value._id}>
+              <option className="select-fac" key={value._id} value={value._id}>
                 {value.name}
               </option>
             ))

@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(241, 246, 249);
+    background-color: rgb(239, 245, 248);
     font-family: Roboto, Helvetica, Arial, sans-serif;
    
   }
@@ -8,12 +8,12 @@ body {
 
 }
   @media(max-width:768px){
-    .container-out{
-      margin-left: 11px;
+    .admin-outer{
+      margin-left: 22px;
      
     }
     .card-row{
-     box-shadow: 0 4px 6px rgba(22, 10, 58, 0.2), 0 6px 8px rgba(3, 5, 126, 0.562);
+     box-shadow: 0 4px 6px rgba(54, 16, 169, 0.824), 0 6px 8px rgba(3, 5, 126, 0.562);
     }
   }
   

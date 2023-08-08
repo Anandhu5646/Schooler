@@ -20,6 +20,7 @@ import {
   saveUpdateStudent,
 } from "../../../api/adminApi";
 import Swal from "sweetalert2";
+import './StudentList.css'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import nodata from '../../../assets/nodata.gif'
@@ -119,6 +120,7 @@ function StudentList() {
     fetchStudentData();
   }, [refresh, search, currentPage]);
   // ============================================
+
   const deleteStud = async (id) => {
     try {
       const result = await Swal.fire({
@@ -131,15 +133,17 @@ function StudentList() {
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
       });
-
+     
       if (result.isConfirmed) {
         await deleteStudent(id);
         const updatedStudentList = studentList.filter(
           (student) => student._id !== id
         );
         setStudentList(updatedStudentList);
-        Swal.fire("Deleted!", "The student has been deleted.", "success");
-      }
+        toast.success("The student has been deleted.", {
+          autoClose: 2000, 
+        });
+        }   
     } catch (error) {
       console.error("Error:", error);
       Swal.fire(
@@ -149,6 +153,7 @@ function StudentList() {
       );
     }
   };
+  
   // =================== edit code ==================
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -226,13 +231,14 @@ function StudentList() {
   };
   return (
     <div
-      className=""
-      style={{ width: "80%", marginLeft: "200px", marginTop: "50px" }}
+      className="outter-container"
     >
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Student List</h1>
         <Link to="">
           <Button
+          title="Add Student"
+          className="student-add"
             variant="primary"
             style={{ background: "#394867" }}
             onClick={toggleModal}
@@ -252,6 +258,7 @@ function StudentList() {
       </div>
       {/* ===================================================== */}
       <Table striped bordered hover responsive>
+      {studentList.length>0 ?
         <thead>
           <tr>
             <th>No.</th>
@@ -264,7 +271,7 @@ function StudentList() {
             <th>Age</th>
             <th className=" ms-5">Action</th>
           </tr>
-        </thead>
+        </thead> :("")}
 
         <tbody>
           {studentList.length>0 ? ( studentList.map((student, index) => (
@@ -341,15 +348,15 @@ function StudentList() {
       ) : (
         ""
       )}
-      <Modal show={showModal} onHide={toggleModal} centered>
+      <Modal show={showModal} onHide={toggleModal} centered className="student-add-modal">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Student</Modal.Title>
         </Modal.Header>
         <Form>
-          <Modal.Body>
-            <Container>
+          <Modal.Body >
+            <div className="student-add-inputs">
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Student's Name</Form.Label>
                   <Form.Control
                     value={formValue.name}
@@ -360,7 +367,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Father's Name</Form.Label>
                   <Form.Control
                     value={formValue.fatherName}
@@ -371,7 +378,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Mother's Name</Form.Label>
                   <Form.Control
                     value={formValue.motherName}
@@ -382,7 +389,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Date of Birth</Form.Label>
                   <Form.Control
                     value={formValue.dob}
@@ -392,7 +399,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
                   <Form.Control
                     value={formValue.age}
@@ -402,7 +409,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
                   <Form.Control
                     value={formValue.className}
@@ -413,7 +420,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={formValue.email}
@@ -423,7 +430,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     value={formValue.password}
@@ -435,7 +442,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Mobile</Form.Label>
                   <Form.Control
                     value={formValue.mobile}
@@ -444,8 +451,8 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
-                  <Form.Label>Admission Year</Form.Label>
+                <Col xs={12} lg={6}>
+                  <Form.Label >Admission Year</Form.Label>
                   <Form.Control
                     value={formValue.admYear}
                     name="admYear"
@@ -455,7 +462,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     value={formValue.address}
@@ -464,7 +471,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Roll No.</Form.Label>
                   <Form.Control
                     value={formValue.rollNo}
@@ -475,7 +482,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Gender</Form.Label>
                   <div className="mb-3">
                     <Form.Check
@@ -508,7 +515,7 @@ function StudentList() {
                   </div>
                 </Col>
               </Row>
-            </Container>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary"
@@ -527,16 +534,16 @@ function StudentList() {
 
       {/* ======================== edit modal ======================= */}
 
-      <Modal show={open} onHide={handleClose} centered>
+      <Modal show={open} onHide={handleClose} centered className="modal-outer">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Edit Student</Modal.Title>
           <p style={{ color: "red" }}>{ErrMsg}</p>
         </Modal.Header>
         <Form>
           <Modal.Body>
-            <Container>
+            <Container className="input-field">
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Student's Name</Form.Label>
                   <Form.Control
                     name="name"
@@ -547,7 +554,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Father's Name</Form.Label>
                   <Form.Control
                     value={fatherName}
@@ -558,7 +565,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Mother's Name</Form.Label>
                   <Form.Control
                     value={motherName}
@@ -569,7 +576,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Date of Birth</Form.Label>
                   <Form.Control
                     value={dob}
@@ -579,7 +586,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
                   <Form.Control
                     value={age}
@@ -589,7 +596,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
                   <Form.Control
                     value={className}
@@ -600,7 +607,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     value={email}
@@ -612,7 +619,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Mobile</Form.Label>
                   <Form.Control
                     value={mobile}
@@ -621,7 +628,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12} lg={6}>
                   <Form.Label>Admission Year</Form.Label>
                   <Form.Control
                     value={admYear}
@@ -632,7 +639,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     value={address}
@@ -641,7 +648,7 @@ function StudentList() {
                     required
                   />
                 </Col>
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Roll No.</Form.Label>
                   <Form.Control
                     value={rollNo}
@@ -652,7 +659,7 @@ function StudentList() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col>
+                <Col xs={12}>
                   <Form.Label>Gender</Form.Label>
                   <div className="mb-3">
                     <Form.Check

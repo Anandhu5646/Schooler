@@ -121,7 +121,7 @@ const FacAttendance = () => {
   // ===================================
 
   return (
-    <div style={{ marginTop: "50px", width: "90%", marginLeft: "100px" }}>
+    <div className="attendance-outer" >
       <Container>
         <h1>Mark Attendance</h1>
         <hr></hr>
@@ -138,6 +138,7 @@ const FacAttendance = () => {
         <TableContainer component={Paper} className="facultyResultTable">
           <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
             <TableBody>
+            {students.length > 0 ? 
               <TableRow className="table-head">
                 <StyledTableCell style={{ color: "white" }}>
                   No.
@@ -154,7 +155,7 @@ const FacAttendance = () => {
                 <StyledTableCell style={{ color: "white" }}>
                   Actions
                 </StyledTableCell>
-              </TableRow>
+              </TableRow> :''}
               {students.length > 0 ? (
                 students.map((row, i) => (
                   <StyledTableRow key={i}>
@@ -208,16 +209,11 @@ const FacAttendance = () => {
                   </StyledTableRow>
                 ))
               ) : (
-                <StyledTableRow>
-                  <StyledTableCell colSpan={4} align="center">
-                    Attends Not found
-                  </StyledTableCell>
-                </StyledTableRow>
+                <div><h6>No attendance List </h6></div>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-      </Container>
       {students.length === 0 && (
         <div
           className="d-flex justify-content-center align-items-center"
@@ -227,9 +223,9 @@ const FacAttendance = () => {
         </div>
       )}
       {students?.length > 0 ? (
-        <div>
+        <div >
           <Stack spacing={2}>
-            <div className="d-flex justify-content-center mt-3">
+            <div className="d-flex justify-content-center mt-3 pagination-out">
               <Pagination
                 count={total}
                 page={currentPage}
@@ -242,6 +238,7 @@ const FacAttendance = () => {
       ) : (
         ""
       )}
+      </Container>
     </div>
   );
 };

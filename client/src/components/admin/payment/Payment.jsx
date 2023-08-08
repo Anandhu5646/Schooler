@@ -16,6 +16,7 @@ import {
   getPayment,
   savePayment,
 } from "../../../api/adminApi";
+import './Payment.css'
 import { IconButton } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -150,15 +151,15 @@ const Payment = () => {
   }, [refresh, search,currentPage]);
 
   return (
-    <div>
-      <Container style={{ marginTop: "50px" }}>
+    <div className="payment-outer-container">
+      <Container>
         <div className="d-flex justify-content-between align-items-end mb-5">
           <h1>Payment List</h1>
           <div>
-            <Button style={{ background: "#394867" }} onClick={toggleOpenModal}>
+            <Button className="payment-add-btn" title="Add Payment" style={{ background: "#394867" }} onClick={toggleOpenModal}>
               Add Payment
             </Button>
-            <Button
+            <Button className="payment-history-btn" title="Payment History"
               style={{ background: "#394867", marginLeft: "5px" }}
               onClick={openHistory}
             >
@@ -189,9 +190,9 @@ const Payment = () => {
                     <div>
                       <IconButton
                         type="button"
-                        variant="danger"
+                        // variant="danger"
                         onClick={() => handleDelete(payment._id)}
-                        style={{ color: "red" }}
+                        style={{ color: "green" }}
                       >
                         <MdDelete />
                       </IconButton>
@@ -231,7 +232,7 @@ const Payment = () => {
 
       {/*================== Add Payment Modal ===================*/}
 
-      <Modal show={show} onHide={toggleCloseModal}>
+      <Modal show={show} onHide={toggleCloseModal} className="payment-add-modal">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Payment</Modal.Title>
         </Modal.Header>
@@ -283,12 +284,12 @@ const Payment = () => {
         </Form>
       </Modal>
       {/* ======================= history ====================== */}
-      <Modal show={open} onHide={closeHistory} size="lg">
+      <Modal show={open} onHide={closeHistory} size="lg" className="payment-history">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Payment History</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
+        <Modal.Body style={{overflowX:"scroll"}}>
           {paymentHistory?.length > 0 ? (
             <table className="table table-bordered">
               <thead>

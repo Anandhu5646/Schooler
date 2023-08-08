@@ -13,12 +13,16 @@ import {
   MDBTableHead,
   MDBTableBody,
 } from "mdb-react-ui-kit";
-import axios from "axios";
-import { addClass, fetchClassList } from "../../../api/adminApi";
+import { addClass, delClass, fetchClassList } from "../../../api/adminApi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import './ClassList.css'
 
 const ClassList = () => {
-  const [classList, setClassList] = useState([]);
+  const [ classList, setClassList] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [refresh, setRefresh]=useState(false)
   const [formValue, setFormValue] = useState({
     className: "",
   });
@@ -31,6 +35,7 @@ const ClassList = () => {
     try {
       const response = await fetchClassList()
         setClassList(response);
+        setRefresh(false)
     } catch (err) {
       console.error("Error:", err);
     }
@@ -39,12 +44,12 @@ const ClassList = () => {
   const handleAddClass = async () => {
     try {
       const response = await addClass(formValue)
-      console.log(response);
+      setRefresh(true)
+      toggleModal();
     } catch (err) {
       console.error("Error:", err);
     }
 
-    toggleModal();
   };
 
   const handleChange = (e) => {
@@ -54,17 +59,51 @@ const ClassList = () => {
       [name]: value,
     }));
   };
-
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to delete this class. This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#212A3E",
+        cancelButtonColor: "red",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
+     
+      if (result.isConfirmed) {
+        await delClass(id); 
+        const updatedclassList = classList.filter(
+          (classs) => classs._id !== id
+        );
+        setClassList(updatedclassList);
+        toast.success("The class has been deleted.", {
+          autoClose: 2000, 
+        });
+        }   
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire(
+        "Error",
+        "An error occurred while deleting the student.",
+        "error"
+      );
+    }
+  };
   useEffect(() => {
     fetchClassData();
-  }, []);
+  }, [refresh]); 
 
   return (
-    <div className="container" style={{ marginTop: "50px" }}>
+    <div className="class-outer-container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Class List</h1>
         <MDBBtn
+
+        className="class-add-btn"
           style={{ background: "#394867" }}
+          title="Add Class"
           onClick={toggleModal}
         >
           Add Class
@@ -83,11 +122,12 @@ const ClassList = () => {
           </MDBTableHead>
           <MDBTableBody>
             {classList.map((item, index) => (
-              <tr key={item.id}>
+              <tr key={item._id}>
                 <td>{index + 1}</td>
                 <td>{item.className}</td>
                 <td>
-                  <MDBBtn color="link" rounded size="sm">
+                  <MDBBtn color="link" rounded size="sm"
+                  onClick={()=>handleDelete(item._id)}>
                     X
                   </MDBBtn>
                 </td>
@@ -97,7 +137,7 @@ const ClassList = () => {
         </MDBTable>
       </div>
 
-      <MDBModal show={showModal} onHide={toggleModal} tabIndex="-1">
+      <MDBModal show={showModal} onHide={toggleModal} tabIndex="-1" className="modal-outer">
         <MDBModalDialog>
           <form>
             <MDBModalContent className="p-3">
@@ -109,9 +149,9 @@ const ClassList = () => {
                   onClick={toggleModal}
                 ></MDBBtn>
               </MDBModalHeader>
-              <MDBModalBody>
+              <MDBModalBody className="input-field">
                 <div className="mb-3">
-                  <MDBInput
+                  <MDBInput xs={12}
                     value={formValue.className}
                     name="className"
                     onChange={handleChange}
@@ -121,9 +161,7 @@ const ClassList = () => {
                 </div>
               </MDBModalBody>
               <MDBModalFooter>
-                <MDBBtn color="secondary" onClick={toggleModal}>
-                  Close
-                </MDBBtn>
+             
                 <MDBBtn
                   onClick={handleAddClass}
                   style={{ background: "#394867" }}
@@ -135,6 +173,7 @@ const ClassList = () => {
           </form>
         </MDBModalDialog>
       </MDBModal>
+      <ToastContainer />
     </div>
   );
 };

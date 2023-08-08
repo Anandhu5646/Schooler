@@ -241,11 +241,7 @@ export async function deleteFac(id) {
       withCredentials: true,
     });
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.message,
-      });
+    
     } else {
       Swal.fire({
         icon: "error",
@@ -289,11 +285,7 @@ export async function deleteStudent(id) {
       { headers: { "Content-Type": "application/json" }, withCredentials: true }
     );
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.message,
-      });
+     console.log('deleted')
     } else {
       Swal.fire({
         icon: "error",
@@ -313,11 +305,7 @@ export async function deleteSubjects(id) {
       { headers: { "Content-Type": "application/json" }, withCredentials: true }
     );
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.message,
-      });
+     
     } else {
       Swal.fire({
         icon: "error",
@@ -462,11 +450,7 @@ export async function deleteComplain(id) {
       { headers: { "Content-Type": "application/json" }, withCredentials: true }
     );
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.data.message,
-      });
+  
     } else {
       Swal.fire({
         icon: "error",
@@ -690,6 +674,30 @@ export async function  deleNotice(id) {
   try {
     const response = await axios.post(
       `/admin/deleteNotice/${id}`,
+      {
+        headers: { "Content-Type": "application/json", withCredentials: true },
+      }
+    );
+    if (response.data.success) {
+      return response.data;
+    } else {
+      Swal.fire({
+        icon: "error",
+        text: "Failed to fetch notices",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      text: "Failed to fetch notices",
+    });
+    throw error;
+  }
+}
+export async function  delClass(id) {
+  try {
+    const response = await axios.post(
+      `/admin/deleteClass/${id}`,
       {
         headers: { "Content-Type": "application/json", withCredentials: true },
       }

@@ -8,12 +8,12 @@ import {
   MDBCardBody,
   MDBInput,
 } from "mdb-react-ui-kit";
-import "./Login.css";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import "./StudLogin.css"
 
 function Login() {
   const navigate = useNavigate();
@@ -42,7 +42,9 @@ function Login() {
   };
 
   return (
-    <MDBContainer fluid style={{ marginTop: "200px" }}>
+    <div className="student-outer">
+
+    <MDBContainer fluid style={{ marginTop: "150px" }}>
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
@@ -51,9 +53,11 @@ function Login() {
         {({ isSubmitting }) => (
           <Form>
             <MDBRow className="d-flex justify-content-center align-items-center h-100">
-              <MDBCol col="12">
+             
+              <MDBCol col="12" className="stud-card">
                 <MDBCard
-                  className="bg-white my-5 mx-auto"
+
+                  className="bg-white my-5 mx-auto  "
                   style={{ borderRadius: "1rem", maxWidth: "500px" }}
                 >
                   <MDBCardBody className="p-5 w-100 d-flex flex-column">
@@ -103,11 +107,13 @@ function Login() {
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
+          
             </MDBRow>
           </Form>
         )}
       </Formik>
     </MDBContainer>
+    </div>
   );
 }
 

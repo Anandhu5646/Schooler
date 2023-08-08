@@ -11,6 +11,9 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
 import axios from "axios";
+import './Notice.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NoticeList = () => {
   const [noticeList, setNoticeList] = useState([]);
@@ -65,11 +68,12 @@ const NoticeList = () => {
           )
           .then((response) => {
             if (response.data.success) {
-              console.log('qqqqqqqqqqqqqqqqqqqqqq')
+             
               Swal.fire({
                 icon: "success",
                 text: "Notice uploaded successfully",
               });
+              setRefresh(true)
               setContent(null);
               setTitle("");
               toggleModal()
@@ -120,7 +124,9 @@ const NoticeList = () => {
           (notice) => notice._id !== id
         );
         setNoticeList(updatedNoticeList);
-        Swal.fire("Deleted!", "The notice has been deleted.", "success");
+        toast.success("The student has been deleted.", {
+          autoClose: 2000, 
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -139,10 +145,11 @@ const NoticeList = () => {
   };
 
   return (
-    <div className="container" style={{ marginTop: "50px" }}>
+    <div className="notice-outer-container" style={{ marginTop: "50px" }}>
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Notice</h1>
-        <Button style={{ background: "#394867" }} onClick={toggleModal}>
+        <Button className="notice-add" 
+        title="Add Notice" style={{ background: "#394867" }} onClick={toggleModal}>
           Add Notice
         </Button>
       </div>
@@ -206,7 +213,7 @@ const NoticeList = () => {
       )}
 
       {/* =========================== add notice modal ========================== */}
-      <Modal show={showModal} onHide={toggleModal}>
+      <Modal show={showModal} onHide={toggleModal} className="add-modalsss">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Notice</Modal.Title>
         </Modal.Header>
@@ -243,6 +250,7 @@ const NoticeList = () => {
          
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

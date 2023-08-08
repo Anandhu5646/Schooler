@@ -11,7 +11,7 @@ const FacComplain = () => {
   const [errMsg,setErrmsg]=useState('')
  
 const saveComplaint = async (e) => {
-    console.log('sdfdsfsdf')
+   
   e.preventDefault();
   if (title.trim() && content.trim()) {
     let response = await saveFacultyComplain(title, content);
@@ -32,7 +32,10 @@ const saveComplaint = async (e) => {
 
 
   return (
-    <Container style={{ minHeight: '100vh' }}>
+    <div className='complain-outer ' >
+
+    
+    <Container >
       <Row className="justify-content-center align-items-center">
         <Col xs={12} md={6}>
           <div className="text-center mb-4">
@@ -68,6 +71,7 @@ const saveComplaint = async (e) => {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };
 

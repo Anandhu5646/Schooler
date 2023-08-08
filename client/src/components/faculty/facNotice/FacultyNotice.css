@@ -27,11 +27,17 @@
   }
   
   @media (max-width:768px){
-    .container{
+    .fac-notice-outer{
         margin-left: 70px;
        
     }
     .card-out{
-        width: 310px;
+       width: 90%;
+    }
+    .search-notice{
+      width: 80%;
+    }
+    .nodata{
+      margin-left: -80px;
     }
   }

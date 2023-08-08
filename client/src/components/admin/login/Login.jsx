@@ -47,7 +47,10 @@ const validationSchema=Yup.object().shape({
  }
 
   return (
-    <MDBContainer fluid style={{ marginTop: "200px" }}>
+    <div className='admin-outer'>
+
+    
+    <MDBContainer fluid style={{ marginTop: "150px" }}>
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
@@ -113,6 +116,7 @@ const validationSchema=Yup.object().shape({
         )}
       </Formik>
     </MDBContainer>
+    </div>
   );
 }
 

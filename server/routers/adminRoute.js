@@ -33,6 +33,7 @@ const {
   getPaymentHistory,
   viewNotices,
   deleteNotices,
+  adminDeleteClass,
 } = require("../controllers/adminController");
 const verifyAdmin = require("../middleware/verifyAdmin");
 
@@ -68,6 +69,7 @@ router.post("/updateStudent", verifyAdmin, postAdminUpdateStudent);
 router.post("/updateFaculty", verifyAdmin, postAdminUpdateFaculty);
 router.post("/saveNotice", verifyAdmin, postUploadNotice);
 router.post("/addPayment", verifyAdmin, postPaymentMsgToStud);
+router.post("/deleteClass/:id", verifyAdmin, adminDeleteClass)
 router.post("/deletePayment/:id", verifyAdmin, deletePaymentList);
 
 module.exports = router;

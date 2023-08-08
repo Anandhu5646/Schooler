@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -17,23 +16,19 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupIcon from "@mui/icons-material/Group";
-import SchoolIcon from "@mui/icons-material/School";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ClassIcon from "@mui/icons-material/Class";
 import SubjectIcon from "@mui/icons-material/Subject";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
-import EmailIcon from "@mui/icons-material/Email";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useLocation } from "react-router-dom";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import { PiStudentDuotone ,PiChalkboardTeacherThin} from "react-icons/pi";
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-
+import { PiStudentDuotone, PiChalkboardTeacherThin } from "react-icons/pi";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
 const drawerWidth = 330;
 
@@ -63,7 +58,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
+
   ...theme.mixins.toolbar,
 }));
 
@@ -106,33 +101,51 @@ function Sidebar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState(null);
-  const [showModal, setShowModal] =useState(false);
-  const {state}= useLocation()
+  const [showModal, setShowModal] = useState(false);
+  const { state } = useLocation();
 
   const openModal = () => {
     setShowModal(true);
   };
-  useEffect(()=>{
-    
-    setSelectedItem(state?.index)
-  },[state])
-  const closeModal = () => {   
+  useEffect(() => {
+    setSelectedItem(state?.index);
+  }, [state]);
+  const closeModal = () => {
     setShowModal(false);
   };
-  const iconStyle={
-    fontSize:"23px"
-    
-  }
+  const iconStyle = {
+    fontSize: "23px",
+  };
   const drawerItems = [
     { text: "Dashboard", icon: <DashboardIcon />, to: "/admin/" },
-    { text: "Faculty", icon: <span style={iconStyle}><PiChalkboardTeacherThin/></span>, to: "/admin/faculty" },
-    { text: "Students", icon: <span style={iconStyle}><PiStudentDuotone /></span>, to: "/admin/student" },
+    {
+      text: "Faculty",
+      icon: (
+        <span style={iconStyle}>
+          <PiChalkboardTeacherThin />
+        </span>
+      ),
+      to: "/admin/faculty",
+    },
+    {
+      text: "Students",
+      icon: (
+        <span style={iconStyle}>
+          <PiStudentDuotone />
+        </span>
+      ),
+      to: "/admin/student",
+    },
     { text: "Clubs", icon: <LocalLibraryIcon />, to: "/admin/club" },
     { text: "Notice", icon: <WarningAmberIcon />, to: "/admin/notice" },
     { text: "Classes", icon: <ClassIcon />, to: "/admin/classes" },
     { text: "Subjects", icon: <SubjectIcon />, to: "/admin/subjects" },
-    { text: "Check complain", icon: <NotificationImportantIcon />, to: "/admin/complain" },
-    { text: "Payment", icon: <CurrencyRupeeIcon/>, to: "/admin/payment" },
+    {
+      text: "Check complain",
+      icon: <NotificationImportantIcon />,
+      to: "/admin/complain",
+    },
+    { text: "Payment", icon: <CurrencyRupeeIcon />, to: "/admin/payment" },
     { text: "Logout", icon: <LogoutIcon />, to: "" },
   ];
   const handleItemClick = (index) => {
@@ -146,19 +159,18 @@ function Sidebar() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-  
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
   const handleLogoutConfirmed = async () => {
     await handleLogout(); // Perform the logout action
-  
+
     // Close the modal
     closeModal();
   };
   const handleLogout = async () => {
     try {
-     
       // Send a request to the logout endpoint on the server-side
       const response = await axios.post("/admin/auth/logout");
       if (response.data.success) {
@@ -173,7 +185,7 @@ function Sidebar() {
       console.error("Error:", err);
     }
   };
-    
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -197,7 +209,7 @@ function Sidebar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color={"white"} noWrap component="div">
-            SCHOOL MANAGEMENT SYSTEM-ADMIN PANEL
+            ADMIN PANEL
           </Typography>
         </Toolbar>
       </AppBar>
@@ -206,7 +218,7 @@ function Sidebar() {
           className="d-flex justify-content-between w-100 ps-4"
           style={{ background: "#212A3E", color: "#fff" }}
         >
-          <h5>Schooler</h5>
+          <h5>SCHOOLER</h5>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon style={{ color: "white" }} color="white" />
@@ -237,7 +249,7 @@ function Sidebar() {
                 },
               }}
               component={Link}
-              state={{index}}
+              state={{ index }}
               to={item.to}
             >
               <ListItemButton
@@ -282,51 +294,53 @@ function Sidebar() {
         <DrawerHeader />
         <Typography></Typography>
         <Modal
-  open={showModal}
-  onClose={closeModal}
-  aria-labelledby="logout-modal"
-  aria-describedby="logout-modal-description"
->
-  <Box
-    sx={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: 400,
-      bgcolor: "background.paper",
-      boxShadow: 24,
-      p: 4,
-    }}
-  >
-    <Typography
-      id="logout-modal"
-      variant="h6"
-      component="h2"
-      gutterBottom
-    >
-      Confirm Logout
-    </Typography>
-    <Typography id="logout-modal-description" sx={{ mb: 2 }}>
-      Are you sure you want to logout?
-    </Typography>
-    <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-      <Button
-        onClick={closeModal}
-        variant="contained"
-        color="error"
-        sx={{ mr: 2 }}
-      >
-        Cancel
-      </Button>
-      <Button onClick={handleLogoutConfirmed} variant="contained" style={{background:"#212A3E"}}>
-        Logout
-      </Button>
-    </Box>
-  </Box>
-</Modal>
-
-
+          open={showModal}
+          onClose={closeModal}
+          aria-labelledby="logout-modal"
+          aria-describedby="logout-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography
+              id="logout-modal"
+              variant="h6"
+              component="h2"
+              gutterBottom
+            >
+              Confirm Logout
+            </Typography>
+            <Typography id="logout-modal-description" sx={{ mb: 2 }}>
+              Are you sure you want to logout?
+            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                onClick={closeModal}
+                variant="contained"
+                color="error"
+                sx={{ mr: 2 }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleLogoutConfirmed}
+                variant="contained"
+                style={{ background: "#212A3E" }}
+              >
+                Logout
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
       </Box>
     </Box>
   );

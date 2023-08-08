@@ -20,4 +20,17 @@
     border: 1px solid #ced4da;
     color: black !important;
   }
-  
+  .mark-outer{
+    margin-top: 50px;
+    width: 80%;
+    margin-left: 200px;
+  }
+  @media (max-width:768px){
+    .mark-outer{
+      margin-left: 65px;
+    }
+    .mark-modal{
+      margin-left: 65px;
+      width: 80%;
+    }
+  }

@@ -1,0 +1,10 @@
+.complain-outer-container{
+    width: 80%;
+    margin-left: 200px
+}
+
+@media (max-width:768px){
+    .complain-outer-container{
+        margin-left: 0px
+    }
+}
