@@ -68,12 +68,78 @@ function StudentList() {
     className: "",
     rollNo: "",
   });
-
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    age: "",
+    fatherName: "",
+    dob: "",
+    motherName: "",
+    email: "",
+    password: "",
+    mobile: "",
+    admYear: "",
+    gender: "",
+    address: "",
+    className: "",
+    rollNo: "",
+  });
   const onChange = (e) => {
-    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+
+    setFormValue({ ...formValue, [name]: value });
   };
   // ==================================================================
   const handleAddStudent = async () => {
+    const newFieldErrors = {};
+
+    if (!formValue.name) {
+     newFieldErrors.name = "Name is required";
+    }
+    if (!formValue.age) {
+     newFieldErrors.age = "Age is required";
+    }
+    if (!formValue.fatherName) {
+     newFieldErrors.fatherName = "Father's Name is required";
+    }
+    if (!formValue.dob) {
+     newFieldErrors.dob = "DOB is required";
+    }
+    if (!formValue.motherName) {
+     newFieldErrors.motherName = "Mother's Name is required";
+    }
+    if (!formValue.email) {
+     newFieldErrors.email = "Email is required";
+    }
+    if (!formValue.password) {
+     newFieldErrors.password = "Password is required";
+    }
+    if (!formValue.mobile) {
+     newFieldErrors.mobile = "Mobile is required";
+    } else if (formValue.mobile.length !== 10) {
+     newFieldErrors.mobile = "Mobile number must be 10 digits";
+    }
+    if (!formValue.admYear) {
+     newFieldErrors.admYear = "Admission Year is required";
+    }
+    if (!formValue.gender) {
+     newFieldErrors.gender = "Gender is required";
+    }
+    if (!formValue.address) {
+     newFieldErrors.address = "Address is required";
+    }
+    if (!formValue.className) {
+     newFieldErrors.className = "Class Name is required";
+    }
+    if (!formValue.rollNo) {
+     newFieldErrors.rollNo = "Roll No is required";
+    }
+    setFieldErrors(newFieldErrors);
+    if (Object.keys(newFieldErrors).length === 0) {
     try {
       const response = await addStudent(formValue);
       console.log("data saved successfully", response);
@@ -115,6 +181,7 @@ function StudentList() {
         progress: undefined,
       });
     }
+  }
   };
   useEffect(() => {
     fetchStudentData();
@@ -171,6 +238,21 @@ function StudentList() {
   const [ErrMsg, setErrmsg] = React.useState("");
 
   const handleOpenEdit = async (id) => {
+    setFieldErrors({
+      name: "",
+      age: "",
+      fatherName: "",
+      dob: "",
+      motherName: "",
+      email: "",
+      password: "",
+      mobile: "",
+      admYear: "",
+      gender: "",
+      address: "",
+      className: "",
+      rollNo: "",
+    });
     setid(id);
     let response = await updateStudent(id);
 
@@ -187,7 +269,7 @@ function StudentList() {
     setAge(response.age);
     setRollNo(response.rollNo);
     setClassName(response.className);
-    console.log(response);
+  
   };
   const handleClose = () => {
     setOpen(false);
@@ -364,6 +446,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.name && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.name}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -375,6 +462,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.fatherName && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.fatherName}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -386,6 +478,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.motherName && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.motherName}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -398,6 +495,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.dob && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.dob}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
@@ -408,6 +510,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.age && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.age}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
@@ -417,6 +524,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.className && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.className}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -429,6 +541,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.email && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.email}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12}>
                   <Form.Label>Password</Form.Label>
@@ -439,6 +556,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.password && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.password}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -450,6 +572,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.mobile && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.mobile}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={6}>
                   <Form.Label >Admission Year</Form.Label>
@@ -459,6 +586,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.admYear && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.admYear}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -470,6 +602,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.address && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.address}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12}>
                   <Form.Label>Roll No.</Form.Label>
@@ -479,6 +616,11 @@ function StudentList() {
                     onChange={onChange}
                     required
                   />
+                   {fieldErrors.rollNo && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.rollNo}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -513,6 +655,11 @@ function StudentList() {
                       required
                     />
                   </div>
+                  {fieldErrors.gender && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.gender}
+                    </div>
+                  )}
                 </Col>
               </Row>
             </div>
@@ -551,6 +698,11 @@ function StudentList() {
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
+                   {fieldErrors.name && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.name}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -562,6 +714,11 @@ function StudentList() {
                     onChange={(e) => setFatherName(e.target.value)}
                     required
                   />
+                  {fieldErrors.fatherName && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.fatherName}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -573,6 +730,11 @@ function StudentList() {
                     onChange={(e) => setMotherName(e.target.value)}
                     required
                   />
+                   {fieldErrors.motherName && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.motherName}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -585,6 +747,11 @@ function StudentList() {
                     onChange={(e) => setDob(e.target.value)}
                     required
                   />
+                   {fieldErrors.dob && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.dob}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
@@ -595,6 +762,11 @@ function StudentList() {
                     onChange={(e) => setAge(e.target.value)}
                     required
                   />
+                    {fieldErrors.age && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.age}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
@@ -604,6 +776,11 @@ function StudentList() {
                     onChange={(e) => setClassName(e.target.value)}
                     required
                   />
+                   {fieldErrors.className && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.className}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -616,6 +793,11 @@ function StudentList() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                   {fieldErrors.email && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.email}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -627,6 +809,11 @@ function StudentList() {
                     onChange={(e) => setMobile(e.target.value)}
                     required
                   />
+                     {fieldErrors.mobile && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.mobile}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={6}>
                   <Form.Label>Admission Year</Form.Label>
@@ -636,6 +823,11 @@ function StudentList() {
                     onChange={(e) => setAdmyear(e.target.value)}
                     required
                   />
+                   {fieldErrors.admYear && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.admYear}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -647,6 +839,11 @@ function StudentList() {
                     onChange={(e) => setAddress(e.target.value)}
                     required
                   />
+                   {fieldErrors.address && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.address}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12}>
                   <Form.Label>Roll No.</Form.Label>
@@ -656,6 +853,11 @@ function StudentList() {
                     onChange={(e) => setRollNo(e.target.value)}
                     required
                   />
+                   {fieldErrors.rollNo && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.rollNo}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -690,6 +892,11 @@ function StudentList() {
                       required
                     />
                   </div>
+                  {fieldErrors.gender && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.gender}
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Container>

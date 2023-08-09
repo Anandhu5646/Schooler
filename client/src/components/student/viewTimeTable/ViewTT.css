@@ -1,0 +1,15 @@
+.timetable-outer{
+    margin-top: 50px;
+    margin-left: 200px;
+    width: 80%;
+
+}
+@media (max-width:768px){
+    .timetable-outer{
+        margin-left: 65px !important;
+     
+    }
+    .tt-card{
+        margin-left: 0px;
+    }
+}

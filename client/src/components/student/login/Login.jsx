@@ -26,21 +26,27 @@ function Login() {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
-    const { data } = await axios.post("/student/auth/login", {
-      email: values.email,
-      password: values.password,
-    });
-    setSubmitting(false);
-    if (data.err) {
-    } else {
-      console.log("dispatched");
-      navigate("/student/");
-      dispatch({ type: "refresh" });
+    try {
+      const { data } = await axios.post("/student/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
+      setSubmitting(false)
+  
+      if (data.error) {
+        setErrors({ email: data.message1, password: data.message2 });
+      } else {
+       
+        navigate("/student/");
+        dispatch({ type: "refresh" });
+      }
+    } catch (error) {
+      console.error(error);
+      setSubmitting(false);
     }
   };
-
   return (
     <div className="student-outer">
 

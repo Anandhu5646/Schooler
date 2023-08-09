@@ -1,10 +1,13 @@
 @media (max-width:768px){
-    .column1{
-        margin-left: 0px;
-        width: 310px;
-       
-    }
+.stud-club-outer{
+    margin-left: 65px !important;
+}
 }
 .card-column{
-    background-color: #e0f3ff;
+    background-color: #e0f3ff74;
+}
+.stud-club-outer{
+    margin-top: 50px;
+    margin-left: 200px;
+    width: 80%;
 }

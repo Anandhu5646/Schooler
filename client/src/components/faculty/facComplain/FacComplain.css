@@ -1,12 +1,15 @@
 @media (max-width: 768px) {
     .complain-outer{
-     margin-left:-75px;
+     margin-left:65px;
      width: 100%;
     
     
    }
- .submit-btn{
-   margin-left: -150px;
+ .submitt-btn{
+   margin-left: -270px;
+ }
+ .complain-title{
+  margin-left:-130px ;
  }
    
  }

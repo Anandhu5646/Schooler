@@ -116,11 +116,7 @@ export async function addFaculty(facultyData) {
       return response.data.faculty;
     } 
   } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops..!!",
-      text: "An error occured while saving faculty data",
-    });
+   
     throw error;
   }
 }
@@ -217,13 +213,9 @@ export async function addClass(classData) {
     });
     if (response.data.success) {
       return response.data.classNam;
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops..!!",
-        text: response.data.error,
-      });
-      throw new Error(response.data.error);
+    } 
+    if(response.data.error){
+      throw new Error(response.data.error); 
     }
   } catch (error) {
     Swal.fire({

@@ -25,13 +25,18 @@
     background-color: #05182cb6; 
     border-color: #007bff;
   }
-  
+  .notice-outer-stud{
+    margin-top: 50px;
+    width: 80%;
+    margin-left: 200px;
+  }
   @media (max-width:768px){
-    .container{
+    .notice-outer-stud{
         margin-left: 70px;
        
     }
     .card-out{
         width: 310px;
+        margin-left: 0px;
     }
   }

@@ -121,6 +121,11 @@ let adminController = {
   postAdminAddClass: async (req, res) => {
     try {
       let { className } = req.body;
+      const existingClass = await classModel.findOne({ className });
+
+      if (existingClass) {
+        return res.json({ success: false, message: "Class already exists" });
+      }
       let classNam = new classModel({
         className,
       });
@@ -130,7 +135,7 @@ let adminController = {
         .json({ success: true, message: "Class registration successful" });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: "Failed to register" });
+      res.status(500).json({ success: false, messag: "Failed to register" });
     }
   },
   postAdminAddNotice: async (req, res) => {

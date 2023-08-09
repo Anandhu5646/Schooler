@@ -38,7 +38,7 @@ const saveComplaint = async (e) => {
     <Container >
       <Row className="justify-content-center align-items-center">
         <Col xs={12} md={6}>
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 complain-title">
             <h1>Register Complaint</h1>
           </div>
           <Form onSubmit={saveComplaint}>
@@ -62,7 +62,7 @@ const saveComplaint = async (e) => {
                 required
               />
             </Form.Group>
-            <div className="text-center mt-4 submit-btn">
+            <div className="text-center mt-4 submitt-btn">
               <Button type="submit" style={{ background: "#212A3E" }}>
                 Submit
               </Button>

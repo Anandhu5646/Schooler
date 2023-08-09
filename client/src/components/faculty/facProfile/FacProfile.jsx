@@ -241,7 +241,7 @@ function FacProfile() {
   };
 
   return (
-    <div>
+    <div className="fac-profile-outer">
       {/* =========================== otp modal ======================= */}
 
       <div>
@@ -477,21 +477,15 @@ function FacProfile() {
                   <MDBRow className="g-0">
                     <MDBCol
                       md="4"
-                      className="gradient-custom text-center text-white"
-                      style={{
-                        borderTopLeftRadius: ".5rem",
-                        borderBottomLeftRadius: ".5rem",
-                        background:
-                          "linear-gradient(144deg, rgb(41 41 41), rgb(48 106 168 / 89%))",
-                      }}
+                      className="gradient-customss text-center text-white"
                     >
                       <MDBCardImage
                         src={
-                          faculty.pic.length > 0
+                          faculty.pic && faculty.pic.length >0
                             ? `http://localhost:1800/images/${faculty.pic[0].filename}`
-                            :`https://iconscout.com/lottie/profile-avatar-boy-7145747`
+                            : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
                         }
-                        alt="Avatar"
+                        alt=""
                         className="rounded-circle my-5"
                         style={{
                           width: "120px",
@@ -500,6 +494,7 @@ function FacProfile() {
                         }}
                         fluid
                       />
+
                       <MDBTypography tag="h5" className="fw-bold mb-4">
                         {faculty.name}
                       </MDBTypography>

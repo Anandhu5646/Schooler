@@ -35,7 +35,7 @@
 
   @media (max-width:768px){
     .payment-outer-container{
-        margin-left: 0px;
+        margin-left: 65px;
     }
     .payment-add-modal{
       width: 80%;

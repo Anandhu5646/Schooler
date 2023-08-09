@@ -121,7 +121,7 @@ const FacAttendance = () => {
   // ===================================
 
   return (
-    <div className="attendance-outer" >
+    <div className="fac-attendance-outer" >
       <Container>
         <h1>Mark Attendance</h1>
         <hr></hr>

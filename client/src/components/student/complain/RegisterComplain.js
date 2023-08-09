@@ -31,10 +31,10 @@ const saveComplaint = async (e) => {
 
 
   return (
-    <Container className="container-out" style={{ minHeight: '100vh' }}>
+    <Container className="stud-complain-outer" style={{ minHeight: '100vh' }}>
       <Row className="justify-content-center align-items-center">
         <Col xs={12} md={6} className='column'>
-          <div className="text-center mb-4">
+          <div className="text-center mb-4  heading">
             <h1>Register Complaint</h1>
           </div>
           <Form onSubmit={saveComplaint}>

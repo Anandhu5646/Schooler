@@ -139,6 +139,7 @@ function StudProfile() {
           "Failed to update student profile:",
           response.data.message
         );
+      }
     } catch (error) {
       console.error("Error updating student profile:", error);
     }
@@ -253,7 +254,7 @@ function StudProfile() {
   // ==========================================================
 
   return (
-    <div>
+    <div className="stud-profile-outer">
       {/* ======================================================================= */}
       {/* otp modal */}
       <div>
@@ -336,13 +337,7 @@ function StudProfile() {
                     <MDBCol
                       md="4"
                       className="gradient-custom text-center text-white"
-                      style={{
-                        borderTopLeftRadius: ".5rem",
-                        borderBottomLeftRadius: ".5rem",
-                        color: "#fff",
-                        background:
-                          "linear-gradient(144deg, rgb(41 41 41), rgb(48 106 168 / 89%))",
-                      }}
+      
                     >
                       <MDBCardImage
                         src={
@@ -376,7 +371,7 @@ function StudProfile() {
                         </div>
                         <hr className="mt-0 mb-4" />
                         <MDBRow className="pt-1">
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Email
                             </MDBTypography>
@@ -384,7 +379,7 @@ function StudProfile() {
                               {student.email}
                             </MDBCardText>
                           </MDBCol>
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Phone
                             </MDBTypography>
@@ -394,7 +389,7 @@ function StudProfile() {
                           </MDBCol>
                         </MDBRow>
                         <MDBRow className="pt-1">
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Mother Name
                             </MDBTypography>
@@ -402,7 +397,7 @@ function StudProfile() {
                               {student.motherName}
                             </MDBCardText>
                           </MDBCol>
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Father Name
                             </MDBTypography>
@@ -412,7 +407,7 @@ function StudProfile() {
                           </MDBCol>
                         </MDBRow>
                         <MDBRow className="pt-1">
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Date of Birth
                             </MDBTypography>
@@ -420,7 +415,7 @@ function StudProfile() {
                               {student.dob}
                             </MDBCardText>
                           </MDBCol>
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Age
                             </MDBTypography>
@@ -430,7 +425,7 @@ function StudProfile() {
                           </MDBCol>
                         </MDBRow>
                         <MDBRow className="pt-1">
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Class
                             </MDBTypography>
@@ -438,7 +433,7 @@ function StudProfile() {
                               {student.className}
                             </MDBCardText>
                           </MDBCol>
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Admission Year
                             </MDBTypography>
@@ -448,7 +443,7 @@ function StudProfile() {
                           </MDBCol>
                         </MDBRow>
                         <MDBRow className="pt-1">
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Address
                             </MDBTypography>
@@ -456,7 +451,7 @@ function StudProfile() {
                               {student.address}
                             </MDBCardText>
                           </MDBCol>
-                          <MDBCol size="6" className="mb-3">
+                          <MDBCol  sm={12} md={6} lg={6} className="mb-3">
                             <MDBTypography tag="h6" className="fw-bold">
                               Roll No
                             </MDBTypography>

@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { getAttendance } from '../../../api/studentApi';
+import './Attend.css'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,7 +54,7 @@ function Attendance() {
   }, []);
 
   return (
-    <div style={{ marginTop: '50px', width: '90%', marginLeft: '100px' }}>
+    <div className='stud-attend-outer'>
       <h1>View Attendance</h1>
       <hr />
       <TableContainer component={Paper}>
@@ -67,14 +68,14 @@ function Attendance() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {attendanceData.map((row, i) => (
+            {attendanceData.length>0 ? attendanceData.map((row, i) => (
               <StyledTableRow key={row._id}>
                 <StyledTableCell>{i + 1}</StyledTableCell>
                 <StyledTableCell>{formatDateToDDMMYYYY(row.date)}</StyledTableCell>
                 <StyledTableCell>{row.facultyName}</StyledTableCell>
                 <StyledTableCell>{row.status}</StyledTableCell>
               </StyledTableRow>
-            ))}
+            )):<div><h6>No Attendace Published</h6></div>}
           </TableBody>
         </Table>
       </TableContainer>

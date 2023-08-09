@@ -14,16 +14,20 @@
 @media (max-width:600px){
 .contents-2{
   margin-left: 5px;
+  height: 110px
 }
 .contents-3{
   margin-left: 5px;
+  height: 110px
 }
 .contents-4{
   margin-left: 5px;
+  height: 110px
 }
 .landing-img {
   object-fit: contain;
 }
+
 
 }
 .right {

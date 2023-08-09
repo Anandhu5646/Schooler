@@ -22,6 +22,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email address")
@@ -29,20 +30,27 @@ function Login() {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     setSubmitting(true);
-    const { data } = await axios.post("/faculty/auth/login", {
-      email: values.email,
-      password: values.password,
-    });
-    setSubmitting(false);
-    if (data.err) {
-    } else {
-      console.log("dispatched");
-      navigate("/faculty/");
-      dispatch({ type: "refresh" });
+    try {
+      const { data } = await axios.post("/faculty/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
+      setSubmitting(false);
+  
+      if (data.error) {
+        setErrors({ email: data.message1, password: data.message2 });
+      } else {
+        navigate("/faculty/");
+        dispatch({ type: "refresh" });
+      }
+    } catch (error) {
+      console.error(error);
+      setSubmitting(false);
     }
   };
+  
  
   return (
     <div className='faculty-outer'>

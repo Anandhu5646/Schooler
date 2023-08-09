@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './FacList.css'
+import "./FacList.css";
 import {
   Table,
   Button,
@@ -66,52 +66,114 @@ function FacList() {
     address: "",
     className: "",
   });
-
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    age: "",
+    qualification: "",
+    dob: "",
+    teachingArea: "",
+    email: "",
+    password: "",
+    mobile: "",
+    joiningYear: "",
+    gender: "",
+    address: "",
+    className: "",
+  });
   const onChange = (e) => {
-    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+
+    setFormValue({ ...formValue, [name]: value });
   };
   // ==================================
   const handleAddFaculty = async () => {
-    try {
-      const response = await addFaculty(formValue);
-    
-      toast.success("Faculty added successfully!", {
-        position: "top-center",
-        autoClose: 300,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setRefresh(!refresh);
-      toggleModal();
-      setFormValue({
-        name: "",
-        age: "",
-        fatherName: "",
-        dob: "",
-        motherName: "",
-        email: "",
-        password: "",
-        mobile: "",
-        admYear: "",
-        gender: "",
-        address: "",
-        className: "",
-        rollNo: "",
-      });
-    } catch (err) {
-      console.error("Error:", err);
-      toast.error("Error adding faculty!", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true, 
-        draggable: true,
-        progress: undefined,
-      });
+    const newFieldErrors = {};
+
+    if (!formValue.name) {
+      newFieldErrors.name = "Name is required";
+    }
+    if (!formValue.age) {
+      newFieldErrors.age = "Age is required";
+    }
+    if (!formValue.qualification) {
+      newFieldErrors.qualification = "Qualification is required";
+    }
+    if (!formValue.dob) {
+      newFieldErrors.dob = "DOB is required";
+    }
+    if (!formValue.teachingArea) {
+      newFieldErrors.teachingArea = "TeachingArea is required";
+    }
+    if (!formValue.email) {
+      newFieldErrors.email = " Email is required";
+    }
+    if (!formValue.password) {
+      newFieldErrors.password = " Password is required";
+    }
+    if (!formValue.mobile) {
+      newFieldErrors.mobile = "Mobile is required";
+    } else if (formValue.mobile.length !== 10) {
+      newFieldErrors.mobile = "Mobile number must be 10 digits";
+    }
+    if (!formValue.joiningYear) {
+      newFieldErrors.joiningYear = "JoiningYear is required";
+    }
+    if (!formValue.gender) {
+      newFieldErrors.gender = " gender is required";
+    }
+    if (!formValue.address) {
+      newFieldErrors.address = " address is required";
+    }
+    if (!formValue.className) {
+      newFieldErrors.className = "className is required";
+    }
+    setFieldErrors(newFieldErrors);
+    if (Object.keys(newFieldErrors).length === 0) {
+      try {
+        const response = await addFaculty(formValue);
+
+        toast.success("Faculty added successfully!", {
+          position: "top-center",
+          autoClose: 300,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setRefresh(!refresh);
+        toggleModal();
+        setFormValue({
+          name: "",
+          age: "",
+          fatherName: "",
+          dob: "",
+          motherName: "",
+          email: "",
+          password: "",
+          mobile: "",
+          admYear: "",
+          gender: "",
+          address: "",
+          className: "",
+          rollNo: "",
+        });
+      } catch (err) {
+        toast.error("Error adding faculty!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
   };
 
@@ -136,7 +198,7 @@ function FacList() {
         );
         setFacultyList(updatedFacultyList);
         toast.success("The student has been deleted.", {
-          autoClose: 2000, 
+          autoClose: 2000,
         });
       }
     } catch (error) {
@@ -230,23 +292,19 @@ function FacList() {
     fetchFacultyData();
   }, [refresh, search, currentPage]);
   return (
-    <div
-      className="outer-container"
-    
-    >
+    <div className="outer-container">
       <div className="d-flex justify-content-between align-items-end mb-5">
         <h1>Faculty List</h1>
-    
-          <Button
+
+        <Button
           className="add-btn"
-            variant="primary"
-            style={{ background: "#394867" }}
-            onClick={toggleModal}
-            title="Add Faculty"
-          >
-            Add faculty
-          </Button>
-  
+          variant="primary"
+          style={{ background: "#394867" }}
+          onClick={toggleModal}
+          title="Add Faculty"
+        >
+          Add faculty
+        </Button>
       </div>
       {/* ================== search bar ===================== */}
       <div className="mb-3">
@@ -259,20 +317,23 @@ function FacList() {
       </div>
       {/* ===================================================== */}
       <Table striped bordered hover responsive>
-      {facultyList.length > 1 ? (
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Class</th>
-            <th>Join Year</th>
-            <th>Mobile</th>
-            <th>DOB</th>
-            <th>Age</th>
-            <th className=" ms-5">Action</th>
-          </tr>
-        </thead>):("")}
+        {facultyList.length > 1 ? (
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Join Year</th>
+              <th>Mobile</th>
+              <th>DOB</th>
+              <th>Age</th>
+              <th className=" ms-5">Action</th>
+            </tr>
+          </thead>
+        ) : (
+          ""
+        )}
 
         <tbody>
           {facultyList.length > 0 ? (
@@ -327,16 +388,19 @@ function FacList() {
             ))
           ) : (
             <div className="d-flex justify-content-center align-items-center">
-             <h6>No Faculty Data</h6>
+              <h6>No Faculty Data</h6>
             </div>
           )}
         </tbody>
       </Table>
       {facultyList.length === 0 && (
-          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "300px" }}>
-            <img src={nodata} alt="No Data" />
-          </div>
-        )}
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "300px" }}
+        >
+          <img src={nodata} alt="No Data" />
+        </div>
+      )}
       {facultyList?.length > 0 ? (
         <div>
           <Stack spacing={2}>
@@ -354,7 +418,12 @@ function FacList() {
         ""
       )}
 
-      <Modal show={showModal} onHide={toggleModal} centered className="modal-outer">
+      <Modal
+        show={showModal}
+        onHide={toggleModal}
+        centered
+        className="modal-outer"
+      >
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Add Faculty</Modal.Title>
         </Modal.Header>
@@ -370,6 +439,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.name && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.name}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -381,6 +455,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.qualification && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.qualification}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -392,6 +471,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.teachingArea && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.teachingArea}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -404,6 +488,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.dob && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.dob}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Age</Form.Label>
@@ -414,6 +503,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.age && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.age}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={4}>
                   <Form.Label>Class</Form.Label>
@@ -423,6 +517,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.className && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.className}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -435,6 +534,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.email && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.email}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12}>
                   <Form.Label>Password</Form.Label>
@@ -445,6 +549,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.password && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.password}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -456,6 +565,11 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.mobile && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.mobile}
+                    </div>
+                  )}
                 </Col>
                 <Col xs={12} lg={6}>
                   <Form.Label>Join Year</Form.Label>
@@ -465,17 +579,27 @@ function FacList() {
                     onChange={onChange}
                     required
                   />
+                  {fieldErrors.joiningYear && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.joiningYear}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col xs={12} >
+                <Col xs={12}>
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     value={formValue.address}
                     name="address"
                     onChange={onChange}
                     required
-                  />
+                  />{" "}
+                  {fieldErrors.address && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.address}
+                    </div>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-3">
@@ -510,6 +634,11 @@ function FacList() {
                       required
                     />
                   </div>
+                  {fieldErrors.gender && (
+                    <div style={{ color: "red" }} className="error">
+                      {fieldErrors.gender}
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Container>
@@ -539,7 +668,7 @@ function FacList() {
           <Modal.Body>
             <Container className="input-field">
               <Row className="mb-3">
-                <Col xs={12} >
+                <Col xs={12}>
                   <Form.Label>Faculty's Name</Form.Label>
                   <Form.Control
                     name="name"

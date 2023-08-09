@@ -29,22 +29,27 @@ const validationSchema=Yup.object().shape({
   password:Yup.string().required("Password is required")
 })
 
- const handleSubmit=async (values,{setSubmitting})=>{
-  setSubmitting(true)
-  const {data}=await axios.post("/admin/auth/login",{
-    email:values.email,
-    password:values.password,
+const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+  setSubmitting(true);
+  try {
+    const { data } = await axios.post("/admin/auth/login", {
+      email: values.email,
+      password: values.password,
+    });
+    setSubmitting(false)
 
-  })
-  setSubmitting(false)
-  if(data.err){
-
-  }else{
-    console.log("dispatched")
-    navigate("/admin/")
-    dispatch({type:"refresh"})
+    if (data.error) {
+      setErrors({ email: data.message1, password: data.message2 });
+    } else {
+     
+      navigate("/admin/");
+      dispatch({ type: "refresh" });
+    }
+  } catch (error) {
+    console.error(error);
+    setSubmitting(false);
   }
- }
+};
 
   return (
     <div className='admin-outer'>

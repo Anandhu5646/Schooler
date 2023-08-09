@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { studentMarks } from '../../../api/studentApi';
+import './Result.css'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,7 +46,7 @@ function Result() {
   }, []);
 
   return (
-    <div style={{ marginTop: '50px', width: '90%', marginLeft: '100px' }}>
+    <div className='stud-result-outer' >
       <h1>View Result</h1>
       <hr></hr>
       <TableContainer component={Paper}>

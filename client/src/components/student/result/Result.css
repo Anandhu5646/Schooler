@@ -1,11 +1,10 @@
-
-.payment-outer{
-    width: 80%;
+.stud-result-outer{
     margin-top: 50px;
+    width: 80%;
     margin-left: 200px;
 }
 @media (max-width:768px){
-    .payment-outer{
+    .stud-result-outer{
         margin-left: 65px;
     }
 }

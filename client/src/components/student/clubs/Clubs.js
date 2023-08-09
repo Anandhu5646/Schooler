@@ -105,15 +105,15 @@ function Clubs() {
   }, [status]);
 
   return (
-    <div>
-      <Container style={{ marginTop: "50px" }}>
-        <div className="d-flex justify-content-between align-items-end mb-5">
+    <div className="stud-club-outer">
+      <Container >
+        <div className=" mb-3">
           <h1>Club List</h1>
-          <hr></hr>
         </div>
+          <hr></hr>
         {/* ================== search bar ===================== */}
       <div className="mb-3">
-        <input
+        <input 
           type="text"
           placeholder="Search club name"
           className="form-control"
@@ -124,7 +124,7 @@ function Clubs() {
         <Row> 
           {club && 
             club.map((data, index) => (
-              <Col md={12} className="mb-4 column1 " key={data.id}>
+              <Col md={12} className="mb-4 column1 " key={String(data.id)}>
                 <Card className="shadow-sm card-column" >
                   <Card.Body>
                     <Card.Title>{data.clubName}</Card.Title>
