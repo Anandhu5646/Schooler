@@ -139,7 +139,6 @@ function StudProfile() {
           "Failed to update student profile:",
           response.data.message
         );
-      }
     } catch (error) {
       console.error("Error updating student profile:", error);
     }
