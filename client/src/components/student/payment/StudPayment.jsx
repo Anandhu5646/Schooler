@@ -47,7 +47,7 @@ const StudPayment = () => {
   }, [history, search, currentPage]);
 
   return (
-    <Container style={{ marginTop: "50px" }}>
+    <Container className="payment-out" style={{ marginTop: "50px" }}>
       <h1>Payments</h1>
       <hr />
        {/* ================== search bar ===================== */}

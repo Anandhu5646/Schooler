@@ -106,12 +106,9 @@ export async function facultyClubReqSend(studentName, studentId, className, club
         text: 'Something Wrong',
       });
     } else {
-      Swal.fire({
-        icon: 'success',
-        text: response.data,
-      });
+     
     }
-    console.log(response.data, 'data');
+  
     return response.data;
   } catch (error) {
    

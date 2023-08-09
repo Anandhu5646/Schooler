@@ -53,7 +53,7 @@ const ComplaintLists = () => {
           (complain) => complain._id !== id
         );
         setComplainList(updatedComplainList);
-        toast.success("The student has been deleted.", {
+        toast.success("The complaint has been deleted.", {
           autoClose: 2000,
         });
       }

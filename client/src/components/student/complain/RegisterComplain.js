@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './Complain.css';
 import { saveStudentComplain } from '../../../api/studentApi';
-import Swal from 'sweetalert2';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const RegisterComplaint = () => {
 
@@ -15,9 +17,8 @@ const saveComplaint = async (e) => {
   if (title.trim() && content.trim()) {
     let response = await saveStudentComplain(title, content);
     if (response) {
-      Swal.fire({
-        icon: 'success',
-        text: 'Complaint Sent Successfully...!!',
+      toast.success("Complaint registered successfully", {
+        autoClose: 2000, 
       });
       setContent('');
       setTitle('');
@@ -65,6 +66,7 @@ const saveComplaint = async (e) => {
           </Form>
         </Col>
       </Row>
+      <ToastContainer />
     </Container>
   );
 };

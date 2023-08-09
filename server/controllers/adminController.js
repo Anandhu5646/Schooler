@@ -402,14 +402,12 @@ let adminController = {
     try {
       const { id } = req.params;
       await clubModel.findByIdAndDelete({ _id: id });
-      return res.json({
-        error: false,
-        success: true,
-        message: "deleted successfully",
-      });
+      return res
+       
+        .json({ error: false, success: true, message: "deleted successfully" });
     } catch (error) {
       res
-        .status(500)
+       
         .json({ error: true, success: false, message: "Something went wrong" });
       console.log(error);
     }

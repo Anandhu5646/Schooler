@@ -261,11 +261,7 @@ export async function deleteClub(id) {
     });
 
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.data.message,
-      });
+    
     } else {
       Swal.fire({
         icon: "error",
@@ -459,11 +455,7 @@ export async function deleteComplain(id) {
       });
     }
   } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops..!!",
-      text: "Something went wrong",
-    });
+   console.log(error)
     throw error;
   }
 }

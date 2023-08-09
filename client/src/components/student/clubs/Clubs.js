@@ -9,6 +9,8 @@ import './Clubs.css'
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import nodata from "../../../assets/nodata.gif";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Clubs() {
   const [clubList, setClubList] = useState([]);
@@ -82,7 +84,9 @@ function Clubs() {
       facultyName,
       facultyId
     );
-
+    toast.success("Club join request has been sent successfully", {
+      autoClose: 2000, 
+    });
     const updatedClubList = club.map((clubItem) => {
       if (clubItem.clubId === clubId) {
         return {
@@ -118,9 +122,9 @@ function Clubs() {
       </div>
 {/* ===================================================== */}
         <Row> 
-          {club &&
+          {club && 
             club.map((data, index) => (
-              <Col md={12} className="mb-4 column1 " key={data._id}>
+              <Col md={12} className="mb-4 column1 " key={data.id}>
                 <Card className="shadow-sm card-column" >
                   <Card.Body>
                     <Card.Title>{data.clubName}</Card.Title>
@@ -186,6 +190,7 @@ function Clubs() {
       ) : (
         ""
       )}
+      <ToastContainer />
     </div>
   );
 }

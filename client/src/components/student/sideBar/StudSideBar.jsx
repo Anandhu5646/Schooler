@@ -53,7 +53,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -118,7 +117,6 @@ const iconStyle={
     { text: "Profile", icon:<span style={iconStyle}><MdAccountBox /></span>, to: "/student/" },
     { text: "Attendance", icon: <span style={iconStyle}><MdCoPresent /></span>, to: "/student/attendance" },
     { text: "Result", icon: <span style={iconStyle}><MdAssignment /></span>, to: "/student/mark" },
-    // { text: "Subjects", icon: <span style={iconStyle}><MdSubject /></span>, to: "/student/subjects" },
     { text: "Timetable", icon: <span style={iconStyle}><MdViewTimeline /></span>, to: "/student/timetable" },
     { text: "Notices", icon: <span style={iconStyle}><MdMarkunread /></span>, to: "/student/notice" },
     { text: "Register Complain", icon: <span style={iconStyle}><MdWarningAmber /></span>, to: "/student/complain" },

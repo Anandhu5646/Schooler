@@ -20,7 +20,8 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import nodata from '../../../assets/nodata.gif'
 import './ClubList.css'
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ClubList = () => {
   const [clubList, setClubList] = useState([]);
@@ -66,7 +67,9 @@ const ClubList = () => {
       };
 
       const response = await addClub(clubData);
-      console.log("Club created ", response);
+      toast.success("The club has been created.", {
+        autoClose: 2000, 
+      });
       setFormValue({
         name: "",
         description: "",
@@ -128,12 +131,12 @@ const changePage=(event, page)=>{
       if (result.isConfirmed) {
         
         await deleteClub(id);
-       
         const updatedClubList = clubList.filter((club) => club._id !== id);
         setClubList(updatedClubList);
-        toast.success("The student has been deleted.", {
+        toast.success("The club has been deleted.", {
           autoClose: 2000, 
         });
+        setRefresh(true)
       }
     } catch (error) {
       console.error('Error:', error);
@@ -267,6 +270,7 @@ const changePage=(event, page)=>{
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 };
