@@ -27,9 +27,9 @@ function App() {
         <Route path="/admin/*" element={<AdminRoute />} />
         <Route path="/faculty/*" element={<FacultyRoute />} />
         <Route path='/student/*' element={<StudentRoute />} />
-        <Route path='/' element={<LandingRoute />} />
+        <Route path='/*' element={<LandingRoute />} />
         <Route path='/404' element={<ErrPage />} />
-        <Route path="/*" element={<Navigate to="/404" />} />
+        {/* <Route path="/*" element={<Navigate to="/404" />} /> */}
       </Routes>
       <BackdropLoading open={loading} />
 
