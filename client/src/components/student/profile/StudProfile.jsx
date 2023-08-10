@@ -343,7 +343,7 @@ function StudProfile() {
                         src={
                           student.pic && student.pic.length > 0
                             ? `http://localhost:1800/images/${student.pic[0].filename}`
-                            : `https://iconscout.com/lottie/profile-avatar-boy-7145747`
+                            : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
                         }
                         alt=""
                         className="rounded-circle my-5"

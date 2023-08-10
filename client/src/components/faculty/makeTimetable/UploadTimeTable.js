@@ -8,6 +8,8 @@ import { deleteTimeTables } from "../../../api/facultyApi";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import nodata from "../../../assets/nodata.gif";
 import './TimeTable.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function UploadTImeTable() {
   const [timetables, setTimetables] = useState([]);
@@ -17,12 +19,12 @@ function UploadTImeTable() {
   const [errMsg, setErrMsg] = useState("");
   const [refresh, setRefresh] = useState(false)
   const [search, setSearch] = useState("");
-  const fetchTimeTable = async () => {
 
+  const fetchTimeTable = async () => {
     const response = await axios.get("/faculty/timeTable" ,{params:{search}})
     if (response.data.success) {
       setTimetables(response.data.timetable)
-    
+      setRefresh(false)
     } else {
       Swal.fire({
         icon: "error",
@@ -61,14 +63,12 @@ function UploadTImeTable() {
           .then(response => {
             if (response.data.success) {
 
-              Swal.fire({
-                icon: "success",
-                text: "Time table uploaded successfully"
+              toast.success("The Timetable has been created.", {
+                autoClose: 2000,
               });
             } else {
-              Swal.fire({
-                icon: "error",
-                text: "Something went wrong"
+              toast.error("Something went wrong..Try Again!", {
+                autoClose: 2000,
               });
             }
             setRefresh(true)
@@ -118,7 +118,10 @@ function UploadTImeTable() {
 
         const updatedTimeTableList = timetables.filter((timeTable) => timeTable._id !== id);
         setTimetables(updatedTimeTableList);
-        Swal.fire('Deleted!', 'The club has been deleted.', 'success');
+        toast.success("The Timetable has been deleted.", {
+          autoClose: 2000,
+        });
+        setRefresh(true)
       }
     } catch (error) {
       console.error('Error:', error);
@@ -198,7 +201,7 @@ function UploadTImeTable() {
         )}
       {/*============== Modal for uploading a new timetable =================*/}
 
-      <Modal show={showModal} onHide={toggleCloseModal} className="time-modal">
+      <Modal show={showModal} onHide={toggleCloseModal} className="timee-modal">
         <Modal.Header closeButton style={{ marginTop: "50px" }}>
           <Modal.Title>Upload Timetable</Modal.Title>
         </Modal.Header>
@@ -237,6 +240,7 @@ function UploadTImeTable() {
         <Modal.Footer>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </div>
   );
 }

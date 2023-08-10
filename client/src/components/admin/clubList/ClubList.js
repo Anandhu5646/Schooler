@@ -160,7 +160,10 @@ const ClubList = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      Swal.fire("Error", "An error occurred while deleting the club.", "error");
+      toast.error("An error occurred while deleting the club.", {
+        autoClose: 2000,
+      });
+     
     }
   };
 

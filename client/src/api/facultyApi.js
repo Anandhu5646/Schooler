@@ -266,11 +266,7 @@ export async function deleteTimeTables(id) {
     });
 
     if (response.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Confirmation!!",
-        text: response.data.message,
-      });
+     
     } else {
       Swal.fire({
         icon: "error",

@@ -3,15 +3,19 @@
     margin-left: 200px;
     margin-top: 50px;
 }
+.timee-modal{
+ 
+  width: 80%;
+}
 @media (max-width:768px){
     .timetable-outer{
        
         margin-left: 65px;
        
     }
-    .time-modal{
+    .timee-modal{
         margin-left: 65px;
-        width: 80%;
+        
     }
     .time-add{
         font-size: 10px;
