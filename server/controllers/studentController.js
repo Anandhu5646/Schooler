@@ -327,6 +327,7 @@ let studentController = {
         { status: true }
       );
 
+      res.redirect(process.env.PAYMENT_URL);
       let pending = await paymentHistoryModel.deleteMany({
         status: "pending",
         studentId: studentid,
@@ -334,7 +335,6 @@ let studentController = {
 
       console.log(complete, "success.........");
       console.log(pending, "pending");
-      res.redirect(process.env.PAYMENT_URL);
     } catch (error) {
       res.redirect(process.env.PAYMENT_URL);
     }
@@ -348,13 +348,13 @@ let studentController = {
         { _id: paymentId },
         { status: false }
       );
+      res.redirect(process.env.PAYMENT_URL);
 
       let pending = await paymentHistoryModel.deleteMany({
         status: "pending",
         studentId: studentid,
       });
 
-      res.redirect(process.env.PAYMENT_URL);
     } catch (error) {
       res.redirect(process.env.PAYMENT_URL);
     }
