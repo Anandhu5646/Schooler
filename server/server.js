@@ -23,7 +23,7 @@ app.use(express.static(path.resolve() + "/public"));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","https://schoolerr.netlify.app","https://schooler.onrender.com"],
+    origin: ["http://localhost:3000","https://schooler.onrender.com","https://clientschooler.perfumio.online"],
     credentials: true,
   })
 );
