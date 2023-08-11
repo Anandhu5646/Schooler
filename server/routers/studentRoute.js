@@ -35,7 +35,7 @@ router.post("/sentOtp", verifyStudent, sentOtp)
 router.post("/changePass", verifyStudent, changePassword)
 router.post("/clubReq", verifyStudent, postClubRequest)
 router.post("/saveComplaint", verifyStudent, postStudComplaint)
-router.post("/payment", postStudPayment)
+router.post("/payment", verifyStudent, postStudPayment)
 
 
 module.exports = router;

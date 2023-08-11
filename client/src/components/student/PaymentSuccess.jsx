@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import pic from "../../assets/paysuccess.gif"
 
 
 function PaymentSuccess() {
 
     const location = useLocation();
-    const paymentId = new URLSearchParams(location.search).get('id');
+    const [searchParams] = useSearchParams()
+    const paymentId = searchParams.get('id');
    
     const navigate = useNavigate();
     setTimeout(() => {
@@ -16,7 +17,7 @@ function PaymentSuccess() {
     useEffect(() => {
       
         axios
-          .get(`/paymentSuccess?id=${paymentId}`)
+          .get(`/student/paymentSuccess?id=${paymentId}`)
           .then((response) => {
             console.log(response.data);
           })
