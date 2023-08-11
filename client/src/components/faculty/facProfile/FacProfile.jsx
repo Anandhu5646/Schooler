@@ -482,7 +482,7 @@ function FacProfile() {
                       <MDBCardImage
                         src={
                           faculty.pic && faculty.pic.length >0
-                            ? `http://localhost:1800/images/${faculty.pic[0].filename}`
+                            ? `https://schooler.sigag.online/images/${faculty.pic[0].filename}`
                             : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
                         }
                         alt=""

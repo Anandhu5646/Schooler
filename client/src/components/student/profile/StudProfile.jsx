@@ -342,7 +342,7 @@ function StudProfile() {
                       <MDBCardImage
                         src={
                           student.pic && student.pic.length > 0
-                            ? `http://localhost:1800/images/${student.pic[0].filename}`
+                            ? `https://schooler.sigag.online/images/${student.pic[0].filename}`
                             : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
                         }
                         alt=""
