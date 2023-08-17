@@ -52,7 +52,7 @@ function Login() {
 
     <MDBContainer fluid style={{ marginTop: "150px" }}>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "student@gmail.com", password: "123" }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
