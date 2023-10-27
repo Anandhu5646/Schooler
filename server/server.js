@@ -38,6 +38,7 @@ app.use('/admin/auth',adminAuthRoute)
 app.use('/faculty/auth',facultyAuthRoute)
 app.use('/student/auth',studentAuthRoute)
 console.log('fdfdfdfdfdf');
+console.log('eeeeeeeeeeeee');
 app.listen(1800, () => {
   console.log("Server running on http://localhost:1800");
 });
