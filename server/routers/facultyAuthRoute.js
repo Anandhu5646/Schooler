@@ -9,4 +9,4 @@ router.post("/logout",postFacLogout)
 router.get("/check",checkFacLoggedIn)
 
 
-module.exports = router;
+module.exports = router;  

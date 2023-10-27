@@ -15,7 +15,7 @@ const {
   getAdminClubs,
   deleteFaculty,
   deleteStudent,
-  deleteSubject,
+  deleteSubject,   
   postEditAdminFaculty,
   getClubFaculties,
   deleteClubs,
@@ -65,7 +65,7 @@ router.post("/deleteComplain/:id", verifyAdmin, deleteComplain);
 router.post("/deleteSubject", verifyAdmin, deleteSubject);
 router.post("/deleteClub/:id", verifyAdmin, deleteClubs);
 router.post("/deleteNotice/:id", verifyAdmin, deleteNotices);
-router.post("/updateStudent", verifyAdmin, postAdminUpdateStudent);
+router.post("/updateStudent", verifyAdmin, postAdminUpdateStudent);   
 router.post("/updateFaculty", verifyAdmin, postAdminUpdateFaculty);
 router.post("/saveNotice", verifyAdmin, postUploadNotice);
 router.post("/addPayment", verifyAdmin, postPaymentMsgToStud);

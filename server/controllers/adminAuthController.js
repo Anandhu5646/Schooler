@@ -6,8 +6,7 @@ const adminAuthController = {
   postAdminLogin: async (req, res) => {
     try {
       const { email, password } = req.body;
-
-      const admin = await adminModel.findOne({ email });
+      const admin = await adminModel.findOne({ email }).exec();
       if (!admin) {
         return res.json({ error: true, message1: "You have no admin access" });
       }
