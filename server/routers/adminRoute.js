@@ -73,3 +73,4 @@ router.post("/deleteClass/:id", verifyAdmin, adminDeleteClass)
 router.post("/deletePayment/:id", verifyAdmin, deletePaymentList);
 
 module.exports = router;
+   

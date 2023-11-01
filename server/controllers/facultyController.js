@@ -107,7 +107,7 @@ let facultyController = {
       total = Math.ceil(total / 5);
 
       let previous = await attendanceModel
-        .find({
+        ?.find({
           $and: [
             { date: currentDate },
             { facultyId: req.faculty.id },
@@ -121,7 +121,7 @@ let facultyController = {
           studentQuery.name = new RegExp(key, "i");
         }
         let student = await studentModel
-          .find(studentQuery)
+          .find({ className: clasName })
           .limit(limit)
           .skip(skip)
           .sort({ _id: -1 })
@@ -186,6 +186,7 @@ let facultyController = {
         .status(500)
         .json({ success: false, error: "Failed to fetch students" });
     }
+ 
   },
 
   postFacStudAttendance: async (req, res) => {
@@ -462,7 +463,9 @@ let facultyController = {
       if (req.query.search) {
         key = req.query.search.replace(/[^a-zA-Z]/g, "");
       }
-      const timetable = await timeTableModel.find({ title: new RegExp(key, "i") }).sort({ _id: -1 });
+      const timetable = await timeTableModel
+        .find({ title: new RegExp(key, "i") })
+        .sort({ _id: -1 });
       res.json({ success: true, timetable });
     } catch (error) {
       res.json({ success: false, error, message: "Server error" });
@@ -470,7 +473,6 @@ let facultyController = {
   },
   deleteTImeTable: async (req, res) => {
     try {
-     
       const { id } = req.params;
       await timeTableModel.findByIdAndDelete({ _id: id });
       res.json({ success: true, message: "Deleted successfully" });

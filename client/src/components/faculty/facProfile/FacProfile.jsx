@@ -482,15 +482,16 @@ function FacProfile() {
                       <MDBCardImage
                         src={
                           faculty.pic && faculty.pic.length >0
-                            ? `https://schooler.sigag.online/images/${faculty.pic[0].filename}`
-                            : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
+                            ? `https://schooler.kkfoods.online/images/${faculty.pic[0].filename}`
+                            : `https://lordicon.com/icons/wired/outline/21-avatar.gif`
                         }
                         alt=""
-                        className="rounded-circle my-5"
+                        className="rounded-circle my-5" 
                         style={{
                           width: "120px",
                           height: "120px",
                           border: "4px solid #fff",
+                          padding:"4px"
                         }}
                         fluid
                       />

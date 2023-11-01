@@ -4,11 +4,11 @@ import FacAttendance from '../../../components/faculty/facAttendance/FacAttendan
 import { ToastContainer } from 'react-toastify'
 
 function FacMarkAttendance() {
+
   return (
     <div>
         <FacSidebar/>
         <FacAttendance/>
-
         <ToastContainer/>
         
         

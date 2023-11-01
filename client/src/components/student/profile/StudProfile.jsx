@@ -342,8 +342,8 @@ function StudProfile() {
                       <MDBCardImage
                         src={
                           student.pic && student.pic.length > 0
-                            ? `https://schooler.sigag.online/images/${student.pic[0].filename}`
-                            : `https://lordicon.com/icons/wired/gradient/306-avatar-icon-calm.gif`
+                            ? `https://schooler.kkfoods.online/images/${student.pic[0].filename}`
+                            : `https://lordicon.com/icons/wired/outline/21-avatar.gif`
                         }
                         alt=""
                         className="rounded-circle my-5"

@@ -35,8 +35,8 @@ app.use('/admin', adminRoute);
 app.use('/student', studentRoute);
 app.use('/faculty', facultyRoute);
 app.use('/admin/auth',adminAuthRoute)
-app.use('/faculty/auth',facultyAuthRoute)
+app.use('/faculty/auth',facultyAuthRoute) 
 app.use('/student/auth',studentAuthRoute)
 app.listen(1800, () => {
   console.log("Server running on http://localhost:1800");
-});
+}); 

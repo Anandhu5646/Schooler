@@ -214,7 +214,7 @@ const FacAttendance = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      {students.length === 0 && (
+      {students?.length === 0 && (
         <div
           className="d-flex justify-content-center align-items-center"
           style={{ minHeight: "300px", marginTop: "30px" }}

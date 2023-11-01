@@ -20,7 +20,7 @@ const facultySchema = new mongoose.Schema({
         type:String,
         
     },
-    teachingArea:{
+    teachingArea:{  
         type:String,
     },
     email:{
