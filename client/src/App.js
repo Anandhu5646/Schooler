@@ -17,9 +17,8 @@ import ErrPage from './pages/404page';
 
 function App() {
   axios.defaults.baseURL = "http://localhost:1800"
-  // axios.defaults.baseURL ="https://schooler.sigag.online"
-  console.log('hi');
-  // axios.defaults.baseURL ="https://schooler.kkfoods.online"
+  axios.defaults.baseURL = "http://schooler.asweb.online"
+  
   axios.defaults.withCredentials = true;
 
   const { loading } = useSelector((state) => state);

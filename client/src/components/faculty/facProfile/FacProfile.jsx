@@ -482,7 +482,7 @@ function FacProfile() {
                       <MDBCardImage
                         src={
                           faculty.pic && faculty.pic.length >0
-                            ? `https://schooler.kkfoods.online/images/${faculty.pic[0].filename}`
+                            ? `https://schooler.asweb.online/images/${faculty.pic[0].filename}`
                             : `https://lordicon.com/icons/wired/outline/21-avatar.gif`
                         }
                         alt=""

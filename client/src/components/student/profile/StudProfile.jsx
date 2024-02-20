@@ -342,7 +342,7 @@ function StudProfile() {
                       <MDBCardImage
                         src={
                           student.pic && student.pic.length > 0
-                            ? `https://schooler.kkfoods.online/images/${student.pic[0].filename}`
+                            ? `https://schooler.asweb.online/images/${student.pic[0].filename}`
                             : `https://lordicon.com/icons/wired/outline/21-avatar.gif`
                         }
                         alt=""
