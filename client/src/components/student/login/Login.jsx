@@ -47,16 +47,21 @@ function Login() {
       setSubmitting(false);
     }
   };
+  const handleDummyLogin = (setFieldValue) => {
+    
+    setFieldValue("email", "student@gmail.com");
+    setFieldValue("password", "dummyPassword");
+  };
   return (
     <div className="student-outer">
 
     <MDBContainer fluid style={{ marginTop: "150px" }}>
       <Formik
-        initialValues={{ email: "student@gmail.com", password: "123" }}
+        initialValues={{ email:"", password: "" }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue }) => (
           <Form>
             <MDBRow className="d-flex justify-content-center align-items-center h-100">
              
@@ -108,7 +113,14 @@ function Login() {
                     >
                       Login
                     </MDBBtn>
-
+                    <MDBBtn
+                  size="lg"
+                  type="button"
+                  onClick={() => handleDummyLogin(setFieldValue)}
+                  style={{ backgroundColor: "#212A3E", marginLeft: '0px' ,marginTop:"10px"}}
+                >
+                  Dummy Login
+                </MDBBtn>
                     <hr className="my-4" />
                   </MDBCardBody>
                 </MDBCard>

@@ -11,6 +11,8 @@ const subjectModel = require("../models/subjectModel");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("../helper/cloudinary");
 const { Pagination } = require("../helper/pagination");
+const facEmail = require("../helper/facEmail");
+const studEmail = require("../helper/studEmail");
 
 let salt = bcrypt.genSaltSync(10);
 
@@ -32,6 +34,7 @@ let adminController = {
         rollNo,
         address,
       } = req.body;
+     
       let hashPassword = bcrypt.hashSync(password, salt);
       let student = new studentModel({
         name,
@@ -49,6 +52,7 @@ let adminController = {
         mobile,
       });
       await student.save();
+      studEmail(req.body.email,req.body.password)
       res
         .status(201)
         .json({ success: true, message: "Student registered successfully" });
@@ -90,6 +94,9 @@ let adminController = {
         className,
       });
       await faculty.save();
+      
+      
+      facEmail(req.body.email,req.body.password)
       res
         .status(201)
         .json({ success: true, message: "Faculty registration successful" });
